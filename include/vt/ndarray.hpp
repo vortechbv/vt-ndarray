@@ -21,6 +21,8 @@
 #ifndef VT_NDARRAY_HPP_
 #define VT_NDARRAY_HPP_
 
+#include <vt/ndarray/allocator.hpp>
+#include <vt/ndarray/container.hpp>
 #include <vt/ndarray/view.hpp>
 
 #endif // VT_NDARRAY_HPP_

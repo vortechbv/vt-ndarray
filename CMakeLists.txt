@@ -114,6 +114,8 @@ target_compile_features(
 
 add_executable(
     vt-ndarray-test
+    "${CMAKE_CURRENT_LIST_DIR}/test/vt/ndarray/allocator_test.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/vt/ndarray/container_test.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/test/vt/ndarray/test_main.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/test/vt/ndarray/view_test.cpp")
 target_link_libraries(
