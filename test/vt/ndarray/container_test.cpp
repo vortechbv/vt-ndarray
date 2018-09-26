@@ -245,6 +245,22 @@ TEST_CASE(
 }
 
 TEST_CASE(
+    "A self-copy-assign of a vt::ndarray is a no-op",
+    "[ndarray][container")
+{
+    vt::ndarray<int, 1> a{{ 4 }, { 3, 1, 4, 1 }};
+
+    a = a;
+
+    REQUIRE(a.shape(0) == 4);
+
+    CHECK(a[0] == 3);
+    CHECK(a[1] == 1);
+    CHECK(a[2] == 4);
+    CHECK(a[3] == 1);
+}
+
+TEST_CASE(
     "A vt::ndarray can be move-assigned",
     "[ndarray][container]")
 {
@@ -255,6 +271,22 @@ TEST_CASE(
 
     REQUIRE(b.shape(0) == 0);
     REQUIRE(b.data() == nullptr);
+
+    REQUIRE(a.shape(0) == 4);
+
+    CHECK(a[0] == 3);
+    CHECK(a[1] == 1);
+    CHECK(a[2] == 4);
+    CHECK(a[3] == 1);
+}
+
+TEST_CASE(
+    "A self-move-assign of a vt::ndarray is a no-op",
+    "[ndarray][container")
+{
+    vt::ndarray<int, 1> a{{ 4 }, { 3, 1, 4, 1 }};
+
+    a = std::move(a);
 
     REQUIRE(a.shape(0) == 4);
 

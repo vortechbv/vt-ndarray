@@ -174,6 +174,8 @@ ndarray<T, N, Allocator>&
 ndarray<T, N, Allocator>::
 operator=(const ndarray& other)
 {
+    if (&other == this) return *this;
+
     constexpr bool should_copy_alloc = std::allocator_traits<Allocator>::
         propagate_on_container_copy_assignment::value;
     const bool should_realloc =
@@ -202,6 +204,8 @@ ndarray<T, N, Allocator>&
 ndarray<T, N, Allocator>::
 operator=(ndarray&& other)
 {
+    if (&other == this) return *this;
+
     constexpr bool should_copy_alloc = std::allocator_traits<Allocator>::
         propagate_on_container_move_assignment::value;
     const bool should_transfer_ownership =
