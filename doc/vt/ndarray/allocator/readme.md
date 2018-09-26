@@ -26,9 +26,11 @@ Template parameters
 Member types
 ------------
 
-Member type            | Definition
----------------------- | ----------
-value_type             | `T`
+Member type                            | Definition
+-------------------------------------- | ----------------
+value_type                             | `T`
+propagate_on_container_move_assignment | `std::true_type`
+propagate_on_container_swap            | `std::true_type`
 
 Member functions
 ----------------

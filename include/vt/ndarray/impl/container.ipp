@@ -428,9 +428,12 @@ swap(ndarray<T, N, Allocator>& other) noexcept
     constexpr bool should_swap_alloc = std::allocator_traits<Allocator>::
         propagate_on_container_swap::value;
 
-    assert(!should_swap_alloc || _alloc == other._alloc);
+    if constexpr (should_swap_alloc) {
+        swap(_alloc, other._alloc);
+    } else {
+        assert(_alloc == other._alloc);
+    }
 
-    if constexpr (should_swap_alloc) swap(_alloc, other._alloc);
     swap(_view, other._view);
 }
 

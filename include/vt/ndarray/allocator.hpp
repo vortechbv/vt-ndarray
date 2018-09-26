@@ -32,6 +32,8 @@ class ndarray_allocator {
 
 public:
     using value_type = T;
+    using propagate_on_container_move_assignment = std::true_type;
+    using propagate_on_container_swap = std::true_type;
 
     constexpr
     ndarray_allocator() noexcept;
