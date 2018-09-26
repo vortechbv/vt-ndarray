@@ -12,6 +12,11 @@ This library uses C++17 features and assumes a C++17 compliant compiler.
 
 To use the install script or build the accompanying test-suite, you will need CMake 3.8 or newer.
 
+Documentation
+-------------
+
+A reference sections containing documentation of the API and usage examples can be found [here](doc/vt/ndarray/readme.md#top).
+
 Building
 --------
 
