@@ -20,8 +20,8 @@ Template parameters
 -------------------
 
 |||
------ | -------------------------------------------------------
-**T** | the type of elements of arrays this allocator allocates
+----- | ------------------------------------------------------------------------
+**T** | the type of elements of arrays this allocator allocates; must not be cv-qualified
 
 Member types
 ------------

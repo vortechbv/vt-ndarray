@@ -16,9 +16,9 @@ Template parameters
 
 |||
 ------------- | ----------------------------------------------------------------
-**T**         | the type of the elements
+**T**         | the type of the elements; must not be cv-qualified
 **N**         | the number of dimensions; must be larger than 0
-**Allocator** | allocator for acquiring/releasing memory and constructing/destroying elements
+**Allocator** | allocator for acquiring/releasing memory and constructing/destroying elements; `Allocator::value_type` must be the same as `T`
 
 Member types
 ------------

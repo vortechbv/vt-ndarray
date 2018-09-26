@@ -28,6 +28,8 @@ namespace vt {
 
 template<typename T>
 class ndarray_allocator {
+    static_assert(std::is_same_v<std::remove_cv_t<T>, T>);
+
 public:
     using value_type = T;
 
