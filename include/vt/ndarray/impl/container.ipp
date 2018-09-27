@@ -323,6 +323,14 @@ data() const noexcept
 }
 
 template<typename T, std::size_t N, typename Allocator>
+Allocator
+ndarray<T, N, Allocator>::
+get_allocator() const noexcept
+{
+    return _alloc;
+}
+
+template<typename T, std::size_t N, typename Allocator>
 typename ndarray<T, N, Allocator>::iterator
 ndarray<T, N, Allocator>::
 begin() noexcept

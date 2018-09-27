@@ -35,6 +35,16 @@ TEST_CASE(
 }
 
 TEST_CASE(
+    "A vt::ndarray can be constructed with a user specified allocator",
+    "[ndarray][container]")
+{
+    vt::ndarray_allocator<int> alloc{std::align_val_t{16}};
+    const vt::ndarray<int, 1> a{alloc};
+
+    REQUIRE(a.get_allocator() == alloc);
+}
+
+TEST_CASE(
     "A vt::ndarray can be constructed with a shape without zero-initializing",
     "[ndarray][container]")
 {

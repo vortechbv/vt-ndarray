@@ -57,6 +57,7 @@ Member functions
 [element_count](element-count.md#top)                   | returns the total number of elements
 [shape](shape.md#top)                                   | returns the N-dimensional shape
 [data](data.md#top)                                     | direct access to the underlying array
+[get_allocator](get_allocator.md#top)                   | returns the associated allocator
 [begin<br/>cbegin](begin.md#top)                        | returns an iterator to the beginning
 [end<br/>cend](end.md#top)                              | returns an iterator to the end
 [rbegin<br/>crbegin](rbegin.md#top)                     | returns a reverse iterator to the beginning

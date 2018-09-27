@@ -111,6 +111,9 @@ public:
     const T*
     data() const noexcept;
 
+    Allocator
+    get_allocator() const noexcept;
+
     iterator
     begin() noexcept;
     const_iterator
