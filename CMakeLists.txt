@@ -22,6 +22,8 @@ cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
 
 project(vt-ndarray CXX)
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/tools/cmake")
+include(vt/Util)
 
 ### User options
 
@@ -36,6 +38,23 @@ set(
     CACHE
     STRING "SHA256 hash of the Catch header file.")
 
+set(
+    VT_BENCHMARK_DOWNLOAD_URL
+    "https://github.com/google/benchmark/archive/v1.4.1.tar.gz"
+    CACHE
+    STRING "Url to the Google Benchmark source code zip file.")
+set(
+    VT_BENCHMARK_DOWNLOAD_SHA256
+    f8e525db3c42efc9c7f3bc5176a8fa893a9a9920bbd08cef30fb56a51854d60d
+    CACHE
+    STRING "SHA256 hash of the Google Benchmark zip file.")
+
+
+### Build type configuration
+
+if(CMAKE_CONFIGURATION_TYPES)
+    set(CMAKE_CONFIGURATION_TYPES Debug Release)
+endif()
 
 if(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
     message(STATUS "No build type specified, defaulting to Release.")
@@ -43,10 +62,35 @@ if(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
 endif()
 
 
+### Third-party dependencies
+
 set(_THIRDPARTY_DIR "${CMAKE_CURRENT_BINARY_DIR}/thirdparty")
+list(APPEND CMAKE_PREFIX_PATH "${_THIRDPARTY_DIR}")
+
+if(MSVC)
+    # MSVC can't link release libraries with debug libraries, so third-party
+    # libraries will have to be built for the correct build type.
+    if(CMAKE_CONFIGURATION_TYPES)
+        # The build-dir contains multiple build types, so third-party libraries
+        # will need to be build for both debug and release.
+        set(_THIRDPARTY_BUILD_TYPE_ARG)
+        set(_THIRDPARTY_BUILD_TYPES Debug Release)
+    else()
+        # The build dir contains a single build type, so third-party libraries
+        # can be built for that build type.
+        set(_THIRDPARTY_BUILD_TYPE_ARG -DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}")
+        set(_THIRDPARTY_BUILD_TYPES ${CMAKE_BUILD_TYPE})
+    endif()
+else()
+    set(_THIRDPARTY_BUILD_TYPE_ARG "-DCMAKE_BUILD_TYPE=Release")
+    set(_THIRDPARTY_BUILD_TYPES Release)
+endif()
 
 
 ### Catch dependency
+
+message(STATUS "Installing third-party catch library:")
+message("----------------------------------------")
 
 file(
     DOWNLOAD
@@ -61,6 +105,45 @@ set_target_properties(
     Catch2::Catch2
     PROPERTIES
         INTERFACE_INCLUDE_DIRECTORIES "${_THIRDPARTY_DIR}/include")
+
+
+### Benchmark dependency
+
+message(STATUS "Installing third-party benchmark library:")
+message("--------------------------------------------")
+
+file(
+    DOWNLOAD
+        ${VT_BENCHMARK_DOWNLOAD_URL}
+        "${_THIRDPARTY_DIR}/download/benchmark-1.4.1.tar.gz"
+    EXPECTED_HASH SHA256=${VT_BENCHMARK_DOWNLOAD_SHA256}
+    INACTIVITY_TIMEOUT 10
+    SHOW_PROGRESS)
+
+vt_unzip(
+    "${_THIRDPARTY_DIR}/download/benchmark-1.4.1.tar.gz"
+    DEST "${_THIRDPARTY_DIR}/download")
+
+vt_cmake_configure(
+    "${_THIRDPARTY_DIR}/download/benchmark-1.4.1"
+    "${_THIRDPARTY_DIR}/build/benchmark"
+    FLAGS
+        -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+        -DCMAKE_INSTALL_PREFIX=${_THIRDPARTY_DIR}
+        -DCMAKE_DEBUG_POSTFIX=d
+        ${_THIRDPARTY_BUILD_TYPE_ARG}
+        -DBENCHMARK_ENABLE_GTEST_TESTS=OFF
+        -DBENCHMARK_ENABLE_TESTING=OFF)
+
+foreach(_BUILD_TYPE IN LISTS _THIRDPARTY_BUILD_TYPES)
+    vt_cmake_build(
+        "${_THIRDPARTY_DIR}/build/benchmark"
+        FLAGS
+            --config ${_BUILD_TYPE}
+            --target install)
+endforeach()
+
+find_package(benchmark REQUIRED CONFIG)
 
 
 ### Compile options
@@ -123,6 +206,20 @@ target_link_libraries(
     vt-ndarray Catch2::Catch2)
 target_compile_options(
     vt-ndarray-test
+    PRIVATE ${VT_NDARRAY_${CMAKE_CXX_COMPILER_ID}_COMPILE_OPTIONS})
+
+
+### Benchmark target
+
+add_executable(
+    vt-ndarray-benchmark
+    "${CMAKE_CURRENT_LIST_DIR}/benchmark/vt/ndarray/foreach_benchmark.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/benchmark/vt/ndarray/matrix_mul_benchmark.cpp")
+target_link_libraries(
+    vt-ndarray-benchmark
+    vt-ndarray benchmark::benchmark_main)
+target_compile_options(
+    vt-ndarray-benchmark
     PRIVATE ${VT_NDARRAY_${CMAKE_CXX_COMPILER_ID}_COMPILE_OPTIONS})
 
 

@@ -39,6 +39,11 @@ Testing
 
 You can run the test-suite by executing `vt-ndarray-test`/`vt-ndarray-test.exe`. Run with `--help` for more options. Note that Visual Studio places the output binaries in a `Debug`/`Release` subdirectory of your build directory.
 
+Benchmarks
+----------
+
+Benchmarks for measuring the overhead of the N-dimensional array classes compared to raw pointers are included. You can run them by executing `vt-ndarray-benchmark`/`vt-ndarray-benchmark.exe`. Run with `--help` for more options.
+
 Options
 -------
 
@@ -48,10 +53,12 @@ Common CMake options for the build are listed below. See the CMake documentation
 
 Some build systems (such as Visual Studio) have multiple build types. For build systems with only one build type (such as Makefiles) the default build type will be `Release`. To specify a different build type, add the `-DCMAKE_BUILD_TYPE=<build-type>` flag when executing CMake.
 
-The available build types are: `Debug`, `Release`, `RelWithDebInfo` and `MinSizeRel`.
+The available build types are: `Debug` and `Release`.
 
 ### External Libraries
 
-vt-ndarray uses the Catch testing framework. By default, Catch will be downloaded from the internet. If the download is not possible, (because the URL no longer exists or if you're not connected to the internet,) you can specify an alternative download location.
+For testing purposes, vt-ndarray uses the Catch testing framework and Google Benchmark library. By default, Catch and Benchmark will be downloaded from the internet. If the download is not possible, (because the URL no longer exists or if you're not connected to the internet,) you can specify an alternative download location.
 
-To specify an alternative download location, add the `-DVT_CATCH_DOWNLOAD_URL=<url>` and `-DVT_CATCH_DOWNLOAD_SHA256=<hash>` flags when executing CMake. Here `<url>` should lead to the Catch single include header file and `<hash>` must be the SHA256 hash of the header file.
+To specify an alternative download location for Catch, add the `-DVT_CATCH_DOWNLOAD_URL=<url>` and `-DVT_CATCH_DOWNLOAD_SHA256=<hash>` flags when executing CMake. Here `<url>` should lead to the Catch single include header file and `<hash>` must be the SHA256 hash of the header file.
+
+To specify an alternative download location for Benchmark, add the `-DVT_BENCHMARK_DOWNLOAD_URL=<url>` and `-DVT_BENCHMARK_DOWNLOAD_SHA256=<hash>` flags when executing CMake. Here `<url>` should lead to the Benchmark source-code zip file and `<hash>` must be the SHA256 hash of the zip file.
