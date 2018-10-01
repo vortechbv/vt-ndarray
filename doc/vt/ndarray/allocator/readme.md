@@ -50,3 +50,10 @@ Non-member functions
 |||
 --------------------------------------------------- | -----------------------
 [operator==<br/>operator!=](equals-operator.md#top) | compares two allocators
+
+Macros
+------
+
+|||
+-------------------------------------------- | ---------------------------------
+[VT_CACHE_LINE_SIZE](cache-line-size.md#top) | user-overridable cache-line size constant

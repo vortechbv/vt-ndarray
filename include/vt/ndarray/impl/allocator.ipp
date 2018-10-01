@@ -30,8 +30,13 @@ namespace vt {
 namespace detail {
 
 // This is not necessarily the cache-line size for every machine, but it is for
-// most machines that we target.
-inline constexpr std::size_t cache_line_size = 64;
+// most machines that we target. Users can optionally specify a different value
+// by defining this macro.
+#ifndef VT_CACHE_LINE_SIZE
+#   define VT_CACHE_LINE_SIZE 64
+#endif
+
+inline constexpr std::size_t cache_line_size = VT_CACHE_LINE_SIZE;
 
 } // namespace detail
 
