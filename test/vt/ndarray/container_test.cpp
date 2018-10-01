@@ -71,6 +71,20 @@ TEST_CASE(
 }
 
 TEST_CASE(
+    "A vt::ndarray with std::allocator as allocator will still zero-initialize",
+    "[ndarray][container]")
+{
+    const vt::ndarray<int, 1, std::allocator<int>> a{{ 4 }};
+
+    REQUIRE(a.shape(0) == 4);
+
+    CHECK(a[0] == 0);
+    CHECK(a[1] == 0);
+    CHECK(a[2] == 0);
+    CHECK(a[3] == 0);
+}
+
+TEST_CASE(
     "A vt::ndarray can be constructed with a default value",
     "[ndarray][container]")
 {
