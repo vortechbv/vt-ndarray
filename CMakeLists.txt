@@ -27,6 +27,9 @@ include(vt/Util)
 
 ### User options
 
+option(VT_ENABLE_TESTING "Build the test-suite" ON)
+option(VT_ENABLE_BENCHMARKS "Build the benchmarks" ON)
+
 set(
     VT_CATCH_DOWNLOAD_URL
     "https://github.com/catchorg/Catch2/releases/download/v2.4.0/catch.hpp"
@@ -89,61 +92,65 @@ endif()
 
 ### Catch dependency
 
-message(STATUS "Installing third-party catch library:")
-message("----------------------------------------")
+if(VT_ENABLE_TESTING)
+    message(STATUS "Installing third-party catch library:")
+    message("----------------------------------------")
 
-file(
-    DOWNLOAD
-        ${VT_CATCH_DOWNLOAD_URL}
-        "${_THIRDPARTY_DIR}/include/catch2/catch.hpp"
-    EXPECTED_HASH SHA256=${VT_CATCH_DOWNLOAD_SHA256}
-    INACTIVITY_TIMEOUT 10
-    SHOW_PROGRESS)
+    file(
+        DOWNLOAD
+            ${VT_CATCH_DOWNLOAD_URL}
+            "${_THIRDPARTY_DIR}/include/catch2/catch.hpp"
+        EXPECTED_HASH SHA256=${VT_CATCH_DOWNLOAD_SHA256}
+        INACTIVITY_TIMEOUT 10
+        SHOW_PROGRESS)
 
-add_library(Catch2::Catch2 INTERFACE IMPORTED)
-set_target_properties(
-    Catch2::Catch2
-    PROPERTIES
-        INTERFACE_INCLUDE_DIRECTORIES "${_THIRDPARTY_DIR}/include")
+    add_library(Catch2::Catch2 INTERFACE IMPORTED)
+    set_target_properties(
+        Catch2::Catch2
+        PROPERTIES
+            INTERFACE_INCLUDE_DIRECTORIES "${_THIRDPARTY_DIR}/include")
+endif()
 
 
 ### Benchmark dependency
 
-message(STATUS "Installing third-party benchmark library:")
-message("--------------------------------------------")
+if(VT_ENABLE_BENCHMARKS)
+    message(STATUS "Installing third-party benchmark library:")
+    message("--------------------------------------------")
 
-file(
-    DOWNLOAD
-        ${VT_BENCHMARK_DOWNLOAD_URL}
+    file(
+        DOWNLOAD
+            ${VT_BENCHMARK_DOWNLOAD_URL}
+            "${_THIRDPARTY_DIR}/download/benchmark-1.4.1.tar.gz"
+        EXPECTED_HASH SHA256=${VT_BENCHMARK_DOWNLOAD_SHA256}
+        INACTIVITY_TIMEOUT 10
+        SHOW_PROGRESS)
+
+    vt_unzip(
         "${_THIRDPARTY_DIR}/download/benchmark-1.4.1.tar.gz"
-    EXPECTED_HASH SHA256=${VT_BENCHMARK_DOWNLOAD_SHA256}
-    INACTIVITY_TIMEOUT 10
-    SHOW_PROGRESS)
+        DEST "${_THIRDPARTY_DIR}/download")
 
-vt_unzip(
-    "${_THIRDPARTY_DIR}/download/benchmark-1.4.1.tar.gz"
-    DEST "${_THIRDPARTY_DIR}/download")
-
-vt_cmake_configure(
-    "${_THIRDPARTY_DIR}/download/benchmark-1.4.1"
-    "${_THIRDPARTY_DIR}/build/benchmark"
-    FLAGS
-        -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
-        -DCMAKE_INSTALL_PREFIX=${_THIRDPARTY_DIR}
-        -DCMAKE_DEBUG_POSTFIX=d
-        ${_THIRDPARTY_BUILD_TYPE_ARG}
-        -DBENCHMARK_ENABLE_GTEST_TESTS=OFF
-        -DBENCHMARK_ENABLE_TESTING=OFF)
-
-foreach(_BUILD_TYPE IN LISTS _THIRDPARTY_BUILD_TYPES)
-    vt_cmake_build(
+    vt_cmake_configure(
+        "${_THIRDPARTY_DIR}/download/benchmark-1.4.1"
         "${_THIRDPARTY_DIR}/build/benchmark"
         FLAGS
-            --config ${_BUILD_TYPE}
-            --target install)
-endforeach()
+            -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+            -DCMAKE_INSTALL_PREFIX=${_THIRDPARTY_DIR}
+            -DCMAKE_DEBUG_POSTFIX=d
+            ${_THIRDPARTY_BUILD_TYPE_ARG}
+            -DBENCHMARK_ENABLE_GTEST_TESTS=OFF
+            -DBENCHMARK_ENABLE_TESTING=OFF)
 
-find_package(benchmark REQUIRED CONFIG)
+    foreach(_BUILD_TYPE IN LISTS _THIRDPARTY_BUILD_TYPES)
+        vt_cmake_build(
+            "${_THIRDPARTY_DIR}/build/benchmark"
+            FLAGS
+                --config ${_BUILD_TYPE}
+                --target install)
+    endforeach()
+
+    find_package(benchmark REQUIRED CONFIG)
+endif()
 
 
 ### Compile options
@@ -195,32 +202,36 @@ target_compile_features(
 
 ### Test target
 
-add_executable(
-    vt-ndarray-test
-    "${CMAKE_CURRENT_LIST_DIR}/test/vt/ndarray/allocator_test.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/test/vt/ndarray/container_test.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/test/vt/ndarray/test_main.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/test/vt/ndarray/view_test.cpp")
-target_link_libraries(
-    vt-ndarray-test
-    vt-ndarray Catch2::Catch2)
-target_compile_options(
-    vt-ndarray-test
-    PRIVATE ${VT_NDARRAY_${CMAKE_CXX_COMPILER_ID}_COMPILE_OPTIONS})
+if(VT_ENABLE_TESTING)
+    add_executable(
+        vt-ndarray-test
+        "${CMAKE_CURRENT_LIST_DIR}/test/vt/ndarray/allocator_test.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/test/vt/ndarray/container_test.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/test/vt/ndarray/test_main.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/test/vt/ndarray/view_test.cpp")
+    target_link_libraries(
+        vt-ndarray-test
+        vt-ndarray Catch2::Catch2)
+    target_compile_options(
+        vt-ndarray-test
+        PRIVATE ${VT_NDARRAY_${CMAKE_CXX_COMPILER_ID}_COMPILE_OPTIONS})
+endif()
 
 
 ### Benchmark target
 
-add_executable(
-    vt-ndarray-benchmark
-    "${CMAKE_CURRENT_LIST_DIR}/benchmark/vt/ndarray/foreach_benchmark.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/benchmark/vt/ndarray/matrix_mul_benchmark.cpp")
-target_link_libraries(
-    vt-ndarray-benchmark
-    vt-ndarray benchmark::benchmark_main)
-target_compile_options(
-    vt-ndarray-benchmark
-    PRIVATE ${VT_NDARRAY_${CMAKE_CXX_COMPILER_ID}_COMPILE_OPTIONS})
+if(VT_ENABLE_BENCHMARKS)
+    add_executable(
+        vt-ndarray-benchmark
+        "${CMAKE_CURRENT_LIST_DIR}/benchmark/vt/ndarray/foreach_benchmark.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/benchmark/vt/ndarray/matrix_mul_benchmark.cpp")
+    target_link_libraries(
+        vt-ndarray-benchmark
+        vt-ndarray benchmark::benchmark_main)
+    target_compile_options(
+        vt-ndarray-benchmark
+        PRIVATE ${VT_NDARRAY_${CMAKE_CXX_COMPILER_ID}_COMPILE_OPTIONS})
+endif()
 
 
 ### Install target

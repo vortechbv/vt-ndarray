@@ -55,9 +55,13 @@ Some build systems (such as Visual Studio) have multiple build types. For build 
 
 The available build types are: `Debug` and `Release`.
 
+### Optional compilation
+
+Compilation of the test-suite and benchmarks is not mandatory. You can disable either by adding the `-DVT_ENABLE_TESTING=OFF` and/or `-DVT_ENABLE_BENCHMARKS=OFF` flags when executing CMake.
+
 ### External Libraries
 
-For testing purposes, vt-ndarray uses the Catch testing framework and Google Benchmark library. By default, Catch and Benchmark will be downloaded from the internet. If the download is not possible, (because the URL no longer exists or if you're not connected to the internet,) you can specify an alternative download location.
+For testing purposes, vt-ndarray uses the Catch testing framework and Google Benchmark library. By default, Catch and Benchmark will be downloaded from the internet, unless you specified to disable the compilation of the test-suite or benchmarks. If the download is not possible, (because the URL no longer exists or if you're not connected to the internet,) you can specify an alternative download location.
 
 To specify an alternative download location for Catch, add the `-DVT_CATCH_DOWNLOAD_URL=<url>` and `-DVT_CATCH_DOWNLOAD_SHA256=<hash>` flags when executing CMake. Here `<url>` should lead to the Catch single include header file and `<hash>` must be the SHA256 hash of the header file.
 
