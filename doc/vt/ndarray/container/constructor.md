@@ -41,7 +41,7 @@ Constructs a new container from a variety of data sources, optionally using a us
 
 1. Default constructor. Constructs an empty container, with a default-constructed allocator.
 2. Constructs an empty container with the specified allocator.
-3. Constructs the container with the specified shape and default-constructed elements.
+3. Constructs the container with the specified shape and default-constructed elements. Note that the default allocator will leave fundamental types uninitialized when default-constructing them.
 4. Constructs the container with the specified shape, where all elements are copy-constructed from `value`.
 5. Constructs the container with the specified shape and contents of the range `[first, last)`. The behavior is undefined if `std::distance(first, last)` is not equal to the number of elements in the container.
 6. Constructs the container with the specifed shape and contents of the initializer list `init`. The behavior is undefined if `init.size()` is not equal to the number of elements in the container.

@@ -1,7 +1,7 @@
 operator==,!=(vt::ndarray_allocator)
 ====================================
 
-- Defined in header `<vt/ndarray/algorithm.hpp>`
+- Defined in header `<vt/ndarray/allocator.hpp>`
 - Defined in header `<vt/ndarray.hpp>`
 
 ```c++
