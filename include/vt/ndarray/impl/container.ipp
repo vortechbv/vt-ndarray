@@ -480,7 +480,7 @@ copy_construct(InputIt first, InputIt last)
             // If this occurs when called from the constructor, the destructor
             // won't run. If this occurs when called from the assignment
             // operator, the destructor has no way of knowing which elements
-            // were succesfully constructed. So in either case we need to clean
+            // were successfully constructed. So in either case we need to clean
             // up.
             this->destroy(this->begin(), dest);
             _view = { { 0 }, nullptr };
@@ -514,7 +514,7 @@ move_construct(iterator first, iterator last)
             // If this occurs when called from the constructor, the destructor
             // won't run. If this occurs when called from the assignment
             // operator, the destructor has no way of knowing which elements
-            // were succesfully constructed. So in either case we need to clean
+            // were successfully constructed. So in either case we need to clean
             // up.
             this->destroy(this->begin(), dest);
             _view = { { 0 }, nullptr };

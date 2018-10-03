@@ -16,6 +16,8 @@ The default allocator for the [ndarray](../container/readme.md#top) class. It di
 
 Instances of this allocator are interchangeable if their alignment value matches.
 
+This class satisfies the `Allocator` named requirement.
+
 Template parameters
 -------------------
 
@@ -48,8 +50,8 @@ Non-member functions
 --------------------
 
 |||
---------------------------------------------------- | -----------------------
-[operator==<br/>operator!=](equals-operator.md#top) | compares two allocators
+-------------------------------------------------- | -----------------------
+[operator==<br>operator!=](equals-operator.md#top) | compares two allocators
 
 Macros
 ------

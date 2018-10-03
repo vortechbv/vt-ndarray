@@ -8,7 +8,7 @@ ndarray_view(const std::array<std::size_t, N>& shape, T* data) noexcept;
 
 Constructs the view for the given shape over the given data.
 
-The behavior is undefined if the array pointed to by `data` contains less than `shape[0] * ... shape[N-1]` elements.
+The behavior is undefined if the array pointed to by `data` contains less than `shape[0] * ... * shape[N-1]` elements.
 
 Parameters
 ----------

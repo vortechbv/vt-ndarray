@@ -9,11 +9,11 @@ template<typename T, std::size_t N>
 class ndarray_view;
 ```
 
-Non-owning view into row-major N-dimensional array data. It's essentially a pointer-shape pair for externally managed data, providing an N-dimensional `operator[]` interface.
+View into N-dimensional array data. It's essentially a pointer-shape pair for externally managed data, providing an N-dimensional `operator[]` interface. The data is assumed to be in row-major order and the view does not take ownership of the data.
 
-For an owning N-dimensional array container, see [ndarray](../container/readme.md#top).
+For an owning N-dimensional array container, use [ndarray](../container/readme.md#top) instead.
 
-This is a reference type and therefor cheap to copy. As a reference type, note that `ndarray_view<const T, N>` is similar to `const T*`, while `const ndarray_view<T, N>` is similar to `T* const`.
+This is a reference type and therefore cheap to copy, i.e. copy-constructing or assigning a view will be a shallow copy. As a reference type, note that `ndarray_view<const T, N>` is similar to `const T*`, while `const ndarray_view<T, N>` is similar to `T* const`.
 
 Template parameters
 -------------------
@@ -56,10 +56,10 @@ Member functions
 [element_count](element-count.md#top)          | returns the total number of elements
 [shape](shape.md#top)                          | returns the N-dimensional shape
 [data](data.md#top)                            | returns a pointer to the first element
-[begin<br/>cbegin](begin.md#top)               | returns an iterator to the beginning
-[end<br/>cend](end.md#top)                     | returns an iterator to the end
-[rbegin<br/>crbegin](rbegin.md#top)            | returns a reverse iterator to the beginning
-[rend<br/>crend](rend.md#top)                  | returns a reverse iterator to the end
+[begin<br>cbegin](begin.md#top)                | returns an iterator to the beginning
+[end<br>cend](end.md#top)                      | returns an iterator to the end
+[rbegin<br>crbegin](rbegin.md#top)             | returns a reverse iterator to the beginning
+[rend<br>crend](rend.md#top)                   | returns a reverse iterator to the end
 
 Non-member functions
 --------------------
