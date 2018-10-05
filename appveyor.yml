@@ -1,0 +1,29 @@
+version: '{build}'
+
+image: Visual Studio 2017
+
+configuration:
+  - Debug
+  - Release
+
+environment:
+  matrix:
+    - compiler: msvc-15-seh
+      generator: "Visual Studio 15 2017"
+      benchmarks: "OFF"
+
+    - compiler: msvc-15-seh
+      generator: "Visual Studio 15 2017 Win64"
+      benchmarks: "ON"
+
+matrix:
+  fast_finish: true
+
+build_script:
+  - md build -Force
+  - cd build
+  - cmake -G "%generator%" -DVT_ENABLE_BENCHMARKS=%benchmarks% ..
+  - cmake --build . --config %configuration%
+
+test_script:
+  - '%configuration%\vt-ndarray-test.exe'
