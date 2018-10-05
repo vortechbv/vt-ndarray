@@ -11,7 +11,7 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-7
-      env: COMPILER='g++-7' BUILD_TYPE='Debug'
+      env: COMPILER='g++-7' BUILD_TYPE='Debug' BENCHMARKS='OFF'
 
     - os: linux
       compiler: gcc
@@ -21,7 +21,33 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-7
-      env: COMPILER='g++-7' BUILD_TYPE='Release'
+      env: COMPILER='g++-7' BUILD_TYPE='Release' BENCHMARKS='ON'
+
+    - os: linux
+      compiler: clang
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-trusty
+            - llvm-toolchain-trusty-6.0
+          packages:
+            - clang-6.0
+            - libstdc++-8-dev
+      env: COMPILER='clang++-6.0' BUILD_TYPE='Debug' BENCHMARKS='OFF'
+
+    - os: linux
+      compiler: clang
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-trusty
+            - llvm-toolchain-trusty-6.0
+          packages:
+            - clang-6.0
+            - libstdc++-8-dev
+      env: COMPILER='clang++-6.0' BUILD_TYPE='Release' BENCHMARKS='OFF'
 
 install:
   - THIRDPARTY_DIR="${TRAVIS_BUILD_DIR}/thirdparty"
@@ -37,6 +63,6 @@ script:
   - SRC_DIR=${TRAVIS_BUILD_DIR}
   - mkdir -p ${BUILD_DIR}
   - cd ${BUILD_DIR}
-  - cmake -DCMAKE_CXX_COMPILER=${COMPILER} -DCMAKE_BUILD_TYPE=${BUILD_TYPE} ${SRC_DIR}
-  - make
+  - cmake -DCMAKE_CXX_COMPILER=${COMPILER} -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DVT_ENABLE_BENCHMARKS=${BENCHMARKS} ${SRC_DIR}
+  - make -j2 VERBOSE=1
   - ./vt-ndarray-test
