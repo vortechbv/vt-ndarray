@@ -1,12 +1,19 @@
 vt-ndarray
 ==========
 
+[![Build Status](https://travis-ci.org/vortechbv/vt-ndarray.svg?branch=master)](https://travis-ci.org/vortechbv/vt-ndarray)
+[![Build Status](https://ci.appveyor.com/api/projects/status/github/vortechbv/vt-ndarray?branch=master&svg=true)](https://ci.appveyor.com/project/elius1/vt-ndarray/branch/master)
+
 N-dimensional array library for C++, developed and maintained by [VORtech](https://vortech.nl/).
 
 Getting started
 ---------------
 
-This is a header-only library. To use it, simply add all files under `include` to your include directories. The library uses C++17 features and assumes a C++17 compliant compiler.
+This is a header-only library. To use it, simply add all files under `include` to your include directories. The library uses C++17 features and assumes a C++17 compliant compiler. Compatibility with the following compilers is tested:
+
+- GCC 7.3
+- Clang 6.0
+- MSVC vs2017
 
 The library provides an array container that allows for N-dimensional indexing:
 
