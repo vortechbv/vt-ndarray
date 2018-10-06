@@ -180,6 +180,10 @@ set(
     -Wno-c++98-compat-pedantic
     -Wno-missing-braces
     -Wno-padded)
+set(
+    VT_NDARRAY_BENCHMARK_Clang_COMPILE_OPTIONS
+    # Google Benchmark makes heavy use of global constructors
+    -Wno-global-constructors)
 
 set(
     VT_NDARRAY_MSVC_COMPILE_OPTIONS
@@ -230,7 +234,9 @@ if(VT_ENABLE_BENCHMARKS)
         vt-ndarray benchmark::benchmark_main)
     target_compile_options(
         vt-ndarray-benchmark
-        PRIVATE ${VT_NDARRAY_${CMAKE_CXX_COMPILER_ID}_COMPILE_OPTIONS})
+        PRIVATE
+            ${VT_NDARRAY_${CMAKE_CXX_COMPILER_ID}_COMPILE_OPTIONS}
+            ${VT_NDARRAY_BENCHMARK_${CMAKE_CXX_COMPILER_ID}_COMPILE_OPTIONS})
 endif()
 
 
