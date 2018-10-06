@@ -16,14 +16,25 @@ environment:
       generator: "Visual Studio 15 2017 Win64"
       benchmarks: "ON"
 
+    - compiler: gcc-7.2.0-posix
+      generator: "MinGW Makefiles"
+      cxx_path: 'C:\mingw-w64\x86_64-7.2.0-posix-seh-rt_v5-rev1\mingw64\bin'
+      benchmarks: "OFF"
+
 matrix:
   fast_finish: true
+
+install:
+  - if "%generator%"=="MinGW Makefiles" (set "is_mingw=1") else (set "is_mingw=0")
+  # If sh.exe from git bash is in the path, cmake and mingw get confused
+  - if %is_mingw%==1 (set "PATH=%PATH:C:\Program Files\Git\usr\bin;=%")
+  - if not "%cxx_path%"=="" (set "PATH=%PATH%;%cxx_path%")
 
 build_script:
   - md build -Force
   - cd build
-  - cmake -G "%generator%" -DVT_ENABLE_BENCHMARKS=%benchmarks% ..
+  - cmake -G "%generator%" -DCMAKE_BUILD_TYPE=%configuration% -DVT_ENABLE_BENCHMARKS=%benchmarks% ..
   - cmake --build . --config %configuration%
 
 test_script:
-  - '%configuration%\vt-ndarray-test.exe'
+  - if %is_mingw%==0 ("%configuration%\vt-ndarray-test.exe") else (vt-ndarray-test.exe)
