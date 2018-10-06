@@ -47,7 +47,7 @@ matrix:
           packages:
             - clang-6.0
             - libstdc++-8-dev
-      env: COMPILER='clang++-6.0' BUILD_TYPE='Release' BENCHMARKS='OFF'
+      env: COMPILER='clang++-6.0' BUILD_TYPE='Release' BENCHMARKS='ON'
 
 install:
   - THIRDPARTY_DIR="${TRAVIS_BUILD_DIR}/thirdparty"
