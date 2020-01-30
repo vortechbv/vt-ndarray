@@ -24,26 +24,26 @@ matrix:
       env: COMPILER='g++-7' BUILD_TYPE='Release' BENCHMARKS='ON'
 
     - os: linux
+      dist: xenial
       compiler: clang
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-trusty
-            - llvm-toolchain-trusty-6.0
+            - llvm-toolchain-xenial-6.0
           packages:
             - clang-6.0
             - libstdc++-8-dev
       env: COMPILER='clang++-6.0' BUILD_TYPE='Debug' BENCHMARKS='OFF'
 
     - os: linux
+      dist: xenial
       compiler: clang
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-trusty
-            - llvm-toolchain-trusty-6.0
+            - llvm-toolchain-xenial-6.0
           packages:
             - clang-6.0
             - libstdc++-8-dev
