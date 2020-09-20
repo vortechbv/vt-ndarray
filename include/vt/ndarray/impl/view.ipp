@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 VORtech b.v.
+// Copyright (c) 2017-2020 VORtech b.v.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -108,6 +108,33 @@ ndarray_view<T, N>::
 data() const noexcept
 {
     return _data;
+}
+
+template<typename T, std::size_t N>
+constexpr vt::ndarray_view<T, N>
+ndarray_view<T, N>::
+slice(std::size_t offset) const noexcept
+{
+    return this->slice(offset, _shape[0] - offset);
+}
+
+template<typename T, std::size_t N>
+constexpr vt::ndarray_view<T, N>
+ndarray_view<T, N>::
+slice(std::size_t offset, std::size_t count) const noexcept
+{
+    assert(offset <= _shape[0]);
+    assert(offset + count <= _shape[0]);
+
+    if constexpr (N > 1) {
+        auto slice_shape = _shape;
+        slice_shape[0] = count;
+        return vt::ndarray_view<T, N>{
+            slice_shape,
+            _data + offset * detail::count_elements(this->subshape())};
+    } else {
+        return vt::ndarray_view<T, 1>{{ count }, _data + offset};
+    }
 }
 
 template<typename T, std::size_t N>

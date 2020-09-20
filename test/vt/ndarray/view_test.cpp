@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 VORtech b.v.
+// Copyright (c) 2017-2020 VORtech b.v.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -170,6 +170,62 @@ TEST_CASE(
     const vt::ndarray_view<const int, 12> view{{ 0 }, nullptr};
 
     REQUIRE(view.dim_count == 12);
+}
+
+TEST_CASE(
+    "You can get a slice-view into a vt::ndarray_view",
+    "[ndarray][view]")
+{
+    const int data[4] = { 3, 1, 4, 1 };
+    const vt::ndarray_view<const int, 1> view{{ 4 }, data};
+
+    const vt::ndarray_view<const int, 1> slice = view.slice(1, 2);
+
+    REQUIRE(slice.shape(0) == 2);
+
+    CHECK(slice[0] == 1);
+    CHECK(slice[1] == 4);
+}
+
+TEST_CASE(
+    "When slicing a vt::ndarray_view with more than 1 dimension, only the "
+    "first dimension is sliced",
+    "[ndarray][view]")
+{
+    const int data[8] = {
+        3, 1,
+        4, 1,
+        5, 9,
+        2, 6
+    };
+    const vt::ndarray_view<const int, 2> view{{ 4, 2 }, data};
+
+    const vt::ndarray_view<const int, 2> slice = view.slice(1, 2);
+
+    REQUIRE(slice.shape(0) == 2);
+    REQUIRE(slice.shape(1) == 2);
+
+    CHECK(slice[0][0] == 4);
+    CHECK(slice[0][1] == 1);
+    CHECK(slice[1][0] == 5);
+    CHECK(slice[1][1] == 9);
+}
+
+TEST_CASE(
+    "When slicing and no count is passed, the last element of the slice will "
+    "be the last element of the view",
+    "[ndarray][view]")
+{
+    const int data[4] = { 3, 1, 4, 1 };
+    const vt::ndarray_view<const int, 1> view{{ 4 }, data};
+
+    const vt::ndarray_view<const int, 1> slice = view.slice(1);
+
+    REQUIRE(slice.shape(0) == 3);
+
+    CHECK(slice[0] == 1);
+    CHECK(slice[1] == 4);
+    CHECK(slice[2] == 1);
 }
 
 TEST_CASE(
