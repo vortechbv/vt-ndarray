@@ -31,7 +31,7 @@ Example
 
 int main()
 {
-    const int A_data = {
+    const int A_data[] = {
         3, 1, 4,
         1, 5, 9
     };
