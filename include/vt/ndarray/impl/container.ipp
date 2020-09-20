@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 VORtech b.v.
+// Copyright (c) 2017-2020 VORtech b.v.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -328,6 +328,38 @@ ndarray<T, N, Allocator>::
 get_allocator() const noexcept
 {
     return _alloc;
+}
+
+template<typename T, std::size_t N, typename Allocator>
+constexpr vt::ndarray_view<T, N>
+ndarray<T, N, Allocator>::
+slice(std::size_t offset) noexcept
+{
+    return this->view().slice(offset);
+}
+
+template<typename T, std::size_t N, typename Allocator>
+constexpr vt::ndarray_view<const T, N>
+ndarray<T, N, Allocator>::
+slice(std::size_t offset) const noexcept
+{
+    return this->cview().slice(offset);
+}
+
+template<typename T, std::size_t N, typename Allocator>
+constexpr vt::ndarray_view<T, N>
+ndarray<T, N, Allocator>::
+slice(std::size_t offset, std::size_t count) noexcept
+{
+    return this->view().slice(offset, count);
+}
+
+template<typename T, std::size_t N, typename Allocator>
+constexpr vt::ndarray_view<const T, N>
+ndarray<T, N, Allocator>::
+slice(std::size_t offset, std::size_t count) const noexcept
+{
+    return this->cview().slice(offset, count);
 }
 
 template<typename T, std::size_t N, typename Allocator>

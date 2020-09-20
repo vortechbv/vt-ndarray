@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 VORtech b.v.
+// Copyright (c) 2017-2020 VORtech b.v.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -342,6 +342,28 @@ TEST_CASE(
     CHECK(a[1][0] == 3);
     CHECK(a[1][1] == 4);
     CHECK(a[1][2] == 5);
+}
+
+TEST_CASE(
+    "You can get a slice view into a vt::ndarray",
+    "[ndarray][container]")
+{
+    const vt::ndarray<int, 2> a{{ 4, 2 }, {
+        3, 1,
+        4, 1,
+        5, 9,
+        2, 6
+    }};
+
+    const vt::ndarray_view<const int, 2> slice = a.slice(1, 2);
+
+    REQUIRE(slice.shape(0) == 2);
+    REQUIRE(slice.shape(1) == 2);
+
+    CHECK(slice[0][0] == 4);
+    CHECK(slice[0][1] == 1);
+    CHECK(slice[1][0] == 5);
+    CHECK(slice[1][1] == 9);
 }
 
 TEST_CASE(

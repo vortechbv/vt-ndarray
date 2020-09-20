@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 VORtech b.v.
+// Copyright (c) 2017-2020 VORtech b.v.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -113,6 +113,15 @@ public:
 
     Allocator
     get_allocator() const noexcept;
+
+    constexpr vt::ndarray_view<T, N>
+    slice(std::size_t offset) noexcept;
+    constexpr vt::ndarray_view<const T, N>
+    slice(std::size_t offset) const noexcept;
+    constexpr vt::ndarray_view<T, N>
+    slice(std::size_t offset, std::size_t count) noexcept;
+    constexpr vt::ndarray_view<const T, N>
+    slice(std::size_t offset, std::size_t count) const noexcept;
 
     iterator
     begin() noexcept;
