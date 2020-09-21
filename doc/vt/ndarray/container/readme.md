@@ -5,11 +5,20 @@ vt::ndarray
 - Defined in header `<vt/ndarray.hpp>`
 
 ```c++
+// (1)
 template<typename T, std::size_t N, typename Allocator = ndarray_allocator<T>>
 class ndarray;
+// (2)
+namespace pmr {
+    template<typename T, std::size_t N>
+    using ndarray = vt::ndarray<T, N, std::pmr::polymorphic_allocator<T>>;
+}
 ```
 
-Container for an N-dimensional array that handles its storage automatically. The array data is stored contiguously in row-major order.
+1. `vt::ndarray` is a container for an N-dimensional array that handles its storage automatically.
+2. `vt::pmr::ndarray` is an alias template that uses a polymorphic allocator. (Only present if your standard library has `<memory_resource>`)
+
+The array data is stored contiguously in row-major order.
 
 For externally managed array data, use [ndarray_view](../view/readme.md#top) instead.
 

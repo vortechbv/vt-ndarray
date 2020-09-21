@@ -366,6 +366,22 @@ TEST_CASE(
     CHECK(slice[1][1] == 9);
 }
 
+#if __has_include(<memory_resource>)
+
+TEST_CASE(
+    "A vt::pmr::ndarray can be constructed with a polymorphic allocator",
+    "[ndarray][container]")
+{
+    int buffer[6];
+    std::pmr::monotonic_buffer_resource arena{buffer, sizeof(buffer)};
+
+    const vt::pmr::ndarray<int, 2> a{{ 2, 3 }, &arena};
+
+    CHECK(buffer == a.data());
+}
+
+#endif // __has_include(<memory_resource>)
+
 TEST_CASE(
     "A vt::ndarray is equality comparable",
     "[ndarray][container]")

@@ -29,6 +29,10 @@
 #include <memory>
 #include <type_traits>
 
+#if __has_include(<memory_resource>)
+#   include <memory_resource>
+#endif
+
 namespace vt {
 
 template<typename T, std::size_t N, typename Allocator = ndarray_allocator<T>>
@@ -172,6 +176,17 @@ private:
     void
     destroy(iterator first, iterator last) noexcept;
 };
+
+#if __has_include(<memory_resource>)
+
+namespace pmr {
+
+template<typename T, std::size_t N>
+using ndarray = vt::ndarray<T, N, std::pmr::polymorphic_allocator<T>>;
+
+} // namespace pmr
+
+#endif // __has_include(<memory_resource>)
 
 template<typename T, std::size_t N, typename Allocator>
 bool
