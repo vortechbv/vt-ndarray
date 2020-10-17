@@ -360,6 +360,21 @@ TEST_CASE(
 }
 
 TEST_CASE(
+    "A vt::ndarray_view's template arguments can be deduced from its "
+    "constructor arguments",
+    "[ndarray][view]")
+{
+    // Explicit integer types for deduction are only required for GCC < 8.0
+    constexpr std::size_t n = 2;
+
+    const int data[n*n] = { 0 };
+
+    vt::ndarray_view view{{ n, n }, data};
+
+    CHECK(std::is_same_v<decltype(view), vt::ndarray_view<const int, 2>>);
+}
+
+TEST_CASE(
     "A vt::ndarray_view can be streamed to a std::ostream",
     "[ndarray][view]")
 {

@@ -71,6 +71,9 @@ Non-member functions
 ------------------------------------ | ----------------------
 [operator<<](stream-operator.md#top) | performs stream output
 
+[Deduction guides](deduction-guides.md#top)
+-------------------------------------------
+
 Example
 -------
 

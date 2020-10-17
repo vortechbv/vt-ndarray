@@ -109,6 +109,9 @@ private:
 };
 
 template<typename T, std::size_t N>
+ndarray_view(const std::size_t (&)[N], T*) -> ndarray_view<T, N>;
+
+template<typename T, std::size_t N>
 std::ostream&
 operator<<(std::ostream& os, ndarray_view<const T, N> a);
 
