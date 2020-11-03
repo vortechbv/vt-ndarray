@@ -87,6 +87,9 @@ Non-member functions
 [operator<<](stream-operator.md#top)               | performs stream output
 [swap](free-swap.md#top)                           | swaps array contents
 
+[Deduction guides](deduction-guides.md#top)
+-------------------------------------------
+
 Example
 -------
 

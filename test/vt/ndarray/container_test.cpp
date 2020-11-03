@@ -428,6 +428,47 @@ TEST_CASE(
 #endif // __has_include(<memory_resource>)
 
 TEST_CASE(
+    "A vt::ndarray's template arguments can be deduced from its fill "
+    "constructor arguments",
+    "[ndarray][container]")
+{
+    // Explicit integer types for deduction are only required for GCC < 8.0
+    constexpr std::size_t n = 2;
+
+    vt::ndarray a{{ n, n }, 42};
+
+    CHECK(std::is_same_v<decltype(a), vt::ndarray<int, 2>>);
+}
+
+TEST_CASE(
+    "A vt::ndarray's template arguments can be deduced from its iterator "
+    "constructor arguments",
+    "[ndarray][container]")
+{
+    // Explicit integer types for deduction are only required for GCC < 8.0
+    constexpr std::size_t n = 2;
+
+    const std::array<int, n*n> data = { 3, 1, 4, 1 };
+
+    vt::ndarray a{{ n, n }, data.begin(), data.end()};
+
+    CHECK(std::is_same_v<decltype(a), vt::ndarray<int, 2>>);
+}
+
+TEST_CASE(
+    "A vt::ndarray's template arguments can be deduced from its initializer-"
+    "list constructor arguments",
+    "[ndarray][container]")
+{
+    // Explicit integer types for deduction are only required for GCC < 8.0
+    constexpr std::size_t n = 2;
+
+    vt::ndarray a{{ n, n }, { 3, 1, 4, 1 }};
+
+    CHECK(std::is_same_v<decltype(a), vt::ndarray<int, 2>>);
+}
+
+TEST_CASE(
     "A vt::ndarray is equality comparable",
     "[ndarray][container]")
 {

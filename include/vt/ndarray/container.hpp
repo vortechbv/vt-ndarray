@@ -206,6 +206,31 @@ using ndarray = vt::ndarray<T, N, std::pmr::polymorphic_allocator<T>>;
 
 #endif // __has_include(<memory_resource>)
 
+namespace detail {
+
+template<typename Iter>
+using iterator_value_t = typename std::iterator_traits<Iter>::value_type;
+
+} // namespace detail
+
+template<typename T, std::size_t N, typename Allocator = ndarray_allocator<T>>
+ndarray(const std::size_t (&)[N], const T&, Allocator = Allocator())
+    -> ndarray<T, N, Allocator>;
+
+template<
+    typename InputIt,
+    std::size_t N,
+    typename Allocator = ndarray_allocator<detail::iterator_value_t<InputIt>>>
+ndarray(const std::size_t (&)[N], InputIt, InputIt, Allocator = Allocator())
+    -> ndarray<detail::iterator_value_t<InputIt>, N, Allocator>;
+
+template<typename T, std::size_t N, typename Allocator = ndarray_allocator<T>>
+ndarray(
+    const std::size_t (&)[N],
+    std::initializer_list<T>,
+    Allocator = Allocator())
+    -> ndarray<T, N, Allocator>;
+
 template<typename T, std::size_t N, typename Allocator>
 bool
 operator==(
