@@ -69,6 +69,9 @@ public:
     constexpr ndarray_view<T, M>
     reshape(const std::size_t (&new_shape)[M]) const noexcept;
 
+    constexpr ndarray_view<T, 1>
+    flatten() const noexcept;
+
     constexpr T*
     data() const noexcept;
 

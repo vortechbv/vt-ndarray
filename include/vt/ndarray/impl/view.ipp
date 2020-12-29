@@ -138,6 +138,14 @@ reshape(const std::size_t (&new_shape)[M]) const noexcept
 }
 
 template<typename T, std::size_t N>
+constexpr ndarray_view<T, 1>
+ndarray_view<T, N>::
+flatten() const noexcept
+{
+    return { { this->element_count() }, this->data() };
+}
+
+template<typename T, std::size_t N>
 constexpr T*
 ndarray_view<T, N>::
 data() const noexcept

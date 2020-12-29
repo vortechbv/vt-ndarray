@@ -221,6 +221,33 @@ TEST_CASE(
 }
 
 TEST_CASE(
+    "You can flatten an N-dimensional vt::ndarray_view to a single dimension",
+    "[ndarray][view]")
+{
+    const int data[8] = {
+        3, 1,
+        4, 1,
+
+        5, 9,
+        2, 6
+    };
+    const vt::ndarray_view<const int, 3> view{{ 2, 2, 2 }, data};
+
+    const vt::ndarray_view<const int, 1> flat = view.flatten();
+
+    REQUIRE(flat.shape(0) == 8);
+
+    CHECK(flat[0] == 3);
+    CHECK(flat[1] == 1);
+    CHECK(flat[2] == 4);
+    CHECK(flat[3] == 1);
+    CHECK(flat[4] == 5);
+    CHECK(flat[5] == 9);
+    CHECK(flat[6] == 2);
+    CHECK(flat[7] == 6);
+}
+
+TEST_CASE(
     "You can get a slice-view into a vt::ndarray_view",
     "[ndarray][view]")
 {

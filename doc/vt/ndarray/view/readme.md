@@ -56,6 +56,7 @@ Member functions
 [element_count](element-count.md#top)          | returns the total number of elements
 [shape](shape.md#top)                          | returns the N-dimensional shape
 [reshape](reshape.md#top)                      | obtains a view with a different shape
+[flatten](flatten.md#top)                      | obtains a view with a flattened shape
 [data](data.md#top)                            | returns a pointer to the first element
 [slice](slice.md#top)                          | obtains a slice-view
 [begin<br>cbegin](begin.md#top)                | returns an iterator to the beginning
