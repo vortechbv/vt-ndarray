@@ -345,6 +345,25 @@ TEST_CASE(
 }
 
 TEST_CASE(
+    "You can reshape a vt::ndarray to a different number of dimensions",
+    "[ndarray][container]")
+{
+    const vt::ndarray<int, 1> a{{ 4 }, { 3, 1, 4, 1 }};
+
+    // Explicit integer types for deduction are only required for GCC < 8.0
+    constexpr std::size_t n = 2;
+    const vt::ndarray_view<const int, 2> reshaped = a.reshape({ n, n });
+
+    REQUIRE(reshaped.shape(0) == n);
+    REQUIRE(reshaped.shape(1) == n);
+
+    CHECK(reshaped[0][0] == 3);
+    CHECK(reshaped[0][1] == 1);
+    CHECK(reshaped[1][0] == 4);
+    CHECK(reshaped[1][1] == 1);
+}
+
+TEST_CASE(
     "You can get a slice view into a vt::ndarray",
     "[ndarray][container]")
 {

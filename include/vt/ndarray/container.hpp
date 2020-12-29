@@ -110,6 +110,19 @@ public:
     std::size_t
     shape(std::size_t dim) const noexcept;
 
+    template<std::size_t M>
+    ndarray_view<T, M>
+    reshape(const std::array<std::size_t, M>& new_shape) noexcept;
+    template<std::size_t M>
+    ndarray_view<const T, M>
+    reshape(const std::array<std::size_t, M>& new_shape) const noexcept;
+    template<std::size_t M>
+    ndarray_view<T, M>
+    reshape(const std::size_t (&new_shape)[M]) noexcept;
+    template<std::size_t M>
+    ndarray_view<const T, M>
+    reshape(const std::size_t (&new_shape)[M]) const noexcept;
+
     T*
     data() noexcept;
     const T*

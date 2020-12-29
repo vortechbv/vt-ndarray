@@ -67,6 +67,7 @@ Member functions
 [operator ndarray_view<br>view<br>cview](view.md#top) | conversion to view
 [element_count](element-count.md#top)                 | returns the total number of elements
 [shape](shape.md#top)                                 | returns the N-dimensional shape
+[reshape](reshape.md#top)                             | obtains a view with a different shape
 [data](data.md#top)                                   | direct access to the underlying array
 [get_allocator](get_allocator.md#top)                 | returns the associated allocator
 [slice](slice.md#top)                                 | obtains a slice-view

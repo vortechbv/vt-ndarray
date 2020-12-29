@@ -307,6 +307,42 @@ shape(std::size_t dim) const noexcept
 }
 
 template<typename T, std::size_t N, typename Allocator>
+template<std::size_t M>
+ndarray_view<T, M>
+ndarray<T, N, Allocator>::
+reshape(const std::array<std::size_t, M>& new_shape) noexcept
+{
+    return this->view().reshape(new_shape);
+}
+
+template<typename T, std::size_t N, typename Allocator>
+template<std::size_t M>
+ndarray_view<const T, M>
+ndarray<T, N, Allocator>::
+reshape(const std::array<std::size_t, M>& new_shape) const noexcept
+{
+    return this->cview().reshape(new_shape);
+}
+
+template<typename T, std::size_t N, typename Allocator>
+template<std::size_t M>
+ndarray_view<T, M>
+ndarray<T, N, Allocator>::
+reshape(const std::size_t (&new_shape)[M]) noexcept
+{
+    return this->view().reshape(new_shape);
+}
+
+template<typename T, std::size_t N, typename Allocator>
+template<std::size_t M>
+ndarray_view<const T, M>
+ndarray<T, N, Allocator>::
+reshape(const std::size_t (&new_shape)[M]) const noexcept
+{
+    return this->cview().reshape(new_shape);
+}
+
+template<typename T, std::size_t N, typename Allocator>
 T*
 ndarray<T, N, Allocator>::
 data() noexcept
