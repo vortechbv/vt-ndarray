@@ -22,6 +22,7 @@
 #define VT_NDARRAY_IMPL_VIEW_IPP_
 
 #include <cassert>
+#include <utility>
 
 namespace vt {
 
@@ -39,6 +40,20 @@ count_elements(const std::array<std::size_t, N>& shape) noexcept
     }
 
     return count;
+}
+
+template<std::size_t N, std::size_t... I>
+constexpr std::array<std::size_t, N>
+to_array_impl(const std::size_t (&shape)[N], std::index_sequence<I...>) noexcept
+{
+    return { {shape[I]...} };
+}
+
+template<std::size_t N>
+constexpr std::array<std::size_t, N>
+to_array(const std::size_t (&shape)[N]) noexcept
+{
+    return to_array_impl(shape, std::make_index_sequence<N>{});
 }
 
 } // namespace detail
@@ -100,6 +115,26 @@ shape(std::size_t dim) const noexcept
     assert(dim < N);
 
     return _shape[dim];
+}
+
+template<typename T, std::size_t N>
+template<std::size_t M>
+constexpr ndarray_view<T, M>
+ndarray_view<T, N>::
+reshape(const std::array<std::size_t, M>& new_shape) const noexcept
+{
+    assert(detail::count_elements(new_shape) == this->element_count());
+
+    return { new_shape, this->data() };
+}
+
+template<typename T, std::size_t N>
+template<std::size_t M>
+constexpr ndarray_view<T, M>
+ndarray_view<T, N>::
+reshape(const std::size_t (&new_shape)[M]) const noexcept
+{
+    return this->reshape(detail::to_array(new_shape));
 }
 
 template<typename T, std::size_t N>

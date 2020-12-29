@@ -62,6 +62,13 @@ public:
     constexpr std::size_t
     shape(std::size_t dim) const noexcept;
 
+    template<std::size_t M>
+    constexpr ndarray_view<T, M>
+    reshape(const std::array<std::size_t, M>& new_shape) const noexcept;
+    template<std::size_t M>
+    constexpr ndarray_view<T, M>
+    reshape(const std::size_t (&new_shape)[M]) const noexcept;
+
     constexpr T*
     data() const noexcept;
 

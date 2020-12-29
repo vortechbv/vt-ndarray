@@ -173,6 +173,54 @@ TEST_CASE(
 }
 
 TEST_CASE(
+    "You can reshape a vt::ndarray_view",
+    "[ndarray][view]")
+{
+    // Explicit integer types for deduction are only required for GCC < 8.0
+    constexpr std::size_t n = 3;
+    constexpr std::size_t m = 2;
+
+    const int data[6] = {
+        3, 1,
+        4, 1,
+        5, 9
+    };
+    const vt::ndarray_view<const int, 2> view{{ n, m }, data};
+
+    const vt::ndarray_view<const int, 2> review = view.reshape({ m, n });
+
+    REQUIRE(review.shape(0) == m);
+    REQUIRE(review.shape(1) == n);
+
+    CHECK(review[0][0] == 3);
+    CHECK(review[0][1] == 1);
+    CHECK(review[0][2] == 4);
+    CHECK(review[1][0] == 1);
+    CHECK(review[1][1] == 5);
+    CHECK(review[1][2] == 9);
+}
+
+TEST_CASE(
+    "You can reshape a vt::ndarray_view to a different number of dimensions",
+    "[ndarray][view]")
+{
+    const int data[4] = { 3, 1, 4, 1 };
+    const vt::ndarray_view<const int, 1> view{{ 4 }, data};
+
+    // Explicit integer types for deduction are only required for GCC < 8.0
+    constexpr std::size_t n = 2;
+    const vt::ndarray_view<const int, 2> review = view.reshape({ n, n });
+
+    REQUIRE(review.shape(0) == n);
+    REQUIRE(review.shape(1) == n);
+
+    CHECK(review[0][0] == 3);
+    CHECK(review[0][1] == 1);
+    CHECK(review[1][0] == 4);
+    CHECK(review[1][1] == 1);
+}
+
+TEST_CASE(
     "You can get a slice-view into a vt::ndarray_view",
     "[ndarray][view]")
 {
