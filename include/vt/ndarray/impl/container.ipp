@@ -343,6 +343,22 @@ reshape(const std::size_t (&new_shape)[M]) const noexcept
 }
 
 template<typename T, std::size_t N, typename Allocator>
+ndarray_view<T, 1>
+ndarray<T, N, Allocator>::
+flatten() noexcept
+{
+    return this->view().flatten();
+}
+
+template<typename T, std::size_t N, typename Allocator>
+ndarray_view<const T, 1>
+ndarray<T, N, Allocator>::
+flatten() const noexcept
+{
+    return this->cview().flatten();
+}
+
+template<typename T, std::size_t N, typename Allocator>
 T*
 ndarray<T, N, Allocator>::
 data() noexcept
