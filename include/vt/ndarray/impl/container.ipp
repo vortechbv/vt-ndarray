@@ -367,7 +367,7 @@ get_allocator() const noexcept
 }
 
 template<typename T, std::size_t N, typename Allocator>
-constexpr vt::ndarray_view<T, N>
+ndarray_view<T, N>
 ndarray<T, N, Allocator>::
 slice(std::size_t offset) noexcept
 {
@@ -375,7 +375,7 @@ slice(std::size_t offset) noexcept
 }
 
 template<typename T, std::size_t N, typename Allocator>
-constexpr vt::ndarray_view<const T, N>
+ndarray_view<const T, N>
 ndarray<T, N, Allocator>::
 slice(std::size_t offset) const noexcept
 {
@@ -383,7 +383,7 @@ slice(std::size_t offset) const noexcept
 }
 
 template<typename T, std::size_t N, typename Allocator>
-constexpr vt::ndarray_view<T, N>
+ndarray_view<T, N>
 ndarray<T, N, Allocator>::
 slice(std::size_t offset, std::size_t count) noexcept
 {
@@ -391,7 +391,7 @@ slice(std::size_t offset, std::size_t count) noexcept
 }
 
 template<typename T, std::size_t N, typename Allocator>
-constexpr vt::ndarray_view<const T, N>
+ndarray_view<const T, N>
 ndarray<T, N, Allocator>::
 slice(std::size_t offset, std::size_t count) const noexcept
 {

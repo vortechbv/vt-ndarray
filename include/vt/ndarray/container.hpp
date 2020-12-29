@@ -131,13 +131,13 @@ public:
     Allocator
     get_allocator() const noexcept;
 
-    constexpr vt::ndarray_view<T, N>
+    ndarray_view<T, N>
     slice(std::size_t offset) noexcept;
-    constexpr vt::ndarray_view<const T, N>
+    ndarray_view<const T, N>
     slice(std::size_t offset) const noexcept;
-    constexpr vt::ndarray_view<T, N>
+    ndarray_view<T, N>
     slice(std::size_t offset, std::size_t count) noexcept;
-    constexpr vt::ndarray_view<const T, N>
+    ndarray_view<const T, N>
     slice(std::size_t offset, std::size_t count) const noexcept;
 
     iterator

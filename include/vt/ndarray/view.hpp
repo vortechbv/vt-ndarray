@@ -72,9 +72,9 @@ public:
     constexpr T*
     data() const noexcept;
 
-    constexpr vt::ndarray_view<T, N>
+    constexpr ndarray_view<T, N>
     slice(std::size_t offset) const noexcept;
-    constexpr vt::ndarray_view<T, N>
+    constexpr ndarray_view<T, N>
     slice(std::size_t offset, std::size_t count) const noexcept;
 
     constexpr iterator
