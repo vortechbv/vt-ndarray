@@ -1,0 +1,115 @@
+name: ci
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-20.04
+            build_type: Debug
+            benchmark: OFF
+            compiler: g++-9
+          - os: ubuntu-20.04
+            build_type: Release
+            benchmark: ON
+            compiler: g++-9
+
+          - os: ubuntu-20.04
+            build_type: Debug
+            benchmark: OFF
+            compiler: clang++-10
+          - os: ubuntu-20.04
+            build_type: Release
+            benchmark: ON
+            compiler: clang++-10
+
+          - os: windows-2019
+            build_type: Debug
+            benchmark: OFF
+            generator: Visual Studio 16 2019
+            arch: Win32
+          - os: windows-2019
+            build_type: Release
+            benchmark: ON
+            generator: Visual Studio 16 2019
+            arch: Win32
+          - os: windows-2019
+            build_type: Debug
+            benchmark: OFF
+            generator: Visual Studio 16 2019
+            arch: x64
+          - os: windows-2019
+            build_type: Release
+            benchmark: ON
+            generator: Visual Studio 16 2019
+            arch: x64
+
+          - os: windows-2019
+            build_type: Debug
+            benchmark: OFF
+            generator: MinGW Makefiles
+          - os: windows-2019
+            build_type: Release
+            benchmark: ON
+            generator: MinGW Makefiles
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: configure-ubuntu
+        if: ${{ contains(matrix.os, 'ubuntu') }}
+        run: >
+          cmake
+          -DCMAKE_CXX_COMPILER=${{ matrix.compiler }}
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          -DVT_ENABLE_BENCHMARKS=${{ matrix.benchmark }}
+          -B ${{ github.workspace }}/build
+          -S ${{ github.workspace }}
+
+      - name: configure-vs
+        if: ${{ contains(matrix.generator, 'Visual Studio') }}
+        run: >
+          cmake
+          -G "${{ matrix.generator }}"
+          -A ${{ matrix.arch }}
+          -DVT_ENABLE_BENCHMARKS=${{ matrix.benchmark }}
+          -B ${{ github.workspace }}/build
+          -S ${{ github.workspace }}
+
+      - name: configure-mingw
+        if: ${{ contains(matrix.generator, 'MinGW') }}
+        run: >
+          cmake
+          -G "${{ matrix.generator }}"
+          -DCMAKE_CXX_COMPILER=g++
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          -DVT_ENABLE_BENCHMARKS=${{ matrix.benchmark }}
+          -B ${{ github.workspace }}/build
+          -S ${{ github.workspace }}
+
+      - name: build
+        run: >
+          cmake
+          --build ${{ github.workspace }}/build
+          --config ${{ matrix.build_type }}
+
+      - name: test-ubuntu
+        if: ${{ contains(matrix.os, 'ubuntu') }}
+        working-directory: ${{ github.workspace }}/build
+        run: ./vt-ndarray-test
+
+      - name: test-vs
+        if: ${{ contains(matrix.generator, 'Visual Studio') }}
+        shell: cmd
+        working-directory: ${{ github.workspace }}/build/${{ matrix.build_type }}
+        run: vt-ndarray-test.exe
+
+      - name: test-mingw
+        if: ${{ contains(matrix.generator, 'MinGW') }}
+        shell: cmd
+        working-directory: ${{ github.workspace }}/build
+        run: vt-ndarray-test.exe

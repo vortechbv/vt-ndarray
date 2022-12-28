@@ -38,6 +38,10 @@ endfunction()
 function(vt_cmake_configure __SRC_DIR __BUILD_DIR)
     cmake_parse_arguments(_ "" "" "FLAGS" ${ARGN})
 
+    if(CMAKE_GENERATOR_PLATFORM)
+        list(APPEND __FLAGS -A ${CMAKE_GENERATOR_PLATFORM})
+    endif()
+
     file(MAKE_DIRECTORY ${__BUILD_DIR})
 
     execute_process(
