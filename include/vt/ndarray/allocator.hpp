@@ -21,7 +21,8 @@
 #ifndef VT_NDARRAY_ALLOCATOR_HPP_
 #define VT_NDARRAY_ALLOCATOR_HPP_
 
-#include <memory>
+#include <cstddef>
+#include <new>
 #include <type_traits>
 
 namespace vt {

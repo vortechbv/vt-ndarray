@@ -22,6 +22,7 @@
 #define VT_NDARRAY_VIEW_HPP_
 
 #include <array>
+#include <cstddef>
 #include <iterator>
 #include <ostream>
 #include <type_traits>

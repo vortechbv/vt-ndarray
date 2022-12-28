@@ -23,7 +23,6 @@
 
 #include <algorithm>
 #include <cassert>
-#include <new>
 
 namespace vt {
 
@@ -122,7 +121,7 @@ operator==(const ndarray_allocator<T1>& lhs, const ndarray_allocator<T2>& rhs)
 noexcept
 {
     // Since the alignment of an allocation must also be specified when
-    // de-allocating, allocators are only interchangable if their alignment
+    // de-allocating, allocators are only interchangeable if their alignment
     // values are equal.
     return lhs.align_val() == rhs.align_val();
 }

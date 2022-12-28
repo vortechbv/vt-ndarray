@@ -25,8 +25,9 @@
 #include <vt/ndarray/view.hpp>
 
 #include <array>
+#include <cstddef>
 #include <initializer_list>
-#include <memory>
+#include <ostream>
 #include <type_traits>
 
 #if __has_include(<memory_resource>)
