@@ -29,6 +29,7 @@ include(vt/Util)
 
 option(VT_ENABLE_TESTING "Build the test-suite" ON)
 option(VT_ENABLE_BENCHMARKS "Build the benchmarks" ON)
+option(VT_ENABLE_INSTALL "Enable installation of header files" ON)
 
 set(
     VT_CATCH_DOWNLOAD_URL
@@ -242,6 +243,8 @@ endif()
 
 ### Install target
 
-install(
-    DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/include/vt"
-    DESTINATION include)
+if(VT_ENABLE_INSTALL)
+    install(
+        DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/include/vt"
+        DESTINATION include)
+endif()
