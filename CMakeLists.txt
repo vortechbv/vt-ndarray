@@ -204,6 +204,8 @@ target_compile_features(
     vt-ndarray
     INTERFACE cxx_std_17)
 
+add_library(vt::ndarray ALIAS vt-ndarray)
+
 
 ### Test target
 
