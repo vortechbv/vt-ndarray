@@ -10,9 +10,9 @@ Getting started
 
 This is a header-only library. To use it, simply add all files under `include` to your include directories. The library uses C++17 features and assumes a C++17 compliant compiler. Compatibility with the following compilers is tested:
 
-- GCC 9.4
-- Clang 10.0
-- MSVC vs2019
+- GCC 14.2
+- Clang 18.1
+- MSVC vs2022
 
 The library provides an array container that allows for N-dimensional indexing:
 

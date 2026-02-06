@@ -9,50 +9,50 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: ubuntu-20.04
+          - os: ubuntu-24.04
             build_type: Debug
             benchmark: OFF
-            compiler: g++-9
-          - os: ubuntu-20.04
+            compiler: g++-14
+          - os: ubuntu-24.04
             build_type: Release
             benchmark: ON
-            compiler: g++-9
+            compiler: g++-14
 
-          - os: ubuntu-20.04
+          - os: ubuntu-24.04
             build_type: Debug
             benchmark: OFF
-            compiler: clang++-10
-          - os: ubuntu-20.04
+            compiler: clang++-18
+          - os: ubuntu-24.04
             build_type: Release
             benchmark: ON
-            compiler: clang++-10
+            compiler: clang++-18
 
-          - os: windows-2019
+          - os: windows-2022
             build_type: Debug
             benchmark: OFF
-            generator: Visual Studio 16 2019
+            generator: Visual Studio 17 2022
             arch: Win32
-          - os: windows-2019
+          - os: windows-2022
             build_type: Release
             benchmark: ON
-            generator: Visual Studio 16 2019
+            generator: Visual Studio 17 2022
             arch: Win32
-          - os: windows-2019
+          - os: windows-2022
             build_type: Debug
             benchmark: OFF
-            generator: Visual Studio 16 2019
+            generator: Visual Studio 17 2022
             arch: x64
-          - os: windows-2019
+          - os: windows-2022
             build_type: Release
             benchmark: ON
-            generator: Visual Studio 16 2019
+            generator: Visual Studio 17 2022
             arch: x64
 
-          - os: windows-2019
+          - os: windows-2022
             build_type: Debug
             benchmark: OFF
             generator: MinGW Makefiles
-          - os: windows-2019
+          - os: windows-2022
             build_type: Release
             benchmark: ON
             generator: MinGW Makefiles

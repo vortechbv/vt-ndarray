@@ -33,23 +33,23 @@ option(VT_ENABLE_INSTALL "Enable installation of header files" ON)
 
 set(
     VT_CATCH_DOWNLOAD_URL
-    "https://github.com/catchorg/Catch2/releases/download/v2.4.0/catch.hpp"
+    "https://github.com/catchorg/Catch2/releases/download/v2.13.9/catch.hpp"
     CACHE
     STRING "Url to the Catch header file.")
 set(
     VT_CATCH_DOWNLOAD_SHA256
-    41522232a2459bb0a078cb1fc8c20c0c082fd762afe2fb54cbb94f1aa538e244
+    27da57c7a06d09be8dd81fab7246b79e7892b6ae7e4e49ba8631f1d5a955e3fc
     CACHE
     STRING "SHA256 hash of the Catch header file.")
 
 set(
     VT_BENCHMARK_DOWNLOAD_URL
-    "https://github.com/google/benchmark/archive/v1.4.1.tar.gz"
+    "https://github.com/google/benchmark/archive/v1.9.5.tar.gz"
     CACHE
     STRING "Url to the Google Benchmark source code zip file.")
 set(
     VT_BENCHMARK_DOWNLOAD_SHA256
-    f8e525db3c42efc9c7f3bc5176a8fa893a9a9920bbd08cef30fb56a51854d60d
+    9631341c82bac4a288bef951f8b26b41f69021794184ece969f8473977eaa340
     CACHE
     STRING "SHA256 hash of the Google Benchmark zip file.")
 
@@ -122,17 +122,17 @@ if(VT_ENABLE_BENCHMARKS)
     file(
         DOWNLOAD
             ${VT_BENCHMARK_DOWNLOAD_URL}
-            "${_THIRDPARTY_DIR}/download/benchmark-1.4.1.tar.gz"
+            "${_THIRDPARTY_DIR}/download/benchmark-1.9.5.tar.gz"
         EXPECTED_HASH SHA256=${VT_BENCHMARK_DOWNLOAD_SHA256}
         INACTIVITY_TIMEOUT 10
         SHOW_PROGRESS)
 
     vt_unzip(
-        "${_THIRDPARTY_DIR}/download/benchmark-1.4.1.tar.gz"
+        "${_THIRDPARTY_DIR}/download/benchmark-1.9.5.tar.gz"
         DEST "${_THIRDPARTY_DIR}/download")
 
     vt_cmake_configure(
-        "${_THIRDPARTY_DIR}/download/benchmark-1.4.1"
+        "${_THIRDPARTY_DIR}/download/benchmark-1.9.5"
         "${_THIRDPARTY_DIR}/build/benchmark"
         FLAGS
             -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
