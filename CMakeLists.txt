@@ -22,21 +22,18 @@ cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
 
 project(vt-ndarray CXX)
 
+include(FetchContent)
+
 ### User options
 
 option(VT_ENABLE_TESTING "Build the test-suite" ON)
 option(VT_ENABLE_INSTALL "Enable installation of header files" ON)
 
 set(
-    VT_CATCH_DOWNLOAD_URL
-    "https://github.com/catchorg/Catch2/releases/download/v2.13.9/catch.hpp"
+    VT_CATCH_GIT_REPOSITORY
+    "https://github.com/catchorg/Catch2.git"
     CACHE
-    STRING "Url to the Catch header file.")
-set(
-    VT_CATCH_DOWNLOAD_SHA256
-    27da57c7a06d09be8dd81fab7246b79e7892b6ae7e4e49ba8631f1d5a955e3fc
-    CACHE
-    STRING "SHA256 hash of the Catch header file.")
+    STRING "Url to the Catch git repository. Can be a local clone.")
 
 
 ### Build type configuration
@@ -51,50 +48,27 @@ if(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
 endif()
 
 
-### Third-party dependencies
-
-set(_THIRDPARTY_DIR "${CMAKE_CURRENT_BINARY_DIR}/thirdparty")
-list(APPEND CMAKE_PREFIX_PATH "${_THIRDPARTY_DIR}")
-
-if(MSVC)
-    # MSVC can't link release libraries with debug libraries, so third-party
-    # libraries will have to be built for the correct build type.
-    if(CMAKE_CONFIGURATION_TYPES)
-        # The build-dir contains multiple build types, so third-party libraries
-        # will need to be build for both debug and release.
-        set(_THIRDPARTY_BUILD_TYPE_ARG)
-        set(_THIRDPARTY_BUILD_TYPES Debug Release)
-    else()
-        # The build dir contains a single build type, so third-party libraries
-        # can be built for that build type.
-        set(_THIRDPARTY_BUILD_TYPE_ARG -DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}")
-        set(_THIRDPARTY_BUILD_TYPES ${CMAKE_BUILD_TYPE})
-    endif()
-else()
-    set(_THIRDPARTY_BUILD_TYPE_ARG "-DCMAKE_BUILD_TYPE=Release")
-    set(_THIRDPARTY_BUILD_TYPES Release)
-endif()
-
-
 ### Catch dependency
 
 if(VT_ENABLE_TESTING)
-    message(STATUS "Installing third-party catch library:")
-    message("----------------------------------------")
+    FetchContent_Declare(
+        Catch2
+        GIT_REPOSITORY ${VT_CATCH_GIT_REPOSITORY}
+        GIT_TAG v2.13.9
+    )
 
-    file(
-        DOWNLOAD
-            ${VT_CATCH_DOWNLOAD_URL}
-            "${_THIRDPARTY_DIR}/include/catch2/catch.hpp"
-        EXPECTED_HASH SHA256=${VT_CATCH_DOWNLOAD_SHA256}
-        INACTIVITY_TIMEOUT 10
-        SHOW_PROGRESS)
+    FetchContent_MakeAvailable(Catch2)
 
-    add_library(Catch2::Catch2 INTERFACE IMPORTED)
+    get_target_property(
+        CATCH2_INCLUDE_DIRS
+        Catch2
+        INTERFACE_INCLUDE_DIRECTORIES
+    )
     set_target_properties(
-        Catch2::Catch2
+        Catch2
         PROPERTIES
-            INTERFACE_INCLUDE_DIRECTORIES "${_THIRDPARTY_DIR}/include")
+            INTERFACE_SYSTEM_INCLUDE_DIRECTORIES "${CATCH2_INCLUDE_DIRS}"
+    )
 endif()
 
 

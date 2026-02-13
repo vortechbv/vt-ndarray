@@ -114,4 +114,4 @@ Compilation of the test suite is not mandatory. You can disable it by adding the
 
 For testing purposes, vt-ndarray uses the Catch2 testing framework. By default, Catch2 will be downloaded from the internet, unless you specified to disable the compilation of the test suite. If the download is not possible, you can specify an alternative download location.
 
-To specify an alternative download location for Catch2, add the `-DVT_CATCH_DOWNLOAD_URL=<url>` and `-DVT_CATCH_DOWNLOAD_SHA256=<hash>` flags when executing CMake. Here `<url>` should lead to the Catch single include header file and `<hash>` must be the SHA256 hash of the header file.
+To specify an alternative download location for Catch2, add the `-DVT_CATCH_GIT_REPOSITORY=<url>` flag when executing CMake. Here `<url>` should lead to the Catch2 Git repository.
