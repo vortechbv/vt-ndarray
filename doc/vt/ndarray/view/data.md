@@ -1,5 +1,5 @@
-vt::ndarray_view::data
-======================
+vt::ndarray::data
+=================
 
 ```c++
 constexpr T*

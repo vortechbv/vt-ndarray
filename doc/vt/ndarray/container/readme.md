@@ -20,7 +20,7 @@ namespace pmr {
 
 The array data is stored contiguously in row-major order.
 
-For externally managed array data, use [ndarray_view](../view/readme.md#top) instead.
+For externally managed array data, use [ndview](../view/readme.md#top) instead.
 
 Template parameters
 -------------------
@@ -35,7 +35,7 @@ Member types
 ------------
 
 Member type            | Definition
----------------------- | -----------------------------------------------------
+---------------------- | -----------------------------------------------
 value_type             | `T`
 allocator_type         | `Allocator`
 size_type              | `std::size_t`
@@ -43,10 +43,10 @@ reference              | `T&`
 const_reference        | `const T&`
 pointer                | `T*`
 const_pointer          | `const T*`
-iterator               | `typename ndarray_view<T, N>::iterator`
-const_iterator         | `typename ndarray_view<T, N>::const_iterator`
-reverse_iterator       | `typename ndarray_view<T, N>::reverse_iterator`
-const_reverse_iterator | `typename ndarray_view<T, N>::const_reverse_iterator`
+iterator               | `typename ndview<T, N>::iterator`
+const_iterator         | `typename ndview<T, N>::const_iterator`
+reverse_iterator       | `typename ndview<T, N>::reverse_iterator`
+const_reverse_iterator | `typename ndview<T, N>::const_reverse_iterator`
 
 Member constant
 ---------------
@@ -59,24 +59,24 @@ Member functions
 ----------------
 
 |||
------------------------------------------------------ | ----------------------
-[(constructor)](constructor.md#top)                   | constructs the array
-[(destructor)](destructor.md#top)                     | destructs the array
-[operator=](assign-operator.md#top)                   | assigns an array
-[operator[]](index-operator.md#top)                   | accesses sub-views or elements
-[operator ndarray_view<br>view<br>cview](view.md#top) | conversion to view
-[element_count](element-count.md#top)                 | returns the total number of elements
-[shape](shape.md#top)                                 | returns the N-dimensional shape
-[reshape](reshape.md#top)                             | obtains a view with a different shape
-[flatten](flatten.md#top)                             | obtains a view with a flattened shape
-[data](data.md#top)                                   | direct access to the underlying array
-[get_allocator](get_allocator.md#top)                 | returns the associated allocator
-[slice](slice.md#top)                                 | obtains a slice-view
-[begin<br>cbegin](begin.md#top)                       | returns an iterator to the beginning
-[end<br>cend](end.md#top)                             | returns an iterator to the end
-[rbegin<br>crbegin](rbegin.md#top)                    | returns a reverse iterator to the beginning
-[rend<br>crend](rend.md#top)                          | returns a reverse iterator to the end
-[swap](swap.md#top)                                   | swaps array contents
+----------------------------------------------- | ----------------------------
+[(constructor)](constructor.md#top)             | constructs the array
+[(destructor)](destructor.md#top)               | destructs the array
+[operator=](assign-operator.md#top)             | assigns an array
+[operator[]](index-operator.md#top)             | accesses sub-views or elements
+[operator ndview<br>view<br>cview](view.md#top) | conversion to view
+[element_count](element-count.md#top)           | returns the total number of elements
+[shape](shape.md#top)                           | returns the N-dimensional shape
+[reshape](reshape.md#top)                       | obtains a view with a different shape
+[flatten](flatten.md#top)                       | obtains a view with a flattened shape
+[data](data.md#top)                             | direct access to the underlying array
+[get_allocator](get_allocator.md#top)           | returns the associated allocator
+[slice](slice.md#top)                           | obtains a slice-view
+[begin<br>cbegin](begin.md#top)                 | returns an iterator to the beginning
+[end<br>cend](end.md#top)                       | returns an iterator to the end
+[rbegin<br>crbegin](rbegin.md#top)              | returns a reverse iterator to the beginning
+[rend<br>crend](rend.md#top)                    | returns a reverse iterator to the end
+[swap](swap.md#top)                             | swaps array contents
 
 Non-member functions
 --------------------

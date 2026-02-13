@@ -1,19 +1,19 @@
-vt::ndarray::operator ndarray_view, vt::ndarray::view
-=====================================================
+vt::ndarray::operator ndview, vt::ndarray::view
+===============================================
 
 ```c++
 // (1)
-operator ndarray_view<T, N>() noexcept;
+operator ndview<T, N>() noexcept;
 // (1)
-operator ndarray_view<const T, N>() const noexcept;
+operator ndview<const T, N>() const noexcept;
 // (2)
-ndarray_view<T, N>
+ndview<T, N>
 view() noexcept;
 // (2)
-ndarray_view<const T, N>
+ndview<const T, N>
 view() const noexcept;
 // (3)
-ndarray_view<const T, N>
+ndview<const T, N>
 cview() const noexcept;
 ```
 

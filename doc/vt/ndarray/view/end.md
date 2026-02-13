@@ -1,5 +1,5 @@
-vt::ndarray_view::end, vt::ndarray_view::cend
-=============================================
+vt::ndview::end, vt::ndview::cend
+=================================
 
 ```c++
 // (1)

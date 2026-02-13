@@ -1,5 +1,5 @@
-operator<<(vt::ndarray_view)
-============================
+operator<<(vt::ndview)
+======================
 
 - Defined in header `<vt/ndarray/view.hpp>`
 - Defined in header `<vt/ndarray.hpp>`
@@ -7,10 +7,10 @@ operator<<(vt::ndarray_view)
 ```c++
 template<typename T, std::size_t N>
 std::ostream&
-operator<<(std::ostream& os, ndarray_view<const T, N> a);
+operator<<(std::ostream& os, ndview<const T, N> a);
 ```
 
-Inserts the formatted data of an `ndarray_view` into the specified output stream.
+Inserts the formatted data of an `ndview` into the specified output stream.
 
 Parameters
 ----------

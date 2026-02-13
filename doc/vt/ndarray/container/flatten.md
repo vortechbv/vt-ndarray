@@ -3,10 +3,10 @@ vt::ndarray::flatten
 
 ```c++
 // (1)
-ndarray_view<T, 1>
+ndview<T, 1>
 flatten() noexcept;
 // (2)
-ndarray_view<const T, 1>
+ndview<const T, 1>
 flatten() const noexcept;
 ```
 
@@ -37,7 +37,7 @@ int main()
         2, 6
     }};
 
-    const vt::ndarray_view<const int, 1> b = A.flatten();
+    const vt::ndview<const int, 1> b = A.flatten();
     assert(b.shape(0) == 8);
     assert(b[0] == 3);
     assert(b[1] == 1);

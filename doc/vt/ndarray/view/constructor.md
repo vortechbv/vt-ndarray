@@ -1,9 +1,9 @@
-vt::ndarray_view::ndarray_view
-==============================
+vt::ndview::ndview
+==================
 
 ```c++
 constexpr
-ndarray_view(const std::array<std::size_t, N>& shape, T* data) noexcept;
+ndview(const std::array<std::size_t, N>& shape, T* data) noexcept;
 ```
 
 Constructs the view for the given shape over the given data.

@@ -47,7 +47,7 @@ int main()
     assert(A[1][1] == 5);
 
     // A single call to operator[] will return a view into a sub-array
-    vt::ndarray_view<const int, 1> A_0 = A[0];
+    vt::ndview<const int, 1> A_0 = A[0];
     assert(A_0[0] == 3);
     assert(A_0[1] == 1);
     assert(A_0[2] == 4);

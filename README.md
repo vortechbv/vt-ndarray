@@ -39,7 +39,7 @@ In many use-cases, array data is managed externally, e.g. by external libraries,
 #include <vt/ndarray.hpp>
 #include <cassert>
 
-static void diag(vt::ndarray_view<int, 2> A, vt::ndarray_view<const int, 1> d)
+static void diag(vt::ndview<int, 2> A, vt::ndview<const int, 1> d)
 {
     const size_t n = d.shape(0);
     for (size_t i = 0; i < n; ++i) {

@@ -1,19 +1,22 @@
-vt::ndarray_view
-================
+vt::ndview
+==========
 
 - Defined in header `<vt/ndarray/view.hpp>`
 - Defined in header `<vt/ndarray.hpp>`
 
 ```c++
 template<typename T, std::size_t N>
-class ndarray_view;
+class ndview;
+// Type alias for backwards compatibility
+template<typename T, std::size_t N>
+using ndarray_view = ndview<T, N>;
 ```
 
 View into N-dimensional array data. It's essentially a pointer-shape pair for externally managed data, providing an N-dimensional `operator[]` interface. The data is assumed to be in row-major order and the view does not take ownership of the data.
 
 For an owning N-dimensional array container, use [ndarray](../container/readme.md#top) instead.
 
-This is a reference type and therefore cheap to copy, i.e. copy-constructing or assigning a view will be a shallow copy. As a reference type, note that `ndarray_view<const T, N>` is similar to `const T*`, while `const ndarray_view<T, N>` is similar to `T* const`.
+This is a reference type and therefore cheap to copy, i.e. copy-constructing or assigning a view will be a shallow copy. As a reference type, note that `ndview<const T, N>` is similar to `const T*`, while `const ndview<T, N>` is similar to `T* const`.
 
 Template parameters
 -------------------
@@ -49,20 +52,20 @@ Member functions
 ----------------
 
 |||
----------------------------------------------- | -------------------------------
-[(constructor)](constructor.md#top)            | constructs a view
-[operator[]](index-operator.md#top)            | accesses sub-views or elements
-[operator ndarray_view](const-operator.md#top) | conversion to const-view
-[element_count](element-count.md#top)          | returns the total number of elements
-[shape](shape.md#top)                          | returns the N-dimensional shape
-[reshape](reshape.md#top)                      | obtains a view with a different shape
-[flatten](flatten.md#top)                      | obtains a view with a flattened shape
-[data](data.md#top)                            | returns a pointer to the first element
-[slice](slice.md#top)                          | obtains a slice-view
-[begin<br>cbegin](begin.md#top)                | returns an iterator to the beginning
-[end<br>cend](end.md#top)                      | returns an iterator to the end
-[rbegin<br>crbegin](rbegin.md#top)             | returns a reverse iterator to the beginning
-[rend<br>crend](rend.md#top)                   | returns a reverse iterator to the end
+---------------------------------------- | -----------------------------------
+[(constructor)](constructor.md#top)      | constructs a view
+[operator[]](index-operator.md#top)      | accesses sub-views or elements
+[operator ndview](const-operator.md#top) | conversion to const-view
+[element_count](element-count.md#top)    | returns the total number of elements
+[shape](shape.md#top)                    | returns the N-dimensional shape
+[reshape](reshape.md#top)                | obtains a view with a different shape
+[flatten](flatten.md#top)                | obtains a view with a flattened shape
+[data](data.md#top)                      | returns a pointer to the first element
+[slice](slice.md#top)                    | obtains a slice-view
+[begin<br>cbegin](begin.md#top)          | returns an iterator to the beginning
+[end<br>cend](end.md#top)                | returns an iterator to the end
+[rbegin<br>crbegin](rbegin.md#top)       | returns a reverse iterator to the beginning
+[rend<br>crend](rend.md#top)             | returns a reverse iterator to the end
 
 Non-member functions
 --------------------
@@ -86,7 +89,7 @@ int main()
     int data[6];
     // Creates a 2-dimensional array view into the data, with 2 rows and 3
     // columns:
-    vt::ndarray_view<int, 2> view{{ 2, 3 }, data};
+    vt::ndview<int, 2> view{{ 2, 3 }, data};
 
     view[0][0] = 3;
     view[0][1] = 1;
@@ -104,9 +107,9 @@ int main()
     }
     std::cout << '\n';
 
-    // The ndarray_view is only a view into the original array, so changing
-    // elements in the view will also change the corresponding elements in the
-    // original array:
+    // The ndview is only a view into the original array, so changing elements
+    // in the view will also change the corresponding elements in the original
+    // array:
     for (int i : data) {
         std::cout << i;
     }

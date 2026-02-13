@@ -3,16 +3,16 @@ vt::ndarray::slice
 
 ```c++
 // (1)
-ndarray_view<T, N>
+ndview<T, N>
 slice(std::size_t offset) noexcept;
 // (2)
-ndarray_view<const T, N>
+ndview<const T, N>
 slice(std::size_t offset) const noexcept;
 // (3)
-ndarray_view<T, N>
+ndview<T, N>
 slice(std::size_t offset, std::size_t count) noexcept;
 // (4)
-ndarray_view<const T, N>
+ndview<const T, N>
 slice(std::size_t offset, std::size_t count) const noexcept;
 ```
 
@@ -56,7 +56,7 @@ int main()
 
     // When slicing a 2D-array, rows outside of the slice will not be in the
     // obtained view
-    vt::ndarray_view<const int, 2> B = A.slice(1, 2);
+    vt::ndview<const int, 2> B = A.slice(1, 2);
     assert(B[0][0] == 4);
     assert(B[0][1] == 1);
     assert(B[1][0] == 5);

@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2020 VORtech b.v.
+// Copyright (c) 2017-2026 VORtech b.v.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,7 @@
 namespace vt {
 
 template<typename T, std::size_t N>
-class ndarray_view {
+class ndview {
     static_assert(N > 0);
 
 public:
@@ -47,13 +47,13 @@ public:
     static constexpr std::size_t dim_count = N;
 
     constexpr
-    ndarray_view(const std::array<std::size_t, N>& shape_, T* data_) noexcept;
+    ndview(const std::array<std::size_t, N>& shape_, T* data_) noexcept;
 
     decltype(auto)
     operator[](std::size_t idx) const noexcept;
 
     constexpr
-    operator ndarray_view<const T, N>() const noexcept;
+    operator ndview<const T, N>() const noexcept;
 
     constexpr std::size_t
     element_count() const noexcept;
@@ -64,21 +64,21 @@ public:
     shape(std::size_t dim) const noexcept;
 
     template<std::size_t M>
-    constexpr ndarray_view<T, M>
+    constexpr ndview<T, M>
     reshape(const std::array<std::size_t, M>& new_shape) const noexcept;
     template<std::size_t M>
-    constexpr ndarray_view<T, M>
+    constexpr ndview<T, M>
     reshape(const std::size_t (&new_shape)[M]) const noexcept;
 
-    constexpr ndarray_view<T, 1>
+    constexpr ndview<T, 1>
     flatten() const noexcept;
 
     constexpr T*
     data() const noexcept;
 
-    constexpr ndarray_view<T, N>
+    constexpr ndview<T, N>
     slice(std::size_t offset) const noexcept;
-    constexpr ndarray_view<T, N>
+    constexpr ndview<T, N>
     slice(std::size_t offset, std::size_t count) const noexcept;
 
     constexpr iterator
@@ -110,11 +110,14 @@ private:
 };
 
 template<typename T, std::size_t N>
-ndarray_view(const std::size_t (&)[N], T*) -> ndarray_view<T, N>;
+using ndarray_view = ndview<T, N>;
+
+template<typename T, std::size_t N>
+ndview(const std::size_t (&)[N], T*) -> ndview<T, N>;
 
 template<typename T, std::size_t N>
 std::ostream&
-operator<<(std::ostream& os, ndarray_view<const T, N> a);
+operator<<(std::ostream& os, ndview<const T, N> a);
 
 } // namespace vt
 

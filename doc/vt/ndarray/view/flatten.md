@@ -1,8 +1,8 @@
-vt::ndarray_view::flatten
-=========================
+vt::ndview::flatten
+===================
 
 ```c++
-constexpr ndarray_view<T, 1>
+constexpr ndview<T, 1>
 flatten() const noexcept;
 ```
 
@@ -29,9 +29,9 @@ int main()
         5, 9,
         2, 6
     };
-    const vt::ndarray_view<const int, 3> A{{ 2, 2, 2 }, A_data};
+    const vt::ndview<const int, 3> A{{ 2, 2, 2 }, A_data};
 
-    const vt::ndarray_view<const int, 1> b = A.flatten();
+    const vt::ndview<const int, 1> b = A.flatten();
     assert(b.shape(0) == 8);
     assert(b[0] == 3);
     assert(b[1] == 1);

@@ -1,14 +1,14 @@
-vt::ndarray_view::reshape
-=========================
+vt::ndview::reshape
+===================
 
 ```c++
 // (1)
 template<std::size_t M>
-constexpr ndarray_view<T, M>
+constexpr ndview<T, M>
 reshape(const std::array<std::size_t, M>& new_shape) const noexcept;
 // (2)
 template<std::size_t M>
-constexpr ndarray_view<T, M>
+constexpr ndview<T, M>
 reshape(const std::size_t (&new_shape)[M]) const noexcept;
 ```
 
@@ -41,13 +41,13 @@ Example
 int main()
 {
     const int A_data[] = { 3, 1, 4, 1 };
-    vt::ndarray_view<const int, 2> A{{ 4 }, A_data};
+    vt::ndview<const int, 2> A{{ 4 }, A_data};
     assert(A[0] == 3);
     assert(A[1] == 1);
     assert(A[2] == 4);
     assert(A[3] == 1);
 
-    vt::ndarray_view<const int, 2> B = A.reshape({ 2, 2 });
+    vt::ndview<const int, 2> B = A.reshape({ 2, 2 });
     assert(B[0][0] == 3);
     assert(B[0][1] == 1);
     assert(B[1][0] == 4);

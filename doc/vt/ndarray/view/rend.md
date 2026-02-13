@@ -1,5 +1,5 @@
-vt::ndarray_view::rend, vt::ndarray_view::crend
-===============================================
+vt::ndview::rend, vt::ndview::crend
+===================================
 
 ```c++
 // (1)

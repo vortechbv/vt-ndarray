@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2020 VORtech b.v.
+// Copyright (c) 2017-2026 VORtech b.v.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -249,20 +249,20 @@ operator[](std::size_t idx) noexcept
 
 template<typename T, std::size_t N, typename Allocator>
 ndarray<T, N, Allocator>::
-operator ndarray_view<T, N>() noexcept
+operator ndview<T, N>() noexcept
 {
     return this->view();
 }
 
 template<typename T, std::size_t N, typename Allocator>
 ndarray<T, N, Allocator>::
-operator ndarray_view<const T, N>() const noexcept
+operator ndview<const T, N>() const noexcept
 {
     return this->cview();
 }
 
 template<typename T, std::size_t N, typename Allocator>
-ndarray_view<T, N>
+ndview<T, N>
 ndarray<T, N, Allocator>::
 view() noexcept
 {
@@ -270,7 +270,7 @@ view() noexcept
 }
 
 template<typename T, std::size_t N, typename Allocator>
-ndarray_view<const T, N>
+ndview<const T, N>
 ndarray<T, N, Allocator>::
 view() const noexcept
 {
@@ -278,7 +278,7 @@ view() const noexcept
 }
 
 template<typename T, std::size_t N, typename Allocator>
-ndarray_view<const T, N>
+ndview<const T, N>
 ndarray<T, N, Allocator>::
 cview() const noexcept
 {
@@ -311,7 +311,7 @@ shape(std::size_t dim) const noexcept
 
 template<typename T, std::size_t N, typename Allocator>
 template<std::size_t M>
-ndarray_view<T, M>
+ndview<T, M>
 ndarray<T, N, Allocator>::
 reshape(const std::array<std::size_t, M>& new_shape) noexcept
 {
@@ -320,7 +320,7 @@ reshape(const std::array<std::size_t, M>& new_shape) noexcept
 
 template<typename T, std::size_t N, typename Allocator>
 template<std::size_t M>
-ndarray_view<const T, M>
+ndview<const T, M>
 ndarray<T, N, Allocator>::
 reshape(const std::array<std::size_t, M>& new_shape) const noexcept
 {
@@ -329,7 +329,7 @@ reshape(const std::array<std::size_t, M>& new_shape) const noexcept
 
 template<typename T, std::size_t N, typename Allocator>
 template<std::size_t M>
-ndarray_view<T, M>
+ndview<T, M>
 ndarray<T, N, Allocator>::
 reshape(const std::size_t (&new_shape)[M]) noexcept
 {
@@ -338,7 +338,7 @@ reshape(const std::size_t (&new_shape)[M]) noexcept
 
 template<typename T, std::size_t N, typename Allocator>
 template<std::size_t M>
-ndarray_view<const T, M>
+ndview<const T, M>
 ndarray<T, N, Allocator>::
 reshape(const std::size_t (&new_shape)[M]) const noexcept
 {
@@ -346,7 +346,7 @@ reshape(const std::size_t (&new_shape)[M]) const noexcept
 }
 
 template<typename T, std::size_t N, typename Allocator>
-ndarray_view<T, 1>
+ndview<T, 1>
 ndarray<T, N, Allocator>::
 flatten() noexcept
 {
@@ -354,7 +354,7 @@ flatten() noexcept
 }
 
 template<typename T, std::size_t N, typename Allocator>
-ndarray_view<const T, 1>
+ndview<const T, 1>
 ndarray<T, N, Allocator>::
 flatten() const noexcept
 {
@@ -386,7 +386,7 @@ get_allocator() const noexcept
 }
 
 template<typename T, std::size_t N, typename Allocator>
-ndarray_view<T, N>
+ndview<T, N>
 ndarray<T, N, Allocator>::
 slice(std::size_t offset) noexcept
 {
@@ -394,7 +394,7 @@ slice(std::size_t offset) noexcept
 }
 
 template<typename T, std::size_t N, typename Allocator>
-ndarray_view<const T, N>
+ndview<const T, N>
 ndarray<T, N, Allocator>::
 slice(std::size_t offset) const noexcept
 {
@@ -402,7 +402,7 @@ slice(std::size_t offset) const noexcept
 }
 
 template<typename T, std::size_t N, typename Allocator>
-ndarray_view<T, N>
+ndview<T, N>
 ndarray<T, N, Allocator>::
 slice(std::size_t offset, std::size_t count) noexcept
 {
@@ -410,7 +410,7 @@ slice(std::size_t offset, std::size_t count) noexcept
 }
 
 template<typename T, std::size_t N, typename Allocator>
-ndarray_view<const T, N>
+ndview<const T, N>
 ndarray<T, N, Allocator>::
 slice(std::size_t offset, std::size_t count) const noexcept
 {
@@ -533,7 +533,7 @@ swap(ndarray<T, N, Allocator>& other) noexcept
 }
 
 template<typename T, std::size_t N, typename Allocator>
-ndarray_view<T, N>
+ndview<T, N>
 ndarray<T, N, Allocator>::
 make_allocated_view(const std::array<std::size_t, N>& shape_)
 {

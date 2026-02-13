@@ -1,15 +1,15 @@
-deduction guides for vt::ndarray_view
-=====================================
+deduction guides for vt::ndview
+===============================
 
 - Defined in header `<vt/ndarray/view.hpp>`
 - Defined in header `<vt/ndarray.hpp>`
 
 ```c++
 template<typename T, std::size_t N>
-ndarray_view(const std::size_t (&)[N], T*) -> ndarray_view<T, N>;
+ndview(const std::size_t (&)[N], T*) -> ndview<T, N>;
 ```
 
-This deduction guide is provided for `ndarray_view` to allow deduction from an array literal as `shape` argument.
+This deduction guide is provided for `ndview` to allow deduction from an array literal as `shape` argument.
 
 Example
 -------
@@ -21,7 +21,7 @@ int main()
 {
     const int data[4] = { 0 };
 
-    // Uses explicit deduction guide to deduce vt::ndarray_view<const int, 2>
-    vt::ndarray_view view{{ 2, 2 }, data};
+    // Uses explicit deduction guide to deduce vt::ndview<const int, 2>
+    vt::ndview view{{ 2, 2 }, data};
 }
 ```

@@ -1,5 +1,5 @@
-vt::ndarray_view::rbegin, vt::ndarray_view::crbegin
-===================================================
+vt::ndview::rbegin, vt::ndview::crbegin
+=======================================
 
 ```c++
 // (1)

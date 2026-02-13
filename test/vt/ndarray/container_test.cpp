@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2020 VORtech b.v.
+// Copyright (c) 2017-2026 VORtech b.v.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -352,7 +352,7 @@ TEST_CASE(
 
     // Explicit integer types for deduction are only required for GCC < 8.0
     constexpr std::size_t n = 2;
-    const vt::ndarray_view<const int, 2> reshaped = a.reshape({ n, n });
+    const vt::ndview<const int, 2> reshaped = a.reshape({ n, n });
 
     REQUIRE(reshaped.shape(0) == n);
     REQUIRE(reshaped.shape(1) == n);
@@ -375,7 +375,7 @@ TEST_CASE(
         2, 6
     }};
 
-    const vt::ndarray_view<const int, 1> flat = a.flatten();
+    const vt::ndview<const int, 1> flat = a.flatten();
 
     REQUIRE(flat.shape(0) == 8);
 
@@ -400,7 +400,7 @@ TEST_CASE(
         2, 6
     }};
 
-    const vt::ndarray_view<const int, 2> slice = a.slice(1, 2);
+    const vt::ndview<const int, 2> slice = a.slice(1, 2);
 
     REQUIRE(slice.shape(0) == 2);
     REQUIRE(slice.shape(1) == 2);

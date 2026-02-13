@@ -26,8 +26,8 @@ using std::size_t;
 
 static void
 mul(
-    vt::ndarray_view<const float, 2> A, vt::ndarray_view<const float, 2> B,
-    vt::ndarray_view<float, 2> C)
+    vt::ndview<const float, 2> A, vt::ndview<const float, 2> B,
+    vt::ndview<float, 2> C)
 {
     assert(A.shape(0) == C.shape(0));
     assert(A.shape(1) == B.shape(0));
@@ -90,7 +90,7 @@ TEST_CASE("Benchmark naive matrix multiplication", "[ndarray][!benchmark]") {
     const vt::ndarray<float, 2> B{{ n, n }};
     vt::ndarray<float, 2> C{{ n, n }};
 
-    BENCHMARK("Using vt::ndarray_view") {
+    BENCHMARK("Using vt::ndview") {
         mul(A.view(), B.view(), C.view());
     };
 

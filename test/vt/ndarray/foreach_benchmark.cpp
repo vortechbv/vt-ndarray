@@ -25,7 +25,7 @@
 using std::size_t;
 
 static float
-sum(vt::ndarray_view<const float, 1> x)
+sum(vt::ndview<const float, 1> x)
 {
     const size_t n = x.shape(0);
 
@@ -38,7 +38,7 @@ sum(vt::ndarray_view<const float, 1> x)
 }
 
 static float
-sum(vt::ndarray_view<const float, 2> x)
+sum(vt::ndview<const float, 2> x)
 {
     const size_t n = x.shape(0);
     const size_t m = x.shape(1);
@@ -54,7 +54,7 @@ sum(vt::ndarray_view<const float, 2> x)
 }
 
 static float
-sum(vt::ndarray_view<const float, 3> x)
+sum(vt::ndview<const float, 3> x)
 {
     const size_t n = x.shape(0);
     const size_t m = x.shape(1);
@@ -122,7 +122,7 @@ sum(const vt::ndarray<float, 3>& x)
 
 template<size_t N>
 static float
-iter_sum(vt::ndarray_view<const float, N> x)
+iter_sum(vt::ndview<const float, N> x)
 {
     float sum_x = 0.0f;
     for (float elem : x) {
@@ -138,7 +138,7 @@ TEST_CASE("Benchmark sum", "[ndarray][!benchmark]") {
     SECTION("1D") {
         const vt::ndarray<float, 1> x{{ n }};
 
-        BENCHMARK("Using vt::ndarray_view") {
+        BENCHMARK("Using vt::ndview") {
             return sum(x.view());
         };
 
@@ -154,7 +154,7 @@ TEST_CASE("Benchmark sum", "[ndarray][!benchmark]") {
     SECTION("2D") {
         const vt::ndarray<float, 2> x{{ n, n }};
 
-        BENCHMARK("Using vt::ndarray_view") {
+        BENCHMARK("Using vt::ndview") {
             return sum(x.view());
         };
 
@@ -170,7 +170,7 @@ TEST_CASE("Benchmark sum", "[ndarray][!benchmark]") {
     SECTION("3D") {
         const vt::ndarray<float, 3> x{{ n, n, n }};
 
-        BENCHMARK("Using vt::ndarray_view") {
+        BENCHMARK("Using vt::ndview") {
             return sum(x.view());
         };
 

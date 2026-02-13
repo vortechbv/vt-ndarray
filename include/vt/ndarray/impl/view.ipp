@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2020 VORtech b.v.
+// Copyright (c) 2017-2026 VORtech b.v.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -60,15 +60,15 @@ to_array(const std::size_t (&shape)[N]) noexcept
 
 template<typename T, std::size_t N>
 constexpr
-ndarray_view<T, N>::
-ndarray_view(const std::array<std::size_t, N>& shape_, T* data_) noexcept :
+ndview<T, N>::
+ndview(const std::array<std::size_t, N>& shape_, T* data_) noexcept :
     _shape{shape_}, _data{data_}
 {
 }
 
 template<typename T, std::size_t N>
 decltype(auto)
-ndarray_view<T, N>::
+ndview<T, N>::
 operator[](std::size_t idx) const noexcept
 {
     assert(idx < _shape[0]);
@@ -76,7 +76,7 @@ operator[](std::size_t idx) const noexcept
     if constexpr (N > 1) {
         const std::array<std::size_t, N - 1> subshape_ = this->subshape();
 
-        return ndarray_view<T, N - 1>{
+        return ndview<T, N - 1>{
             subshape_, _data + idx * detail::count_elements(subshape_)};
     } else {
         return _data[idx];
@@ -85,15 +85,15 @@ operator[](std::size_t idx) const noexcept
 
 template<typename T, std::size_t N>
 constexpr
-ndarray_view<T, N>::
-operator ndarray_view<const T, N>() const noexcept
+ndview<T, N>::
+operator ndview<const T, N>() const noexcept
 {
     return { _shape, _data };
 }
 
 template<typename T, std::size_t N>
 constexpr std::size_t
-ndarray_view<T, N>::
+ndview<T, N>::
 element_count() const noexcept
 {
     return detail::count_elements(_shape);
@@ -101,7 +101,7 @@ element_count() const noexcept
 
 template<typename T, std::size_t N>
 constexpr const std::array<std::size_t, N>&
-ndarray_view<T, N>::
+ndview<T, N>::
 shape() const noexcept
 {
     return _shape;
@@ -109,7 +109,7 @@ shape() const noexcept
 
 template<typename T, std::size_t N>
 constexpr std::size_t
-ndarray_view<T, N>::
+ndview<T, N>::
 shape(std::size_t dim) const noexcept
 {
     assert(dim < N);
@@ -119,8 +119,8 @@ shape(std::size_t dim) const noexcept
 
 template<typename T, std::size_t N>
 template<std::size_t M>
-constexpr ndarray_view<T, M>
-ndarray_view<T, N>::
+constexpr ndview<T, M>
+ndview<T, N>::
 reshape(const std::array<std::size_t, M>& new_shape) const noexcept
 {
     assert(detail::count_elements(new_shape) == this->element_count());
@@ -130,16 +130,16 @@ reshape(const std::array<std::size_t, M>& new_shape) const noexcept
 
 template<typename T, std::size_t N>
 template<std::size_t M>
-constexpr ndarray_view<T, M>
-ndarray_view<T, N>::
+constexpr ndview<T, M>
+ndview<T, N>::
 reshape(const std::size_t (&new_shape)[M]) const noexcept
 {
     return this->reshape(detail::to_array(new_shape));
 }
 
 template<typename T, std::size_t N>
-constexpr ndarray_view<T, 1>
-ndarray_view<T, N>::
+constexpr ndview<T, 1>
+ndview<T, N>::
 flatten() const noexcept
 {
     return { { this->element_count() }, this->data() };
@@ -147,23 +147,23 @@ flatten() const noexcept
 
 template<typename T, std::size_t N>
 constexpr T*
-ndarray_view<T, N>::
+ndview<T, N>::
 data() const noexcept
 {
     return _data;
 }
 
 template<typename T, std::size_t N>
-constexpr ndarray_view<T, N>
-ndarray_view<T, N>::
+constexpr ndview<T, N>
+ndview<T, N>::
 slice(std::size_t offset) const noexcept
 {
     return this->slice(offset, _shape[0] - offset);
 }
 
 template<typename T, std::size_t N>
-constexpr ndarray_view<T, N>
-ndarray_view<T, N>::
+constexpr ndview<T, N>
+ndview<T, N>::
 slice(std::size_t offset, std::size_t count) const noexcept
 {
     assert(offset <= _shape[0]);
@@ -172,73 +172,73 @@ slice(std::size_t offset, std::size_t count) const noexcept
     if constexpr (N > 1) {
         auto slice_shape = _shape;
         slice_shape[0] = count;
-        return ndarray_view<T, N>{
+        return ndview<T, N>{
             slice_shape,
             _data + offset * detail::count_elements(this->subshape())};
     } else {
-        return ndarray_view<T, 1>{{ count }, _data + offset};
+        return ndview<T, 1>{{ count }, _data + offset};
     }
 }
 
 template<typename T, std::size_t N>
-constexpr typename ndarray_view<T, N>::iterator
-ndarray_view<T, N>::
+constexpr typename ndview<T, N>::iterator
+ndview<T, N>::
 begin() const noexcept
 {
     return _data;
 }
 
 template<typename T, std::size_t N>
-constexpr typename ndarray_view<T, N>::const_iterator
-ndarray_view<T, N>::
+constexpr typename ndview<T, N>::const_iterator
+ndview<T, N>::
 cbegin() const noexcept
 {
     return _data;
 }
 
 template<typename T, std::size_t N>
-constexpr typename ndarray_view<T, N>::iterator
-ndarray_view<T, N>::
+constexpr typename ndview<T, N>::iterator
+ndview<T, N>::
 end() const noexcept
 {
     return _data + this->element_count();
 }
 
 template<typename T, std::size_t N>
-constexpr typename ndarray_view<T, N>::const_iterator
-ndarray_view<T, N>::
+constexpr typename ndview<T, N>::const_iterator
+ndview<T, N>::
 cend() const noexcept
 {
     return _data + this->element_count();
 }
 
 template<typename T, std::size_t N>
-constexpr typename ndarray_view<T, N>::reverse_iterator
-ndarray_view<T, N>::
+constexpr typename ndview<T, N>::reverse_iterator
+ndview<T, N>::
 rbegin() const noexcept
 {
     return reverse_iterator{this->end()};
 }
 
 template<typename T, std::size_t N>
-constexpr typename ndarray_view<T, N>::const_reverse_iterator
-ndarray_view<T, N>::
+constexpr typename ndview<T, N>::const_reverse_iterator
+ndview<T, N>::
 crbegin() const noexcept
 {
     return const_reverse_iterator{this->cend()};
 }
 
 template<typename T, std::size_t N>
-constexpr typename ndarray_view<T, N>::reverse_iterator
-ndarray_view<T, N>::
+constexpr typename ndview<T, N>::reverse_iterator
+ndview<T, N>::
 rend() const noexcept
 {
     return reverse_iterator{this->begin()};
 }
 
 template<typename T, std::size_t N>
-constexpr typename ndarray_view<T, N>::const_reverse_iterator
-ndarray_view<T, N>::
+constexpr typename ndview<T, N>::const_reverse_iterator
+ndview<T, N>::
 crend() const noexcept
 {
     return const_reverse_iterator{this->cbegin()};
@@ -246,7 +246,7 @@ crend() const noexcept
 
 template<typename T, std::size_t N>
 std::array<std::size_t, N - 1>
-ndarray_view<T, N>::
+ndview<T, N>::
 subshape() const noexcept
 {
     std::array<std::size_t, N - 1> subshape_;
@@ -259,7 +259,7 @@ subshape() const noexcept
 
 template<typename T, std::size_t N>
 std::ostream&
-operator<<(std::ostream& os, ndarray_view<const T, N> a)
+operator<<(std::ostream& os, ndview<const T, N> a)
 {
     const std::size_t n = a.shape(0);
 

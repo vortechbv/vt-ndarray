@@ -1,5 +1,5 @@
-vt::ndarray_view::element_count
-===============================
+vt::ndview::element_count
+=========================
 
 ```c++
 constexpr std::size_t
