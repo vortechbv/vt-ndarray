@@ -70,7 +70,7 @@ A reference section containing documentation of the API and further usage exampl
 For maintainers
 ---------------
 
-To build the accompanying test suite and benchmarks, you will need CMake 3.8 or newer. Instructions follow below.
+To build the accompanying test suite, you will need CMake 3.8 or newer. Instructions follow below.
 
 ### Building
 
@@ -94,7 +94,7 @@ You can run the test suite by executing `vt-ndarray-test`/`vt-ndarray-test.exe`.
 
 ### Benchmarks
 
-Benchmarks are included for measuring the overhead of the N-dimensional array classes compared to raw pointers. You can run them by executing `vt-ndarray-benchmark`/`vt-ndarray-benchmark.exe`. Run with `--help` for more options.
+Benchmarks are included for measuring the overhead of the N-dimensional array classes compared to raw pointers. You can run them by executing `vt-ndarray-test [!benchmark]`/`vt-ndarray-test.exe [!benchmark]`. Run with `--help` for more options.
 
 ### Options
 
@@ -108,12 +108,10 @@ The available build types are: `Debug` and `Release`.
 
 #### Optional compilation
 
-Compilation of the test suite and benchmarks is not mandatory. You can disable either by adding the `-DVT_ENABLE_TESTING=OFF` and/or `-DVT_ENABLE_BENCHMARKS=OFF` flags when executing CMake.
+Compilation of the test suite is not mandatory. You can disable it by adding the `-DVT_ENABLE_TESTING=OFF` flag when executing CMake.
 
 #### External Libraries
 
-For testing purposes, vt-ndarray uses the Catch testing framework and Google Benchmark library. By default, Catch and Benchmark will be downloaded from the internet, unless you specified to disable the compilation of the test suite or benchmarks. If the download is not possible, you can specify an alternative download location.
+For testing purposes, vt-ndarray uses the Catch2 testing framework. By default, Catch2 will be downloaded from the internet, unless you specified to disable the compilation of the test suite. If the download is not possible, you can specify an alternative download location.
 
-To specify an alternative download location for Catch, add the `-DVT_CATCH_DOWNLOAD_URL=<url>` and `-DVT_CATCH_DOWNLOAD_SHA256=<hash>` flags when executing CMake. Here `<url>` should lead to the Catch single include header file and `<hash>` must be the SHA256 hash of the header file.
-
-To specify an alternative download location for Benchmark, add the `-DVT_BENCHMARK_DOWNLOAD_URL=<url>` and `-DVT_BENCHMARK_DOWNLOAD_SHA256=<hash>` flags when executing CMake. Here `<url>` should lead to the Benchmark source-code zip file and `<hash>` must be the SHA256 hash of the zip file.
+To specify an alternative download location for Catch2, add the `-DVT_CATCH_DOWNLOAD_URL=<url>` and `-DVT_CATCH_DOWNLOAD_SHA256=<hash>` flags when executing CMake. Here `<url>` should lead to the Catch single include header file and `<hash>` must be the SHA256 hash of the header file.
