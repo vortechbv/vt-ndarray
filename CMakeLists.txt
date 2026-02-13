@@ -1,4 +1,4 @@
-# Copyright (c) 2017-2018 VORtech b.v.
+# Copyright (c) 2017-2026 VORtech b.v.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -22,13 +22,9 @@ cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
 
 project(vt-ndarray CXX)
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/tools/cmake")
-include(vt/Util)
-
 ### User options
 
 option(VT_ENABLE_TESTING "Build the test-suite" ON)
-option(VT_ENABLE_BENCHMARKS "Build the benchmarks" ON)
 option(VT_ENABLE_INSTALL "Enable installation of header files" ON)
 
 set(
@@ -41,17 +37,6 @@ set(
     27da57c7a06d09be8dd81fab7246b79e7892b6ae7e4e49ba8631f1d5a955e3fc
     CACHE
     STRING "SHA256 hash of the Catch header file.")
-
-set(
-    VT_BENCHMARK_DOWNLOAD_URL
-    "https://github.com/google/benchmark/archive/v1.9.5.tar.gz"
-    CACHE
-    STRING "Url to the Google Benchmark source code zip file.")
-set(
-    VT_BENCHMARK_DOWNLOAD_SHA256
-    9631341c82bac4a288bef951f8b26b41f69021794184ece969f8473977eaa340
-    CACHE
-    STRING "SHA256 hash of the Google Benchmark zip file.")
 
 
 ### Build type configuration
@@ -113,47 +98,6 @@ if(VT_ENABLE_TESTING)
 endif()
 
 
-### Benchmark dependency
-
-if(VT_ENABLE_BENCHMARKS)
-    message(STATUS "Installing third-party benchmark library:")
-    message("--------------------------------------------")
-
-    file(
-        DOWNLOAD
-            ${VT_BENCHMARK_DOWNLOAD_URL}
-            "${_THIRDPARTY_DIR}/download/benchmark-1.9.5.tar.gz"
-        EXPECTED_HASH SHA256=${VT_BENCHMARK_DOWNLOAD_SHA256}
-        INACTIVITY_TIMEOUT 10
-        SHOW_PROGRESS)
-
-    vt_unzip(
-        "${_THIRDPARTY_DIR}/download/benchmark-1.9.5.tar.gz"
-        DEST "${_THIRDPARTY_DIR}/download")
-
-    vt_cmake_configure(
-        "${_THIRDPARTY_DIR}/download/benchmark-1.9.5"
-        "${_THIRDPARTY_DIR}/build/benchmark"
-        FLAGS
-            -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
-            -DCMAKE_INSTALL_PREFIX=${_THIRDPARTY_DIR}
-            -DCMAKE_DEBUG_POSTFIX=d
-            ${_THIRDPARTY_BUILD_TYPE_ARG}
-            -DBENCHMARK_ENABLE_GTEST_TESTS=OFF
-            -DBENCHMARK_ENABLE_TESTING=OFF)
-
-    foreach(_BUILD_TYPE IN LISTS _THIRDPARTY_BUILD_TYPES)
-        vt_cmake_build(
-            "${_THIRDPARTY_DIR}/build/benchmark"
-            FLAGS
-                --config ${_BUILD_TYPE}
-                --target install)
-    endforeach()
-
-    find_package(benchmark REQUIRED CONFIG)
-endif()
-
-
 ### Compile options
 
 set(
@@ -181,10 +125,6 @@ set(
     -Wno-c++98-compat-pedantic
     -Wno-missing-braces
     -Wno-padded)
-set(
-    VT_NDARRAY_BENCHMARK_Clang_COMPILE_OPTIONS
-    # Google Benchmark makes heavy use of global constructors
-    -Wno-global-constructors)
 
 set(
     VT_NDARRAY_MSVC_COMPILE_OPTIONS
@@ -214,6 +154,8 @@ if(VT_ENABLE_TESTING)
         vt-ndarray-test
         "${CMAKE_CURRENT_LIST_DIR}/test/vt/ndarray/allocator_test.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/test/vt/ndarray/container_test.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/test/vt/ndarray/foreach_benchmark.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/test/vt/ndarray/matrix_mul_benchmark.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/test/vt/ndarray/test_main.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/test/vt/ndarray/view_test.cpp")
     target_link_libraries(
@@ -222,24 +164,9 @@ if(VT_ENABLE_TESTING)
     target_compile_options(
         vt-ndarray-test
         PRIVATE ${VT_NDARRAY_${CMAKE_CXX_COMPILER_ID}_COMPILE_OPTIONS})
-endif()
-
-
-### Benchmark target
-
-if(VT_ENABLE_BENCHMARKS)
-    add_executable(
-        vt-ndarray-benchmark
-        "${CMAKE_CURRENT_LIST_DIR}/benchmark/vt/ndarray/foreach_benchmark.cpp"
-        "${CMAKE_CURRENT_LIST_DIR}/benchmark/vt/ndarray/matrix_mul_benchmark.cpp")
-    target_link_libraries(
-        vt-ndarray-benchmark
-        vt-ndarray benchmark::benchmark_main)
-    target_compile_options(
-        vt-ndarray-benchmark
-        PRIVATE
-            ${VT_NDARRAY_${CMAKE_CXX_COMPILER_ID}_COMPILE_OPTIONS}
-            ${VT_NDARRAY_BENCHMARK_${CMAKE_CXX_COMPILER_ID}_COMPILE_OPTIONS})
+    target_compile_definitions(
+        vt-ndarray-test
+        PRIVATE CATCH_CONFIG_ENABLE_BENCHMARKING)
 endif()
 
 

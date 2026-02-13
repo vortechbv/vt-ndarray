@@ -1,4 +1,4 @@
-// Copyright (c) 2018 VORtech b.v.
+// Copyright (c) 2018-2026 VORtech b.v.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,8 +20,7 @@
 
 #include <vt/ndarray.hpp>
 
-#include <benchmark/benchmark.h>
-#include <cassert>
+#include <catch2/catch.hpp>
 
 using std::size_t;
 
@@ -84,44 +83,22 @@ mul(size_t n, size_t m, size_t p, const float* A, const float* B, float* C)
     }
 }
 
-static void
-BM_naive_matrix_mul_ndarray_view(benchmark::State& state)
-{
-    const size_t n = size_t(state.range(0));
+TEST_CASE("Benchmark naive matrix multiplication", "[ndarray][!benchmark]") {
+    const size_t n = GENERATE(8, 64, 512, 1024);
+
     const vt::ndarray<float, 2> A{{ n, n }};
     const vt::ndarray<float, 2> B{{ n, n }};
     vt::ndarray<float, 2> C{{ n, n }};
 
-    for (auto _ : state) {
+    BENCHMARK("Using vt::ndarray_view") {
         mul(A.view(), B.view(), C.view());
-    }
-}
-BENCHMARK(BM_naive_matrix_mul_ndarray_view)->Range(8, 1024);
+    };
 
-static void
-BM_naive_matrix_mul_ndarray(benchmark::State& state)
-{
-    const size_t n = size_t(state.range(0));
-    const vt::ndarray<float, 2> A{{ n, n }};
-    const vt::ndarray<float, 2> B{{ n, n }};
-    vt::ndarray<float, 2> C{{ n, n }};
-
-    for (auto _ : state) {
+    BENCHMARK("Using vt::ndarray") {
         mul(A, B, C);
-    }
-}
-BENCHMARK(BM_naive_matrix_mul_ndarray)->Range(8, 1024);
+    };
 
-static void
-BM_naive_matrix_mul_pointers(benchmark::State& state)
-{
-    const size_t n = size_t(state.range(0));
-    const vt::ndarray<float, 2> A{{ n, n }};
-    const vt::ndarray<float, 2> B{{ n, n }};
-    vt::ndarray<float, 2> C{{ n, n }};
-
-    for (auto _ : state) {
+    BENCHMARK("Using pointers") {
         mul(n, n, n, A.data(), B.data(), C.data());
-    }
+    };
 }
-BENCHMARK(BM_naive_matrix_mul_pointers)->Range(8, 1024);

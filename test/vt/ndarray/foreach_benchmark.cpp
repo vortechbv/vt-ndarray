@@ -1,4 +1,4 @@
-// Copyright (c) 2018 VORtech b.v.
+// Copyright (c) 2018-2026 VORtech b.v.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,8 +20,7 @@
 
 #include <vt/ndarray.hpp>
 
-#include <benchmark/benchmark.h>
-#include <cassert>
+#include <catch2/catch.hpp>
 
 using std::size_t;
 
@@ -133,110 +132,54 @@ iter_sum(vt::ndarray_view<const float, N> x)
     return sum_x;
 }
 
-static void
-BM_sum_1d_ndarray_view(benchmark::State& state)
-{
-    const size_t n = size_t(state.range(0));
-    const vt::ndarray<float, 1> x{{ n }};
+TEST_CASE("Benchmark sum", "[ndarray][!benchmark]") {
+    const size_t n = GENERATE(8, 64, 512, 1024);
 
-    for (auto _ : state) {
-        benchmark::DoNotOptimize(sum(x.view()));
+    SECTION("1D") {
+        const vt::ndarray<float, 1> x{{ n }};
+
+        BENCHMARK("Using vt::ndarray_view") {
+            return sum(x.view());
+        };
+
+        BENCHMARK("Using vt::ndarray") {
+            return sum(x);
+        };
+
+        BENCHMARK("Using iterators") {
+            return iter_sum<1>(x.view());
+        };
+    }
+
+    SECTION("2D") {
+        const vt::ndarray<float, 2> x{{ n, n }};
+
+        BENCHMARK("Using vt::ndarray_view") {
+            return sum(x.view());
+        };
+
+        BENCHMARK("Using vt::ndarray") {
+            return sum(x);
+        };
+
+        BENCHMARK("Using iterators") {
+            return iter_sum<2>(x.view());
+        };
+    }
+
+    SECTION("3D") {
+        const vt::ndarray<float, 3> x{{ n, n, n }};
+
+        BENCHMARK("Using vt::ndarray_view") {
+            return sum(x.view());
+        };
+
+        BENCHMARK("Using vt::ndarray") {
+            return sum(x);
+        };
+
+        BENCHMARK("Using iterators") {
+            return iter_sum<3>(x.view());
+        };
     }
 }
-BENCHMARK(BM_sum_1d_ndarray_view)->Range(8, 1024);
-
-static void
-BM_sum_2d_ndarray_view(benchmark::State& state)
-{
-    const size_t n = size_t(state.range(0));
-    const vt::ndarray<float, 2> x{{ n, n }};
-
-    for (auto _ : state) {
-        benchmark::DoNotOptimize(sum(x.view()));
-    }
-}
-BENCHMARK(BM_sum_2d_ndarray_view)->Range(8, 1024);
-
-static void
-BM_sum_3d_ndarray_view(benchmark::State& state)
-{
-    const size_t n = size_t(state.range(0));
-    const vt::ndarray<float, 3> x{{ n, n, n }};
-
-    for (auto _ : state) {
-        benchmark::DoNotOptimize(sum(x.view()));
-    }
-}
-BENCHMARK(BM_sum_3d_ndarray_view)->Range(8, 1024);
-
-static void
-BM_sum_1d_ndarray(benchmark::State& state)
-{
-    const size_t n = size_t(state.range(0));
-    const vt::ndarray<float, 1> x{{ n }};
-
-    for (auto _ : state) {
-        benchmark::DoNotOptimize(sum(x));
-    }
-}
-BENCHMARK(BM_sum_1d_ndarray)->Range(8, 1024);
-
-static void
-BM_sum_2d_ndarray(benchmark::State& state)
-{
-    const size_t n = size_t(state.range(0));
-    const vt::ndarray<float, 2> x{{ n, n }};
-
-    for (auto _ : state) {
-        benchmark::DoNotOptimize(sum(x));
-    }
-}
-BENCHMARK(BM_sum_2d_ndarray)->Range(8, 1024);
-
-static void
-BM_sum_3d_ndarray(benchmark::State& state)
-{
-    const size_t n = size_t(state.range(0));
-    const vt::ndarray<float, 3> x{{ n, n, n }};
-
-    for (auto _ : state) {
-        benchmark::DoNotOptimize(sum(x));
-    }
-}
-BENCHMARK(BM_sum_3d_ndarray)->Range(8, 1024);
-
-static void
-BM_sum_1d_iterators(benchmark::State& state)
-{
-    const size_t n = size_t(state.range(0));
-    const vt::ndarray<float, 1> x{{ n }};
-
-    for (auto _ : state) {
-        benchmark::DoNotOptimize(iter_sum<1>(x));
-    }
-}
-BENCHMARK(BM_sum_1d_iterators)->Range(8, 1024);
-
-static void
-BM_sum_2d_iterators(benchmark::State& state)
-{
-    const size_t n = size_t(state.range(0));
-    const vt::ndarray<float, 2> x{{ n, n }};
-
-    for (auto _ : state) {
-        benchmark::DoNotOptimize(iter_sum<2>(x));
-    }
-}
-BENCHMARK(BM_sum_2d_iterators)->Range(8, 1024);
-
-static void
-BM_sum_3d_iterators(benchmark::State& state)
-{
-    const size_t n = size_t(state.range(0));
-    const vt::ndarray<float, 3> x{{ n, n, n }};
-
-    for (auto _ : state) {
-        benchmark::DoNotOptimize(iter_sum<3>(x));
-    }
-}
-BENCHMARK(BM_sum_3d_iterators)->Range(8, 1024);
