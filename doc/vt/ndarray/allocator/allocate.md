@@ -2,8 +2,7 @@ vt::ndarray_allocator::allocate
 ===============================
 
 ```c++
-[[nodiscard]] T*
-allocate(std::size_t n) const;
+[[nodiscard]] T* allocate(std::size_t n) const;
 ```
 
 Allocates `n * sizeof(T)` bytes of uninitialized storage, aligned to [align_val()](align-val.md#top).

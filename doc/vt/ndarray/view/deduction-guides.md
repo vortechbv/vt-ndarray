@@ -17,8 +17,7 @@ Example
 ```c++
 #include <vt/ndarray/view.hpp>
 
-int main()
-{
+int main() {
     const int data[4] = { 0 };
 
     // Uses explicit deduction guide to deduce vt::ndview<const int, 2>

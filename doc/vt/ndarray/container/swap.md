@@ -2,8 +2,7 @@ vt::ndarray::swap
 =================
 
 ```c++
-void
-swap(ndarray& other) noexcept;
+void swap(ndarray& other) noexcept;
 ```
 
 Exchanges the shape and contents of the container with those of `other`. Does not invoke any move, copy or swap operations on individual elements.

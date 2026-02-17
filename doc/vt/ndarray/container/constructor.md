@@ -5,28 +5,32 @@ vt::ndarray::ndarray
 // (1)
 ndarray() noexcept(noexcept(Allocator{}));
 // (2)
-explicit
-ndarray(const Allocator& alloc) noexcept;
+explicit ndarray(const Allocator& alloc) noexcept;
 // (3)
-explicit
-ndarray(
+explicit ndarray(
     const std::array<std::size_t, N>& shape,
-    const Allocator& alloc = Allocator{});
+    const Allocator& alloc = Allocator{}
+);
 // (4)
 ndarray(
-    const std::array<std::size_t, N>& shape, const T& value,
-    const Allocator& alloc = Allocator{});
+    const std::array<std::size_t, N>& shape,
+    const T& value,
+    const Allocator& alloc = Allocator{}
+);
 // (5)
 template<typename InputIt>
 ndarray(
     const std::array<std::size_t, N>& shape,
-    InputIt first, InputIt last,
-    const Allocator& alloc = Allocator{});
+    InputIt first,
+    InputIt last,
+    const Allocator& alloc = Allocator{}
+);
 // (6)
 ndarray(
     const std::array<std::size_t, N>& shape,
     std::initializer_list<T> init,
-    const Allocator& alloc = Allocator{});
+    const Allocator& alloc = Allocator{}
+);
 // (7)
 ndarray(const ndarray& other);
 // (8)

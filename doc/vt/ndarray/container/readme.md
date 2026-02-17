@@ -97,8 +97,7 @@ Example
 #include <vt/ndarray/container.hpp>
 #include <iostream>
 
-int main()
-{
+int main() {
     // Creates a 3-dimensional 2-by-3-by-4 array with the specified initial
     // values:
     const vt::ndarray<int, 3> a{{ 2, 3, 4 }, {

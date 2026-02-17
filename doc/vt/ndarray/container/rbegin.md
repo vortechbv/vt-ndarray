@@ -2,12 +2,9 @@ vt::ndarray::rbegin, vt::ndarray::crbegin
 =========================================
 
 ```c++
-reverse_iterator
-rbegin() noexcept;
-const_reverse_iterator
-rbegin() const noexcept;
-const_reverse_iterator
-crbegin() const noexcept;
+reverse_iterator rbegin() noexcept;
+const_reverse_iterator rbegin() const noexcept;
+const_reverse_iterator crbegin() const noexcept;
 ```
 
 Returns a reverse iterator to the first element of the reversed array. It corresponds to the last element of the non-reversed array.

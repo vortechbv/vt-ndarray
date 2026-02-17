@@ -24,9 +24,8 @@
 
 using std::size_t;
 
-static float
-sum(vt::ndview<const float, 1> x)
-{
+
+static float sum(vt::ndview<const float, 1> x) {
     const size_t n = x.shape(0);
 
     float sum_x = 0.0f;
@@ -37,9 +36,8 @@ sum(vt::ndview<const float, 1> x)
     return sum_x;
 }
 
-static float
-sum(vt::ndview<const float, 2> x)
-{
+
+static float sum(vt::ndview<const float, 2> x) {
     const size_t n = x.shape(0);
     const size_t m = x.shape(1);
 
@@ -53,9 +51,8 @@ sum(vt::ndview<const float, 2> x)
     return sum_x;
 }
 
-static float
-sum(vt::ndview<const float, 3> x)
-{
+
+static float sum(vt::ndview<const float, 3> x) {
     const size_t n = x.shape(0);
     const size_t m = x.shape(1);
     const size_t p = x.shape(2);
@@ -72,9 +69,8 @@ sum(vt::ndview<const float, 3> x)
     return sum_x;
 }
 
-static float
-sum(const vt::ndarray<float, 1>& x)
-{
+
+static float sum(const vt::ndarray<float, 1>& x) {
     const size_t n = x.shape(0);
 
     float sum_x = 0.0f;
@@ -85,9 +81,8 @@ sum(const vt::ndarray<float, 1>& x)
     return sum_x;
 }
 
-static float
-sum(const vt::ndarray<float, 2>& x)
-{
+
+static float sum(const vt::ndarray<float, 2>& x) {
     const size_t n = x.shape(0);
     const size_t m = x.shape(1);
 
@@ -101,9 +96,8 @@ sum(const vt::ndarray<float, 2>& x)
     return sum_x;
 }
 
-static float
-sum(const vt::ndarray<float, 3>& x)
-{
+
+static float sum(const vt::ndarray<float, 3>& x) {
     const size_t n = x.shape(0);
     const size_t m = x.shape(1);
     const size_t p = x.shape(2);
@@ -119,11 +113,10 @@ sum(const vt::ndarray<float, 3>& x)
 
     return sum_x;
 }
+
 
 template<size_t N>
-static float
-iter_sum(vt::ndview<const float, N> x)
-{
+static float iter_sum(vt::ndview<const float, N> x) {
     float sum_x = 0.0f;
     for (float elem : x) {
         sum_x += elem;
@@ -131,6 +124,7 @@ iter_sum(vt::ndview<const float, N> x)
 
     return sum_x;
 }
+
 
 TEST_CASE("Benchmark sum", "[ndarray][!benchmark]") {
     const size_t n = GENERATE(8, 64, 512, 1024);

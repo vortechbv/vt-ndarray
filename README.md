@@ -20,8 +20,7 @@ The library provides an array container that allows for N-dimensional indexing:
 #include <vt/ndarray.hpp>
 #include <cassert>
 
-int main()
-{
+int main() {
     // Creates a 2-by-3 array of integers with initial values.
     const vt::ndarray<int, 2> A{{ 2, 3 }, {
         3, 1, 4,
@@ -39,8 +38,7 @@ In many use-cases, array data is managed externally, e.g. by external libraries,
 #include <vt/ndarray.hpp>
 #include <cassert>
 
-static void diag(vt::ndview<int, 2> A, vt::ndview<const int, 1> d)
-{
+static void diag(vt::ndview<int, 2> A, vt::ndview<const int, 1> d) {
     const size_t n = d.shape(0);
     for (size_t i = 0; i < n; ++i) {
         for (size_t j = 0; j < n; ++j) {
@@ -50,8 +48,7 @@ static void diag(vt::ndview<int, 2> A, vt::ndview<const int, 1> d)
     }
 }
 
-int main()
-{
+int main() {
     const vt::ndarray<int, 1> d{{ 3 }, { 1, 2, 3 }};
     int A[9];
 

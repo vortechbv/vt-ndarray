@@ -3,15 +3,12 @@ vt::ndarray_allocator::ndarray_allocator
 
 ```c++
 // (1)
-constexpr
-ndarray_allocator() noexcept;
+constexpr ndarray_allocator() noexcept;
 // (2)
-explicit constexpr
-ndarray_allocator(std::align_val_t align_val) noexcept;
+explicit constexpr ndarray_allocator(std::align_val_t align_val) noexcept;
 // (3)
 template<typename U>
-constexpr
-ndarray_allocator(const ndarray_allocator<U>& other) noexcept;
+constexpr ndarray_allocator(const ndarray_allocator<U>& other) noexcept;
 ```
 
 Constructs the allocator.

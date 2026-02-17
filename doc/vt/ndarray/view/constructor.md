@@ -2,8 +2,7 @@ vt::ndview::ndview
 ==================
 
 ```c++
-constexpr
-ndview(const std::array<std::size_t, N>& shape, T* data) noexcept;
+constexpr ndview(const std::array<std::size_t, N>& shape, T* data) noexcept;
 ```
 
 Constructs the view for the given shape over the given data.

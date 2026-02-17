@@ -3,11 +3,9 @@ vt::ndarray::flatten
 
 ```c++
 // (1)
-ndview<T, 1>
-flatten() noexcept;
+ndview<T, 1> flatten() noexcept;
 // (2)
-ndview<const T, 1>
-flatten() const noexcept;
+ndview<const T, 1> flatten() const noexcept;
 ```
 
 Creates a view into this array with a flattened shape. That is, the newly created view will be 1-dimensional and contains all elements of this array.
@@ -27,8 +25,7 @@ Example
 #include <vt/ndarray/container.hpp>
 #include <cassert>
 
-int main()
-{
+int main() {
     const vt::ndarray<int, 3> A{{ 2, 2, 2 }, {
         3, 1,
         4, 1,

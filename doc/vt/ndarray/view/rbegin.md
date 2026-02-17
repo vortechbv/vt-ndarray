@@ -3,11 +3,9 @@ vt::ndview::rbegin, vt::ndview::crbegin
 
 ```c++
 // (1)
-constexpr reverse_iterator
-rbegin() const noexcept;
+constexpr reverse_iterator rbegin() const noexcept;
 // (2)
-constexpr const_reverse_iterator
-crbegin() const noexcept;
+constexpr const_reverse_iterator crbegin() const noexcept;
 ```
 
 Returns a reverse iterator to the first element of the reversed view. It corresponds to the last element of the non-reversed view.

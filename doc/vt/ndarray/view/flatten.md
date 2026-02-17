@@ -2,8 +2,7 @@ vt::ndview::flatten
 ===================
 
 ```c++
-constexpr ndview<T, 1>
-flatten() const noexcept;
+constexpr ndview<T, 1> flatten() const noexcept;
 ```
 
 Creates a new view into the same array, but with a flattened shape. That is, the newly created view will be 1-dimensional and contains all elements from the original view.

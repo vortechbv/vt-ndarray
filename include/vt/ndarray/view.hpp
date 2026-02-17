@@ -27,6 +27,7 @@
 #include <ostream>
 #include <type_traits>
 
+
 namespace vt {
 
 template<typename T, std::size_t N>
@@ -46,68 +47,58 @@ public:
 
     static constexpr std::size_t dim_count = N;
 
-    constexpr
-    ndview(const std::array<std::size_t, N>& shape_, T* data_) noexcept;
+    constexpr ndview(
+        const std::array<std::size_t, N>& shape_,
+        T* data_
+    ) noexcept;
 
-    decltype(auto)
-    operator[](std::size_t idx) const noexcept;
+    decltype(auto) operator[](std::size_t idx) const noexcept;
 
-    constexpr
-    operator ndview<const T, N>() const noexcept;
+    constexpr operator ndview<const T, N>() const noexcept;
 
-    constexpr std::size_t
-    element_count() const noexcept;
+    constexpr std::size_t element_count() const noexcept;
 
-    constexpr const std::array<std::size_t, N>&
-    shape() const noexcept;
-    constexpr std::size_t
-    shape(std::size_t dim) const noexcept;
+    constexpr const std::array<std::size_t, N>& shape() const noexcept;
+    constexpr std::size_t shape(std::size_t dim) const noexcept;
 
     template<std::size_t M>
-    constexpr ndview<T, M>
-    reshape(const std::array<std::size_t, M>& new_shape) const noexcept;
+    constexpr ndview<T, M> reshape(
+        const std::array<std::size_t, M>& new_shape
+    ) const noexcept;
     template<std::size_t M>
-    constexpr ndview<T, M>
-    reshape(const std::size_t (&new_shape)[M]) const noexcept;
+    constexpr ndview<T, M> reshape(
+        const std::size_t (&new_shape)[M]
+    ) const noexcept;
 
-    constexpr ndview<T, 1>
-    flatten() const noexcept;
+    constexpr ndview<T, 1> flatten() const noexcept;
 
-    constexpr T*
-    data() const noexcept;
+    constexpr T* data() const noexcept;
 
-    constexpr ndview<T, N>
-    slice(std::size_t offset) const noexcept;
-    constexpr ndview<T, N>
-    slice(std::size_t offset, std::size_t count) const noexcept;
+    constexpr ndview<T, N> slice(std::size_t offset) const noexcept;
+    constexpr ndview<T, N> slice(
+        std::size_t offset,
+        std::size_t count
+    ) const noexcept;
 
-    constexpr iterator
-    begin() const noexcept;
-    constexpr const_iterator
-    cbegin() const noexcept;
+    constexpr iterator begin() const noexcept;
+    constexpr const_iterator cbegin() const noexcept;
 
-    constexpr iterator
-    end() const noexcept;
-    constexpr const_iterator
-    cend() const noexcept;
+    constexpr iterator end() const noexcept;
+    constexpr const_iterator cend() const noexcept;
 
-    constexpr reverse_iterator
-    rbegin() const noexcept;
-    constexpr const_reverse_iterator
-    crbegin() const noexcept;
+    constexpr reverse_iterator rbegin() const noexcept;
+    constexpr const_reverse_iterator crbegin() const noexcept;
 
-    constexpr reverse_iterator
-    rend() const noexcept;
-    constexpr const_reverse_iterator
-    crend() const noexcept;
+    constexpr reverse_iterator rend() const noexcept;
+    constexpr const_reverse_iterator crend() const noexcept;
 
 private:
     std::array<std::size_t, N> _shape;
     T* _data;
 
-    std::array<std::size_t, N - 1>
-    subshape() const noexcept;
+    std::array<std::size_t, N - 1> subshape() const noexcept;
 };
+
 
 template<typename T, std::size_t N>
 using ndarray_view = ndview<T, N>;
@@ -116,8 +107,7 @@ template<typename T, std::size_t N>
 ndview(const std::size_t (&)[N], T*) -> ndview<T, N>;
 
 template<typename T, std::size_t N>
-std::ostream&
-operator<<(std::ostream& os, ndview<const T, N> a);
+std::ostream& operator<<(std::ostream& os, ndview<const T, N> a);
 
 } // namespace vt
 

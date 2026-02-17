@@ -4,20 +4,18 @@ vt::ndarray::reshape
 ```c++
 // (1)
 template<std::size_t M>
-ndview<T, M>
-reshape(const std::array<std::size_t, M>& new_shape) noexcept;
+ndview<T, M> reshape(const std::array<std::size_t, M>& new_shape) noexcept;
 // (2)
 template<std::size_t M>
-ndview<const T, M>
-reshape(const std::array<std::size_t, M>& new_shape) const noexcept;
+ndview<const T, M> reshape(
+    const std::array<std::size_t, M>& new_shape
+) const noexcept;
 // (3)
 template<std::size_t M>
-ndview<T, M>
-reshape(const std::size_t (&new_shape)[M]) noexcept;
+ndview<T, M> reshape(const std::size_t (&new_shape)[M]) noexcept;
 // (4)
 template<std::size_t M>
-ndview<const T, M>
-reshape(const std::size_t (&new_shape)[M]) const noexcept;
+ndview<const T, M> reshape(const std::size_t (&new_shape)[M]) const noexcept;
 ```
 
 Creates a view into this array with a different shape. The number of dimensions in the new shape may differ from the original shape.
@@ -48,8 +46,7 @@ Example
 #include <vt/ndarray/container.hpp>
 #include <cassert>
 
-int main()
-{
+int main() {
     const vt::ndarray<int, 2> A{{ 4 }, { 3, 1, 4, 1 }};
     assert(A[0] == 3);
     assert(A[1] == 1);

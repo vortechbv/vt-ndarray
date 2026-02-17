@@ -6,8 +6,7 @@ vt::swap(vt::ndarray)
 
 ```c++
 template<typename T, std::size_t N, typename Allocator>
-void
-swap(ndarray<T, N, Allocator>& a, ndarray<T, N, Allocator>& b) noexcept;
+void swap(ndarray<T, N, Allocator>& a, ndarray<T, N, Allocator>& b) noexcept;
 ```
 
 Swaps the contents of `a` and `b`. Calls `a.swap(b)`.

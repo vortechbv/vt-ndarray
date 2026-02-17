@@ -3,17 +3,13 @@ vt::ndarray::slice
 
 ```c++
 // (1)
-ndview<T, N>
-slice(std::size_t offset) noexcept;
+ndview<T, N> slice(std::size_t offset) noexcept;
 // (2)
-ndview<const T, N>
-slice(std::size_t offset) const noexcept;
+ndview<const T, N> slice(std::size_t offset) const noexcept;
 // (3)
-ndview<T, N>
-slice(std::size_t offset, std::size_t count) noexcept;
+ndview<T, N> slice(std::size_t offset, std::size_t count) noexcept;
 // (4)
-ndview<const T, N>
-slice(std::size_t offset, std::size_t count) const noexcept;
+ndview<const T, N> slice(std::size_t offset, std::size_t count) const noexcept;
 ```
 
 Creates a slice in the first dimension of the array. The shape of the remaining dimensions will remain the same.
@@ -45,8 +41,7 @@ Example
 #include <vt/ndarray/container.hpp>
 #include <cassert>
 
-int main()
-{
+int main() {
     const vt::ndarray<int, 2> A{{ 4, 2 }, {
         3, 1,
         4, 1,

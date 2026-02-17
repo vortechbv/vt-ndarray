@@ -1,4 +1,4 @@
-// Copyright (c) 2018 VORtech b.v.
+// Copyright (c) 2018-2026 VORtech b.v.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,7 @@
 #include <algorithm>
 #include <cassert>
 
+
 namespace vt {
 
 namespace detail {
@@ -39,55 +40,53 @@ inline constexpr std::size_t cache_line_size = VT_CACHE_LINE_SIZE;
 
 } // namespace detail
 
+
 template<typename T>
-constexpr
-ndarray_allocator<T>::
-ndarray_allocator() noexcept :
+constexpr ndarray_allocator<T>::ndarray_allocator(
+) noexcept :
     ndarray_allocator{
-        std::align_val_t{std::max(detail::cache_line_size, alignof(T))}}
+        std::align_val_t{std::max(detail::cache_line_size, alignof(T))}
+    }
 {
 }
 
+
 template<typename T>
-constexpr
-ndarray_allocator<T>::
-ndarray_allocator(std::align_val_t align_val_) noexcept :
-    _align_val(align_val_)
-{
+constexpr ndarray_allocator<T>::ndarray_allocator(
+    std::align_val_t align_val_
+) noexcept : _align_val(align_val_) {
     assert(this->align_val() >= alignof(T));
 }
 
-template<typename T>
-template<typename U>
-constexpr
-ndarray_allocator<T>::
-ndarray_allocator(const ndarray_allocator<U>& other) noexcept :
-    _align_val{std::align_val_t{other.align_val()}}
-{
-}
 
 template<typename T>
-T*
-ndarray_allocator<T>::
-allocate(std::size_t n) const
-{
+template<typename U>
+constexpr ndarray_allocator<T>::ndarray_allocator(
+    const ndarray_allocator<U>& other
+) noexcept : _align_val{std::align_val_t{other.align_val()}} {
+}
+
+
+template<typename T>
+T* ndarray_allocator<T>::allocate(std::size_t n) const {
     return static_cast<T*>(::operator new(n * sizeof(T), _align_val));
 }
 
+
 template<typename T>
-void
-ndarray_allocator<T>::
-deallocate(T* p, std::size_t /* n */) const noexcept
-{
+void ndarray_allocator<T>::deallocate(
+    T* p,
+    std::size_t /* n */
+) const noexcept {
     ::operator delete(p, _align_val);
 }
 
+
 template<typename T>
 template<typename U>
-void
-ndarray_allocator<T>::
-construct(U* p) const noexcept(std::is_nothrow_default_constructible_v<U>)
-{
+void ndarray_allocator<T>::construct(
+    U* p
+) const noexcept(std::is_nothrow_default_constructible_v<U>) {
     if constexpr (std::is_fundamental_v<U>) {
         (void)p;
     } else {
@@ -95,42 +94,42 @@ construct(U* p) const noexcept(std::is_nothrow_default_constructible_v<U>)
     }
 }
 
+
 template<typename T>
 template<typename U>
-void
-ndarray_allocator<T>::
-destroy(U* p) const noexcept(std::is_nothrow_destructible_v<U>)
-{
+void ndarray_allocator<T>::destroy(
+    U* p
+) const noexcept(std::is_nothrow_destructible_v<U>) {
     // Specified manually, since if we let std::allocator_traits specify this
     // function, clang with libstdc++ will generate a loop with subroutine calls
     // for no-op destructors.
     p->~U();
 }
 
+
 template<typename T>
-constexpr std::size_t
-ndarray_allocator<T>::
-align_val() const noexcept
-{
+constexpr std::size_t ndarray_allocator<T>::align_val() const noexcept {
     return static_cast<std::size_t>(_align_val);
 }
 
+
 template<typename T1, typename T2>
-constexpr bool
-operator==(const ndarray_allocator<T1>& lhs, const ndarray_allocator<T2>& rhs)
-noexcept
-{
+constexpr bool operator==(
+    const ndarray_allocator<T1>& lhs,
+    const ndarray_allocator<T2>& rhs
+) noexcept {
     // Since the alignment of an allocation must also be specified when
     // de-allocating, allocators are only interchangeable if their alignment
     // values are equal.
     return lhs.align_val() == rhs.align_val();
 }
 
+
 template<typename T1, typename T2>
-constexpr bool
-operator!=(const ndarray_allocator<T1>& lhs, const ndarray_allocator<T2>& rhs)
-noexcept
-{
+constexpr bool operator!=(
+    const ndarray_allocator<T1>& lhs,
+    const ndarray_allocator<T2>& rhs
+) noexcept {
     return !(lhs == rhs);
 }
 

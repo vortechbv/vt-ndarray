@@ -3,11 +3,9 @@ vt::ndview::shape
 
 ```c++
 // (1)
-constexpr const std::array<std::size_t, N>&
-shape() const noexcept;
+constexpr const std::array<std::size_t, N>& shape() const noexcept;
 // (2)
-constexpr std::size_t
-shape(std::size_t dim) const noexcept;
+constexpr std::size_t shape(std::size_t dim) const noexcept;
 ```
 
 Returns the shape of this view.

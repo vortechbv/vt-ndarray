@@ -3,11 +3,9 @@ vt::ndview::begin, vt::ndview::cbegin
 
 ```c++
 // (1)
-constexpr iterator
-begin() const noexcept;
+constexpr iterator begin() const noexcept;
 // (2)
-constexpr const_iterator
-cbegin() const noexcept;
+constexpr const_iterator cbegin() const noexcept;
 ```
 
 Returns an iterator to the first element in the view.

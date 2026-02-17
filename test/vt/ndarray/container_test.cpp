@@ -24,30 +24,33 @@
 #include <catch2/catch.hpp>
 #include <numeric>
 
+
 TEST_CASE(
     "An empty vt::ndarray can be default constructed without any allocations",
-    "[ndarray][container]")
-{
+    "[ndarray][container]"
+) {
     const vt::ndarray<int, 1> a;
 
     REQUIRE(a.shape(0) == 0);
     REQUIRE(a.data() == nullptr);
 }
 
+
 TEST_CASE(
     "A vt::ndarray can be constructed with a user specified allocator",
-    "[ndarray][container]")
-{
+    "[ndarray][container]"
+) {
     vt::ndarray_allocator<int> alloc{std::align_val_t{16}};
     const vt::ndarray<int, 1> a{alloc};
 
     REQUIRE(a.get_allocator() == alloc);
 }
 
+
 TEST_CASE(
     "A vt::ndarray can be constructed with a shape without zero-initializing",
-    "[ndarray][container]")
-{
+    "[ndarray][container]"
+) {
     const vt::ndarray<int, 2> a{{ 2, 3 }};
 
     REQUIRE(a.shape(0) == 2);
@@ -55,11 +58,12 @@ TEST_CASE(
     REQUIRE(a.data() != nullptr);
 }
 
+
 TEST_CASE(
     "A vt::ndarray of non-trivial types will still have its elements default "
     "constructed",
-    "[ndarray][container]")
-{
+    "[ndarray][container]"
+) {
     const vt::ndarray<std::string, 1> a{{ 4 }};
 
     REQUIRE(a.shape(0) == 4);
@@ -70,10 +74,11 @@ TEST_CASE(
     CHECK(a[3].empty());
 }
 
+
 TEST_CASE(
     "A vt::ndarray with std::allocator as allocator will still zero-initialize",
-    "[ndarray][container]")
-{
+    "[ndarray][container]"
+) {
     const vt::ndarray<int, 1, std::allocator<int>> a{{ 4 }};
 
     REQUIRE(a.shape(0) == 4);
@@ -84,10 +89,11 @@ TEST_CASE(
     CHECK(a[3] == 0);
 }
 
+
 TEST_CASE(
     "A vt::ndarray can be constructed with a default value",
-    "[ndarray][container]")
-{
+    "[ndarray][container]"
+) {
     const vt::ndarray<int, 1> a{{ 4 }, 42};
 
     REQUIRE(a.shape(0) == 4);
@@ -98,10 +104,11 @@ TEST_CASE(
     CHECK(a[3] == 42);
 }
 
+
 TEST_CASE(
     "A vt::ndarray can be constructed with a default value of non-trivial type",
-    "[ndarray][container]")
-{
+    "[ndarray][container]"
+) {
     const vt::ndarray<std::string, 1> a{{ 4 }, "42"};
 
     REQUIRE(a.shape(0) == 4);
@@ -112,10 +119,11 @@ TEST_CASE(
     CHECK(a[3] == "42");
 }
 
+
 TEST_CASE(
     "A vt::ndarray can be constructed with an iterator range",
-    "[ndarray][container]")
-{
+    "[ndarray][container]"
+) {
     const int a[6] = {
         3, 1, 4,
         1, 5, 9
@@ -134,11 +142,12 @@ TEST_CASE(
     CHECK(b[1][2] == 9);
 }
 
+
 TEST_CASE(
     "A vt::ndarray can be constructed with an iterator range of non-trivial "
     "types",
-    "[ndarray][container]")
-{
+    "[ndarray][container]"
+) {
     const std::string a[3] = { "31", "41", "59" };
 
     const vt::ndarray<std::string, 1> b{{ 3 }, std::begin(a), std::end(a)};
@@ -150,47 +159,48 @@ TEST_CASE(
     CHECK(b[2] == "59");
 }
 
+
 struct except_on_copy {
     static thread_local unsigned count;
 
-    except_on_copy()
-    {
+    except_on_copy() {
         ++count;
     }
 
-    except_on_copy(const except_on_copy&)
-    {
+    except_on_copy(const except_on_copy&) {
         if (count >= 6) throw std::exception{};
         ++count;
     }
 
-    ~except_on_copy()
-    {
+    ~except_on_copy() {
         --count;
     }
 };
 
 thread_local unsigned except_on_copy::count = 0;
 
+
 TEST_CASE(
     "If an exception occurs while copying elements into a vt::ndarray, all "
     "already constructed elements will be destructed",
-    "[ndarray][container]")
-{
+    "[ndarray][container]"
+) {
     const except_on_copy a[4];
 
     REQUIRE(except_on_copy::count == 4);
 
     REQUIRE_THROWS(
-        vt::ndarray<except_on_copy, 1>{{ 4 }, std::begin(a), std::end(a)});
+        vt::ndarray<except_on_copy, 1>{{ 4 }, std::begin(a), std::end(a)}
+    );
 
     REQUIRE(except_on_copy::count == 4);
 }
 
+
 TEST_CASE(
     "A vt::ndarray can be constructed from an initializer list",
-    "[ndarray][container]")
-{
+    "[ndarray][container]"
+) {
     const vt::ndarray<int, 2> a{{ 2, 3 }, {
         3, 1, 4,
         1, 5, 9
@@ -207,10 +217,11 @@ TEST_CASE(
     CHECK(a[1][2] == 9);
 }
 
+
 TEST_CASE(
     "A vt::ndarray can be copy-constructed",
-    "[ndarray][container]")
-{
+    "[ndarray][container]"
+) {
     const vt::ndarray<int, 1> a{{ 4 }, { 3, 1, 4, 1 }};
 
     const vt::ndarray<int, 1> b = a;
@@ -218,10 +229,11 @@ TEST_CASE(
     REQUIRE(a == b);
 }
 
+
 TEST_CASE(
     "A vt::ndarray can be move-constructed",
-    "[ndarray][container]")
-{
+    "[ndarray][container]"
+) {
     vt::ndarray<int, 1> a{{ 4 }, { 3, 1, 4, 1 }};
 
     const vt::ndarray<int, 1> b = std::move(a);
@@ -237,10 +249,11 @@ TEST_CASE(
     CHECK(b[3] == 1);
 }
 
+
 TEST_CASE(
     "A vt::ndarray can be copy-assigned",
-    "[ndarray][container]")
-{
+    "[ndarray][container]"
+) {
     vt::ndarray<int, 1> a;
     const vt::ndarray<int, 1> b{{ 4 }, { 3, 1, 4, 1 }};
 
@@ -249,11 +262,12 @@ TEST_CASE(
     REQUIRE(a == b);
 }
 
+
 TEST_CASE(
     "A vt::ndarray copy-assign does not reallocate if the element count is "
     "equal",
-    "[ndarray][container]")
-{
+    "[ndarray][container]"
+) {
     vt::ndarray<int, 2> a{{ 3, 2 }};
     const vt::ndarray<int, 2> b{{ 2, 3 }, {
         3, 1, 4,
@@ -268,10 +282,11 @@ TEST_CASE(
     REQUIRE(a == b);
 }
 
+
 TEST_CASE(
     "A self-copy-assign of a vt::ndarray is a no-op",
-    "[ndarray][container")
-{
+    "[ndarray][container"
+) {
     vt::ndarray<int, 1> a{{ 4 }, { 3, 1, 4, 1 }};
 
     a = a;
@@ -284,10 +299,11 @@ TEST_CASE(
     CHECK(a[3] == 1);
 }
 
+
 TEST_CASE(
     "A vt::ndarray can be move-assigned",
-    "[ndarray][container]")
-{
+    "[ndarray][container]"
+) {
     vt::ndarray<int, 1> a;
     vt::ndarray<int, 1> b{{ 4 }, { 3, 1, 4, 1 }};
 
@@ -304,10 +320,11 @@ TEST_CASE(
     CHECK(a[3] == 1);
 }
 
+
 TEST_CASE(
     "A self-move-assign of a vt::ndarray is a no-op",
-    "[ndarray][container")
-{
+    "[ndarray][container"
+) {
     vt::ndarray<int, 1> a{{ 4 }, { 3, 1, 4, 1 }};
 
     a = std::move(a);
@@ -320,10 +337,11 @@ TEST_CASE(
     CHECK(a[3] == 1);
 }
 
+
 TEST_CASE(
     "A non-const vt::ndarray can be modified through its operator[]",
-    "[ndarray][container]")
-{
+    "[ndarray][container]"
+) {
     vt::ndarray<int, 2> a{{ 2, 3 }};
 
     REQUIRE(a.shape(0) == 2);
@@ -344,10 +362,11 @@ TEST_CASE(
     CHECK(a[1][2] == 5);
 }
 
+
 TEST_CASE(
     "You can reshape a vt::ndarray to a different number of dimensions",
-    "[ndarray][container]")
-{
+    "[ndarray][container]"
+) {
     const vt::ndarray<int, 1> a{{ 4 }, { 3, 1, 4, 1 }};
 
     // Explicit integer types for deduction are only required for GCC < 8.0
@@ -363,10 +382,11 @@ TEST_CASE(
     CHECK(reshaped[1][1] == 1);
 }
 
+
 TEST_CASE(
     "You can flatten an N-dimensional vt::ndarray to a single dimension",
-    "[ndarray][container]")
-{
+    "[ndarray][container]"
+) {
     const vt::ndarray<int, 3> a{{ 2, 2, 2 }, {
         3, 1,
         4, 1,
@@ -389,10 +409,11 @@ TEST_CASE(
     CHECK(flat[7] == 6);
 }
 
+
 TEST_CASE(
     "You can get a slice view into a vt::ndarray",
-    "[ndarray][container]")
-{
+    "[ndarray][container]"
+) {
     const vt::ndarray<int, 2> a{{ 4, 2 }, {
         3, 1,
         4, 1,
@@ -411,12 +432,13 @@ TEST_CASE(
     CHECK(slice[1][1] == 9);
 }
 
+
 #if __has_include(<memory_resource>)
 
 TEST_CASE(
     "A vt::pmr::ndarray can be constructed with a polymorphic allocator",
-    "[ndarray][container]")
-{
+    "[ndarray][container]"
+) {
     int buffer[6];
     std::pmr::monotonic_buffer_resource arena{buffer, sizeof(buffer)};
 
@@ -427,11 +449,12 @@ TEST_CASE(
 
 #endif // __has_include(<memory_resource>)
 
+
 TEST_CASE(
     "A vt::ndarray's template arguments can be deduced from its fill "
     "constructor arguments",
-    "[ndarray][container]")
-{
+    "[ndarray][container]"
+) {
     // Explicit integer types for deduction are only required for GCC < 8.0
     constexpr std::size_t n = 2;
 
@@ -440,11 +463,12 @@ TEST_CASE(
     CHECK(std::is_same_v<decltype(a), vt::ndarray<int, 2>>);
 }
 
+
 TEST_CASE(
     "A vt::ndarray's template arguments can be deduced from its iterator "
     "constructor arguments",
-    "[ndarray][container]")
-{
+    "[ndarray][container]"
+) {
     // Explicit integer types for deduction are only required for GCC < 8.0
     constexpr std::size_t n = 2;
 
@@ -455,11 +479,12 @@ TEST_CASE(
     CHECK(std::is_same_v<decltype(a), vt::ndarray<int, 2>>);
 }
 
+
 TEST_CASE(
     "A vt::ndarray's template arguments can be deduced from its initializer-"
     "list constructor arguments",
-    "[ndarray][container]")
-{
+    "[ndarray][container]"
+) {
     // Explicit integer types for deduction are only required for GCC < 8.0
     constexpr std::size_t n = 2;
 
@@ -468,30 +493,33 @@ TEST_CASE(
     CHECK(std::is_same_v<decltype(a), vt::ndarray<int, 2>>);
 }
 
+
 TEST_CASE(
     "A vt::ndarray is equality comparable",
-    "[ndarray][container]")
-{
+    "[ndarray][container]"
+) {
     const vt::ndarray<int, 1> a{{ 4 }, { 3, 1, 4, 1 }};
     const vt::ndarray<int, 1> b{{ 4 }, { 3, 1, 4, 1 }};
 
     REQUIRE(a == b);
 }
 
+
 TEST_CASE(
     "A vt::ndarray is inequality comparable",
-    "[ndarray][container]")
-{
+    "[ndarray][container]"
+) {
     const vt::ndarray<int, 1> a{{ 4 }, { 3, 1, 4, 1 }};
     const vt::ndarray<int, 1> b{{ 4 }, { 3, 1, 4, 2 }};
 
     REQUIRE(a != b);
 }
 
+
 TEST_CASE(
     "If the shape doesn't match, a vt::ndarray is never equal",
-    "[ndarray][container]")
-{
+    "[ndarray][container]"
+) {
     const vt::ndarray<int, 2> a{{ 2, 3 }, {
         3, 1, 4,
         1, 5, 9
@@ -505,10 +533,11 @@ TEST_CASE(
     REQUIRE(a != b);
 }
 
+
 TEST_CASE(
     "A vt::ndarray is swappable",
-    "[ndarray][container]")
-{
+    "[ndarray][container]"
+) {
     vt::ndarray<int, 1> a{{ 4 }, { 3, 1, 4, 1 }};
     vt::ndarray<int, 1> b{{ 3 }, { 0, 1, 2 }};
 

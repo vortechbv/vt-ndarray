@@ -2,8 +2,7 @@ vt::ndarray_allocator::align_val
 ================================
 
 ```c++
-constexpr std::size_t
-align_val() const noexcept;
+constexpr std::size_t align_val() const noexcept;
 ```
 
 Returns the alignment value used for allocation by this allocator.

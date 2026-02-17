@@ -2,12 +2,9 @@ vt::ndarray::end, vt::ndarray::cend
 ===================================
 
 ```c++
-iterator
-end() noexcept;
-const_iterator
-end() const noexcept;
-const_iterator
-cend() const noexcept;
+iterator end() noexcept;
+const_iterator end() const noexcept;
+const_iterator cend() const noexcept;
 ```
 
 Returns an iterator to the element following the last element in the array. This element acts as a placeholder, attempting to access it results in undefined behavior.

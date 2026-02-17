@@ -2,8 +2,7 @@ vt::ndarray_allocator::deallocate
 =================================
 
 ```c++
-void
-deallocate(T* p, std::size_t n) const noexcept;
+void deallocate(T* p, std::size_t n) const noexcept;
 ```
 
 Deallocates the storage referenced by the pointer `p`, which must be a pointer obtained by an earlier call to [allocate()](allocate.md#top).

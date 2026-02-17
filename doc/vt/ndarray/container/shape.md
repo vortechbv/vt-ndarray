@@ -3,11 +3,9 @@ vt::ndarray::shape
 
 ```c++
 // (1)
-const std::array<std::size_t, N>&
-shape() const noexcept;
+const std::array<std::size_t, N>& shape() const noexcept;
 // (2)
-std::size_t
-shape(std::size_t dim) const noexcept;
+std::size_t shape(std::size_t dim) const noexcept;
 ```
 
 Returns the shape of this array.

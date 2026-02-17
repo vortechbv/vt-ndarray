@@ -6,8 +6,7 @@ operator<<(vt::ndarray)
 
 ```c++
 template<typename T, std::size_t N, typename Allocator>
-std::ostream&
-operator<<(std::ostream& os, const ndarray<T, N, Allocator>& a);
+std::ostream& operator<<(std::ostream& os, const ndarray<T, N, Allocator>& a);
 ```
 
 Inserts the formatted data of an `ndarray` into the specified output stream.

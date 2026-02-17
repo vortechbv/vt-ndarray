@@ -3,11 +3,9 @@ vt::ndarray::operator[]
 
 ```c++
 // (1)
-decltype(auto)
-operator[](std::size_t idx) noexcept;
+decltype(auto) operator[](std::size_t idx) noexcept;
 // (2)
-decltype(auto)
-operator[](std::size_t idx) const noexcept;
+decltype(auto) operator[](std::size_t idx) const noexcept;
 ```
 
 Accesses the view or element at the specified index. The behavior is undefined if `idx >= shape[0]`.
@@ -36,8 +34,7 @@ Example
 #include <vt/ndarray/container.hpp>
 #include <cassert>
 
-int main()
-{
+int main() {
     const vt::ndarray<int, 2> A{{ 2, 3 }, {
         3, 1, 4,
         1, 5, 9

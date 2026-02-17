@@ -26,10 +26,11 @@
 #include <numeric>
 #include <sstream>
 
+
 TEST_CASE(
     "A vt::ndview is a pointer-shape pair",
-    "[ndarray][view]")
-{
+    "[ndarray][view]"
+) {
     const int data[4] = { 0 };
     const vt::ndview<const int, 2> view{{ 2, 2 }, data};
 
@@ -38,10 +39,11 @@ TEST_CASE(
     REQUIRE(view.data() == data);
 }
 
+
 TEST_CASE(
     "A vt::ndview can index into 1-dimensional data",
-    "[ndarray][view]")
-{
+    "[ndarray][view]"
+) {
     const int data[4] = { 3, 1, 4, 1 };
     const vt::ndview<const int, 1> view{{ 4 }, data};
 
@@ -53,10 +55,11 @@ TEST_CASE(
     CHECK(view[3] == 1);
 }
 
+
 TEST_CASE(
     "A vt::ndview can index into 2-dimensional data",
-    "[ndarray][view]")
-{
+    "[ndarray][view]"
+) {
     const int data[6] = {
         3, 1, 4,
         1, 5, 9
@@ -74,10 +77,11 @@ TEST_CASE(
     CHECK(view[1][2] == 9);
 }
 
+
 TEST_CASE(
     "A vt::ndview can index into 3-dimensional data",
-    "[ndarray][view]")
-{
+    "[ndarray][view]"
+) {
     const int data[24] = {
         3, 1, 4, 1,
         5, 9, 2, 6,
@@ -119,10 +123,11 @@ TEST_CASE(
     CHECK(view[1][2][3] == 4);
 }
 
+
 TEST_CASE(
     "Non-const elements of a vt::ndview can be modified when indexed"
-    "[ndarray][view]")
-{
+    "[ndarray][view]"
+) {
     int data[4] = { 0 };
     const vt::ndview<int, 1> view{{ 4 }, data};
 
@@ -139,10 +144,11 @@ TEST_CASE(
     CHECK(view[3] == 4);
 }
 
+
 TEST_CASE(
     "A vt::ndview<T, N> can convert to a vt::ndview<const T, N>",
-    "[ndarray][view]")
-{
+    "[ndarray][view]"
+) {
     int data[4];
     const vt::ndview<int, 1> view{{ 4 }, data};
 
@@ -152,30 +158,33 @@ TEST_CASE(
     REQUIRE(view.data() == cview.data());
 }
 
+
 TEST_CASE(
     "You can query a vt::ndview's total element count, regardless of "
     "dimensionality",
-    "[ndarray][view]")
-{
+    "[ndarray][view]"
+) {
     const int data[24] = { 0 };
     const vt::ndview<const int, 3> view{{ 4, 3, 2 }, data};
 
     REQUIRE(view.element_count() == 24);
 }
 
+
 TEST_CASE(
     "You can query a vt::ndview's dimension count",
-    "[ndarray][view]")
-{
+    "[ndarray][view]"
+) {
     const vt::ndview<const int, 12> view{{ 0 }, nullptr};
 
     REQUIRE(view.dim_count == 12);
 }
 
+
 TEST_CASE(
     "You can reshape a vt::ndview",
-    "[ndarray][view]")
-{
+    "[ndarray][view]"
+) {
     // Explicit integer types for deduction are only required for GCC < 8.0
     constexpr std::size_t n = 3;
     constexpr std::size_t m = 2;
@@ -200,10 +209,11 @@ TEST_CASE(
     CHECK(review[1][2] == 9);
 }
 
+
 TEST_CASE(
     "You can reshape a vt::ndview to a different number of dimensions",
-    "[ndarray][view]")
-{
+    "[ndarray][view]"
+) {
     const int data[4] = { 3, 1, 4, 1 };
     const vt::ndview<const int, 1> view{{ 4 }, data};
 
@@ -220,10 +230,11 @@ TEST_CASE(
     CHECK(review[1][1] == 1);
 }
 
+
 TEST_CASE(
     "You can flatten an N-dimensional vt::ndview to a single dimension",
-    "[ndarray][view]")
-{
+    "[ndarray][view]"
+) {
     const int data[8] = {
         3, 1,
         4, 1,
@@ -247,10 +258,11 @@ TEST_CASE(
     CHECK(flat[7] == 6);
 }
 
+
 TEST_CASE(
     "You can get a slice-view into a vt::ndview",
-    "[ndarray][view]")
-{
+    "[ndarray][view]"
+) {
     const int data[4] = { 3, 1, 4, 1 };
     const vt::ndview<const int, 1> view{{ 4 }, data};
 
@@ -262,11 +274,12 @@ TEST_CASE(
     CHECK(slice[1] == 4);
 }
 
+
 TEST_CASE(
     "When slicing a vt::ndview with more than 1 dimension, only the first "
     "dimension is sliced",
-    "[ndarray][view]")
-{
+    "[ndarray][view]"
+) {
     const int data[8] = {
         3, 1,
         4, 1,
@@ -286,11 +299,12 @@ TEST_CASE(
     CHECK(slice[1][1] == 9);
 }
 
+
 TEST_CASE(
     "When slicing and no count is passed, the last element of the slice will "
     "be the last element of the view",
-    "[ndarray][view]")
-{
+    "[ndarray][view]"
+) {
     const int data[4] = { 3, 1, 4, 1 };
     const vt::ndview<const int, 1> view{{ 4 }, data};
 
@@ -303,21 +317,23 @@ TEST_CASE(
     CHECK(slice[2] == 1);
 }
 
+
 TEST_CASE(
     "A vt::ndview supports iterating over all elements, regardless of "
     "dimensionality",
-    "[ndarray][view]")
-{
+    "[ndarray][view]"
+) {
     const int data[6] = { 3, 1, 4, 1, 5, 9 };
     const vt::ndview<const int, 2> view{{ 3, 2 }, data};
 
     REQUIRE(std::equal(view.cbegin(), view.cend(), std::begin(data)));
 }
 
+
 TEST_CASE(
     "Values can also be modified through a vt::ndview's iterators",
-    "[ndarray][view]")
-{
+    "[ndarray][view]"
+) {
     int data[4] = { 0 };
     const vt::ndview<int, 1> view{{ 4 }, data};
 
@@ -331,20 +347,22 @@ TEST_CASE(
     CHECK(view[3] == 3);
 }
 
+
 TEST_CASE(
     "A vt::ndview also supports reverse iterators",
-    "[ndarray][view]")
-{
+    "[ndarray][view]"
+) {
     const int data[6] = { 0, 1, 2, 2, 1, 0 };
     const vt::ndview<const int, 1> view{{ 6 }, data};
 
     REQUIRE(std::equal(view.crbegin(), view.crend(), view.cbegin()));
 }
 
+
 TEST_CASE(
     "Values can also be modified through a vt::ndview's reverse iterators",
-    "[ndarray][view]")
-{
+    "[ndarray][view]"
+) {
     int data[4] = { 0 };
     const vt::ndview<int, 1> view{{ 4 }, data};
 
@@ -358,11 +376,12 @@ TEST_CASE(
     CHECK(view[3] == 0);
 }
 
+
 TEST_CASE(
     "A vt::ndview's template arguments can be deduced from its constructor "
     "arguments",
-    "[ndarray][view]")
-{
+    "[ndarray][view]"
+) {
     // Explicit integer types for deduction are only required for GCC < 8.0
     constexpr std::size_t n = 2;
 
@@ -373,10 +392,11 @@ TEST_CASE(
     CHECK(std::is_same_v<decltype(view), vt::ndview<const int, 2>>);
 }
 
+
 TEST_CASE(
     "A vt::ndview can be streamed to a std::ostream",
-    "[ndarray][view]")
-{
+    "[ndarray][view]"
+) {
     const int data[4] = {
         1, 0,
         0, 1
@@ -389,10 +409,11 @@ TEST_CASE(
     REQUIRE(ss.str() == "[[1,0],[0,1]]");
 }
 
+
 TEST_CASE(
     "An empty vt::ndview can also be streamed",
-    "[ndarray][view]")
-{
+    "[ndarray][view]"
+) {
     const vt::ndview<const int, 3> view{{ 0 }, nullptr};
 
     std::ostringstream ss;

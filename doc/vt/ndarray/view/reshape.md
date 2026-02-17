@@ -4,12 +4,14 @@ vt::ndview::reshape
 ```c++
 // (1)
 template<std::size_t M>
-constexpr ndview<T, M>
-reshape(const std::array<std::size_t, M>& new_shape) const noexcept;
+constexpr ndview<T, M> reshape(
+    const std::array<std::size_t, M>& new_shape
+) const noexcept;
 // (2)
 template<std::size_t M>
-constexpr ndview<T, M>
-reshape(const std::size_t (&new_shape)[M]) const noexcept;
+constexpr ndview<T, M> reshape(
+    const std::size_t (&new_shape)[M]
+) const noexcept;
 ```
 
 Creates a new view into the same array, but with a different shape. The number of dimensions in the new shape may differ from the original shape.

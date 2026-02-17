@@ -34,6 +34,7 @@
 #   include <memory_resource>
 #endif
 
+
 namespace vt {
 
 template<typename T, std::size_t N, typename Allocator = ndarray_allocator<T>>
@@ -58,24 +59,27 @@ public:
     static constexpr std::size_t dim_count = N;
 
     ndarray() noexcept(noexcept(Allocator{}));
-    explicit
-    ndarray(const Allocator& alloc) noexcept;
-    explicit
-    ndarray(
+    explicit ndarray(const Allocator& alloc) noexcept;
+    explicit ndarray(
         const std::array<std::size_t, N>& shape_,
-        const Allocator& alloc = Allocator{});
+        const Allocator& alloc = Allocator{}
+    );
     ndarray(
         const std::array<std::size_t, N>& shape_, const T& init,
-        const Allocator& alloc = Allocator{});
+        const Allocator& alloc = Allocator{}
+    );
     template<typename InputIt>
     ndarray(
         const std::array<std::size_t, N>& shape_,
-        InputIt first, InputIt last,
-        const Allocator& alloc = Allocator{});
+        InputIt first,
+        InputIt last,
+        const Allocator& alloc = Allocator{}
+    );
     ndarray(
         const std::array<std::size_t, N>& shape_,
         std::initializer_list<T> init,
-        const Allocator& alloc = Allocator{});
+        const Allocator& alloc = Allocator{}
+    );
     ndarray(const ndarray& other);
     ndarray(const ndarray& other, const Allocator& alloc);
     ndarray(ndarray&& other) noexcept;
@@ -83,118 +87,87 @@ public:
 
     ~ndarray();
 
-    ndarray&
-    operator=(const ndarray& other);
-    ndarray&
-    operator=(ndarray&& other);
+    ndarray& operator=(const ndarray& other);
+    ndarray& operator=(ndarray&& other);
 
-    decltype(auto)
-    operator[](std::size_t idx) noexcept;
-    decltype(auto)
-    operator[](std::size_t idx) const noexcept;
+    decltype(auto) operator[](std::size_t idx) noexcept;
+    decltype(auto) operator[](std::size_t idx) const noexcept;
 
     operator ndview<T, N>() noexcept;
     operator ndview<const T, N>() const noexcept;
 
-    ndview<T, N>
-    view() noexcept;
-    ndview<const T, N>
-    view() const noexcept;
-    ndview<const T, N>
-    cview() const noexcept;
+    ndview<T, N> view() noexcept;
+    ndview<const T, N> view() const noexcept;
+    ndview<const T, N> cview() const noexcept;
 
-    std::size_t
-    element_count() const noexcept;
+    std::size_t element_count() const noexcept;
 
-    const std::array<std::size_t, N>&
-    shape() const noexcept;
-    std::size_t
-    shape(std::size_t dim) const noexcept;
+    const std::array<std::size_t, N>& shape() const noexcept;
+    std::size_t shape(std::size_t dim) const noexcept;
 
     template<std::size_t M>
-    ndview<T, M>
-    reshape(const std::array<std::size_t, M>& new_shape) noexcept;
+    ndview<T, M> reshape(const std::array<std::size_t, M>& new_shape) noexcept;
     template<std::size_t M>
-    ndview<const T, M>
-    reshape(const std::array<std::size_t, M>& new_shape) const noexcept;
+    ndview<const T, M> reshape(
+        const std::array<std::size_t, M>& new_shape
+    ) const noexcept;
     template<std::size_t M>
-    ndview<T, M>
-    reshape(const std::size_t (&new_shape)[M]) noexcept;
+    ndview<T, M> reshape(const std::size_t (&new_shape)[M]) noexcept;
     template<std::size_t M>
-    ndview<const T, M>
-    reshape(const std::size_t (&new_shape)[M]) const noexcept;
+    ndview<const T, M> reshape(
+        const std::size_t (&new_shape)[M]
+    ) const noexcept;
 
-    ndview<T, 1>
-    flatten() noexcept;
-    ndview<const T, 1>
-    flatten() const noexcept;
+    ndview<T, 1> flatten() noexcept;
+    ndview<const T, 1> flatten() const noexcept;
 
-    T*
-    data() noexcept;
-    const T*
-    data() const noexcept;
+    T* data() noexcept;
+    const T* data() const noexcept;
 
-    Allocator
-    get_allocator() const noexcept;
+    Allocator get_allocator() const noexcept;
 
-    ndview<T, N>
-    slice(std::size_t offset) noexcept;
-    ndview<const T, N>
-    slice(std::size_t offset) const noexcept;
-    ndview<T, N>
-    slice(std::size_t offset, std::size_t count) noexcept;
-    ndview<const T, N>
-    slice(std::size_t offset, std::size_t count) const noexcept;
+    ndview<T, N> slice(std::size_t offset) noexcept;
+    ndview<const T, N> slice(std::size_t offset) const noexcept;
+    ndview<T, N> slice(std::size_t offset, std::size_t count) noexcept;
+    ndview<const T, N> slice(
+        std::size_t offset,
+        std::size_t count
+    ) const noexcept;
 
-    iterator
-    begin() noexcept;
-    const_iterator
-    begin() const noexcept;
-    const_iterator
-    cbegin() const noexcept;
+    iterator begin() noexcept;
+    const_iterator begin() const noexcept;
+    const_iterator cbegin() const noexcept;
 
-    iterator
-    end() noexcept;
-    const_iterator
-    end() const noexcept;
-    const_iterator
-    cend() const noexcept;
+    iterator end() noexcept;
+    const_iterator end() const noexcept;
+    const_iterator cend() const noexcept;
 
-    reverse_iterator
-    rbegin() noexcept;
-    const_reverse_iterator
-    rbegin() const noexcept;
-    const_reverse_iterator
-    crbegin() const noexcept;
+    reverse_iterator rbegin() noexcept;
+    const_reverse_iterator rbegin() const noexcept;
+    const_reverse_iterator crbegin() const noexcept;
 
-    reverse_iterator
-    rend() noexcept;
-    const_reverse_iterator
-    rend() const noexcept;
-    const_reverse_iterator
-    crend() const noexcept;
+    reverse_iterator rend() noexcept;
+    const_reverse_iterator rend() const noexcept;
+    const_reverse_iterator crend() const noexcept;
 
-    void
-    swap(ndarray& other) noexcept;
+    void swap(ndarray& other) noexcept;
 
 private:
     Allocator _alloc;
     ndview<T, N> _view;
 
-    [[nodiscard]] ndview<T, N>
-    make_allocated_view(const std::array<std::size_t, N>& shape_);
+    [[nodiscard]] ndview<T, N> make_allocated_view(
+        const std::array<std::size_t, N>& shape_
+    );
 
     template<typename InputIt>
-    void
-    copy_construct(InputIt first, InputIt last);
-    void
-    move_construct(iterator first, iterator last);
+    void copy_construct(InputIt first, InputIt last);
+    void move_construct(iterator first, iterator last);
 
-    void
-    destroy() noexcept;
-    void
-    destroy(iterator first, iterator last) noexcept;
+    void destroy() noexcept;
+    void destroy(iterator first, iterator last) noexcept;
 };
+
 
 #if __has_include(<memory_resource>)
 
@@ -207,6 +180,7 @@ using ndarray = vt::ndarray<T, N, std::pmr::polymorphic_allocator<T>>;
 
 #endif // __has_include(<memory_resource>)
 
+
 namespace detail {
 
 template<typename Iter>
@@ -214,40 +188,48 @@ using iterator_value_t = typename std::iterator_traits<Iter>::value_type;
 
 } // namespace detail
 
+
 template<typename T, std::size_t N, typename Allocator = ndarray_allocator<T>>
-ndarray(const std::size_t (&)[N], const T&, Allocator = Allocator())
-    -> ndarray<T, N, Allocator>;
+ndarray(
+    const std::size_t (&)[N],
+    const T&, Allocator = Allocator()
+) -> ndarray<T, N, Allocator>;
 
 template<
     typename InputIt,
     std::size_t N,
-    typename Allocator = ndarray_allocator<detail::iterator_value_t<InputIt>>>
-ndarray(const std::size_t (&)[N], InputIt, InputIt, Allocator = Allocator())
-    -> ndarray<detail::iterator_value_t<InputIt>, N, Allocator>;
+    typename Allocator = ndarray_allocator<detail::iterator_value_t<InputIt>>
+>
+ndarray(
+    const std::size_t (&)[N],
+    InputIt,
+    InputIt,
+    Allocator = Allocator()
+) -> ndarray<detail::iterator_value_t<InputIt>, N, Allocator>;
 
 template<typename T, std::size_t N, typename Allocator = ndarray_allocator<T>>
 ndarray(
     const std::size_t (&)[N],
     std::initializer_list<T>,
-    Allocator = Allocator())
-    -> ndarray<T, N, Allocator>;
+    Allocator = Allocator()
+) -> ndarray<T, N, Allocator>;
 
 template<typename T, std::size_t N, typename Allocator>
-bool
-operator==(
-    const ndarray<T, N, Allocator>& a, const ndarray<T, N, Allocator>& b);
+bool operator==(
+    const ndarray<T, N, Allocator>& a,
+    const ndarray<T, N, Allocator>& b
+);
 template<typename T, std::size_t N, typename Allocator>
-bool
-operator!=(
-    const ndarray<T, N, Allocator>& a, const ndarray<T, N, Allocator>& b);
+bool operator!=(
+    const ndarray<T, N, Allocator>& a,
+    const ndarray<T, N, Allocator>& b
+);
 
 template<typename T, std::size_t N, typename Allocator>
-std::ostream&
-operator<<(std::ostream& os, const ndarray<T, N, Allocator>& a);
+std::ostream& operator<<(std::ostream& os, const ndarray<T, N, Allocator>& a);
 
 template<typename T, std::size_t N, typename Allocator>
-void
-swap(ndarray<T, N, Allocator>& a, ndarray<T, N, Allocator>& b) noexcept;
+void swap(ndarray<T, N, Allocator>& a, ndarray<T, N, Allocator>& b) noexcept;
 
 } // namespace vt
 

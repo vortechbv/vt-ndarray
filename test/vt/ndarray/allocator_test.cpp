@@ -1,4 +1,4 @@
-// Copyright (c) 2018 VORtech b.v.
+// Copyright (c) 2018-2026 VORtech b.v.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,11 +24,12 @@
 #include <catch2/catch.hpp>
 #include <string>
 
+
 TEST_CASE(
     "A default constructed vt::ndarray_allocator will align allocation to the "
     "cache line size",
-    "[ndarray][allocator]")
-{
+    "[ndarray][allocator]"
+) {
     const vt::ndarray_allocator<int> alloc;
 
     REQUIRE(alloc.align_val() == vt::detail::cache_line_size);
@@ -40,11 +41,12 @@ TEST_CASE(
     std::allocator_traits<decltype(alloc)>::deallocate(alloc, p, 4);
 }
 
+
 TEST_CASE(
     "The desired alignment of allocations can be specified when constructing a "
     "vt::ndarray_allocator",
-    "[ndarray][allocator]")
-{
+    "[ndarray][allocator]"
+) {
     const vt::ndarray_allocator<int> alloc{std::align_val_t{8}};
 
     REQUIRE(alloc.align_val() == 8);
@@ -56,10 +58,11 @@ TEST_CASE(
     std::allocator_traits<decltype(alloc)>::deallocate(alloc, p, 4);
 }
 
+
 TEST_CASE(
     "Allocating from a vt::ndarray_allocator will not return a null pointer",
-    "[ndarray][allocator]")
-{
+    "[ndarray][allocator]"
+) {
     const vt::ndarray_allocator<int> alloc;
 
     int* p = std::allocator_traits<decltype(alloc)>::allocate(alloc, 4);
@@ -69,10 +72,11 @@ TEST_CASE(
     std::allocator_traits<decltype(alloc)>::deallocate(alloc, p, 4);
 }
 
+
 TEST_CASE(
     "A vt::ndarray_allocator won't default construct fundamental types",
-    "[ndarray][allocator]")
-{
+    "[ndarray][allocator]"
+) {
     const vt::ndarray_allocator<int> alloc;
 
     int data = 42;
@@ -84,10 +88,11 @@ TEST_CASE(
     std::allocator_traits<decltype(alloc)>::destroy(alloc, &data);
 }
 
+
 TEST_CASE(
     "A vt::ndarray_allocator will default construct non-fundamental types",
-    "[ndarray][allocator]")
-{
+    "[ndarray][allocator]"
+) {
     const vt::ndarray_allocator<std::string> alloc;
 
     char data[sizeof(std::string)];
@@ -105,19 +110,20 @@ TEST_CASE(
 TEST_CASE(
     "A vt::ndarray_allocator is equal to another vt::ndarray_allocator if "
     "their alignment values are equal, regardless of the value type",
-    "[ndarray][allocator]")
-{
+    "[ndarray][allocator]"
+) {
     const vt::ndarray_allocator<int> alloc;
     const vt::ndarray_allocator<std::string> blloc;
 
     REQUIRE(alloc == blloc);
 }
 
+
 TEST_CASE(
     "A vt::ndarray_allocator is not equal to another vt::ndarray_allocator if "
     "their alignment values are not equal",
-    "[ndarray][allocator]")
-{
+    "[ndarray][allocator]"
+) {
     const vt::ndarray_allocator<int> alloc{std::align_val_t{8}};
     const vt::ndarray_allocator<std::string> blloc{std::align_val_t{16}};
 

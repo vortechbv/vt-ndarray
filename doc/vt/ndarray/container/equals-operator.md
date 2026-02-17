@@ -7,14 +7,16 @@ operator==,!=(vt::ndarray)
 ```c++
 // (1)
 template<typename T, std::size_t N, typename Allocator>
-bool
-operator==(
-    const ndarray<T, N, Allocator>& a, const ndarray<T, N, Allocator>& b);
+bool operator==(
+    const ndarray<T, N, Allocator>& a,
+    const ndarray<T, N, Allocator>& b
+);
 // (2)
 template<typename T, std::size_t N, typename Allocator>
-bool
-operator!=(
-    const ndarray<T, N, Allocator>& a, const ndarray<T, N, Allocator>& b);
+bool operator!=(
+    const ndarray<T, N, Allocator>& a,
+    const ndarray<T, N, Allocator>& b
+);
 ```
 
 Compares the shape and contents of two containers.

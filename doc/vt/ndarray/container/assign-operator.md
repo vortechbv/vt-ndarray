@@ -3,11 +3,9 @@ vt::ndarray::operator=
 
 ```c++
 // (1)
-ndarray&
-operator=(const ndarray& other);
+ndarray& operator=(const ndarray& other);
 // (2)
-ndarray&
-operator=(ndarray&& other);
+ndarray& operator=(ndarray&& other);
 ```
 
 Replaces the contents of the container.

@@ -1,4 +1,4 @@
-// Copyright (c) 2018 VORtech b.v.
+// Copyright (c) 2018-2026 VORtech b.v.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,7 @@
 #include <new>
 #include <type_traits>
 
+
 namespace vt {
 
 template<typename T>
@@ -36,43 +37,40 @@ public:
     using propagate_on_container_move_assignment = std::true_type;
     using propagate_on_container_swap = std::true_type;
 
-    constexpr
-    ndarray_allocator() noexcept;
-    explicit constexpr
-    ndarray_allocator(std::align_val_t align_val_) noexcept;
+    constexpr ndarray_allocator() noexcept;
+    explicit constexpr ndarray_allocator(std::align_val_t align_val_) noexcept;
     template<typename U>
-    constexpr
-    ndarray_allocator(const ndarray_allocator<U>& other) noexcept;
+    constexpr ndarray_allocator(const ndarray_allocator<U>& other) noexcept;
 
-    [[nodiscard]] T*
-    allocate(std::size_t n) const;
+    [[nodiscard]] T* allocate(std::size_t n) const;
 
-    void
-    deallocate(T* p, std::size_t n) const noexcept;
+    void deallocate(T* p, std::size_t n) const noexcept;
 
     template<typename U>
-    void
-    construct(U* p) const noexcept(std::is_nothrow_default_constructible_v<U>);
+    void construct(
+        U* p
+    ) const noexcept(std::is_nothrow_default_constructible_v<U>);
 
     template<typename U>
-    void
-    destroy(U* p) const noexcept(std::is_nothrow_destructible_v<U>);
+    void destroy(U* p) const noexcept(std::is_nothrow_destructible_v<U>);
 
-    constexpr std::size_t
-    align_val() const noexcept;
+    constexpr std::size_t align_val() const noexcept;
 
 private:
     std::align_val_t _align_val;
 };
 
+
 template<typename T1, typename T2>
-constexpr bool
-operator==(const ndarray_allocator<T1>& lhs, const ndarray_allocator<T2>& rhs)
-noexcept;
+constexpr bool operator==(
+    const ndarray_allocator<T1>& lhs,
+    const ndarray_allocator<T2>& rhs
+) noexcept;
 template<typename T1, typename T2>
-constexpr bool
-operator!=(const ndarray_allocator<T1>& lhs, const ndarray_allocator<T2>& rhs)
-noexcept;
+constexpr bool operator!=(
+    const ndarray_allocator<T1>& lhs,
+    const ndarray_allocator<T2>& rhs
+) noexcept;
 
 } // namespace vt
 

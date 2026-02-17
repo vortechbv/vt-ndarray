@@ -24,11 +24,12 @@
 
 using std::size_t;
 
-static void
-mul(
-    vt::ndview<const float, 2> A, vt::ndview<const float, 2> B,
-    vt::ndview<float, 2> C)
-{
+
+static void mul(
+    vt::ndview<const float, 2> A,
+    vt::ndview<const float, 2> B,
+    vt::ndview<float, 2> C
+) {
     assert(A.shape(0) == C.shape(0));
     assert(A.shape(1) == B.shape(0));
     assert(B.shape(1) == C.shape(1));
@@ -47,11 +48,12 @@ mul(
     }
 }
 
-static void
-mul(
-    const vt::ndarray<float, 2>& A, const vt::ndarray<float, 2>& B,
-    vt::ndarray<float, 2>& C)
-{
+
+static void mul(
+    const vt::ndarray<float, 2>& A,
+    const vt::ndarray<float, 2>& B,
+    vt::ndarray<float, 2>& C
+) {
     assert(A.shape(0) == C.shape(0));
     assert(A.shape(1) == B.shape(0));
     assert(B.shape(1) == C.shape(1));
@@ -70,9 +72,15 @@ mul(
     }
 }
 
-static void
-mul(size_t n, size_t m, size_t p, const float* A, const float* B, float* C)
-{
+
+static void mul(
+    size_t n,
+    size_t m,
+    size_t p,
+    const float* A,
+    const float* B,
+    float* C
+) {
     for (size_t i = 0; i < n; ++i) {
         for (size_t j = 0; j < p; ++j) {
             C[i*p+j] = 0.0f;
@@ -82,6 +90,7 @@ mul(size_t n, size_t m, size_t p, const float* A, const float* B, float* C)
         }
     }
 }
+
 
 TEST_CASE("Benchmark naive matrix multiplication", "[ndarray][!benchmark]") {
     const size_t n = GENERATE(8, 64, 512, 1024);

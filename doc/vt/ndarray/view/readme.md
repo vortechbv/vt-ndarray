@@ -84,8 +84,7 @@ Example
 #include <vt/ndarray/view.hpp>
 #include <iostream>
 
-int main()
-{
+int main() {
     int data[6];
     // Creates a 2-dimensional array view into the data, with 2 rows and 3
     // columns:

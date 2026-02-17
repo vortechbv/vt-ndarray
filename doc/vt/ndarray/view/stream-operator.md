@@ -6,8 +6,7 @@ operator<<(vt::ndview)
 
 ```c++
 template<typename T, std::size_t N>
-std::ostream&
-operator<<(std::ostream& os, ndview<const T, N> a);
+std::ostream& operator<<(std::ostream& os, ndview<const T, N> a);
 ```
 
 Inserts the formatted data of an `ndview` into the specified output stream.

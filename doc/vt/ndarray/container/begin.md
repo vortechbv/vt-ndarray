@@ -2,12 +2,9 @@ vt::ndarray::begin, vt::ndarray::cbegin
 =======================================
 
 ```c++
-iterator
-begin() noexcept;
-const_iterator
-begin() const noexcept;
-const_iterator
-cbegin() const noexcept;
+iterator begin() noexcept;
+const_iterator begin() const noexcept;
+const_iterator cbegin() const noexcept;
 ```
 
 Returns an iterator to the first element of the array.

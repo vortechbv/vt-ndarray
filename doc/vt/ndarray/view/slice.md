@@ -3,11 +3,12 @@ vt::ndview::slice
 
 ```c++
 // (1)
-constexpr ndview<T, N>
-slice(std::size_t offset) const noexcept;
+constexpr ndview<T, N> slice(std::size_t offset) const noexcept;
 // (2)
-constexpr ndview<T, N>
-slice(std::size_t offset, std::size_t count) const noexcept;
+constexpr ndview<T, N> slice(
+    std::size_t offset,
+    std::size_t count
+) const noexcept;
 ```
 
 Creates a slice in the first dimension of the view. The shape of the remaining dimensions will remain the same.
@@ -37,8 +38,7 @@ Example
 #include <vt/ndarray/view.hpp>
 #include <cassert>
 
-int main()
-{
+int main() {
     const int A_data[] = {
         3, 1,
         4, 1,

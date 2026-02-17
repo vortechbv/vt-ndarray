@@ -2,8 +2,7 @@ vt::ndview::operator[]
 ======================
 
 ```c++
-decltype(auto)
-operator[](std::size_t idx) const noexcept;
+decltype(auto) operator[](std::size_t idx) const noexcept;
 ```
 
 Accesses the view or element at the specified index. The behavior is undefined if `idx >= shape[0]`.

@@ -7,14 +7,11 @@ operator ndview<T, N>() noexcept;
 // (1)
 operator ndview<const T, N>() const noexcept;
 // (2)
-ndview<T, N>
-view() noexcept;
+ndview<T, N> view() noexcept;
 // (2)
-ndview<const T, N>
-view() const noexcept;
+ndview<const T, N> view() const noexcept;
 // (3)
-ndview<const T, N>
-cview() const noexcept;
+ndview<const T, N> cview() const noexcept;
 ```
 
 Creates a view into the container.
