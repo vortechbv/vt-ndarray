@@ -101,8 +101,6 @@ Common CMake options for the build are listed below. See the CMake documentation
 
 Some build systems (such as Visual Studio) have multiple build types. For build systems with only one build type (such as Makefiles) the default build type will be `Release`. To specify a different build type, add the `-DCMAKE_BUILD_TYPE=<build-type>` flag when executing CMake.
 
-The available build types are: `Debug` and `Release`.
-
 #### Optional compilation
 
 Compilation of the test suite is not mandatory. You can disable it by adding the `-DVT_ENABLE_TESTING=OFF` flag when executing CMake.
