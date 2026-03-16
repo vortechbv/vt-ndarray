@@ -54,9 +54,9 @@ int main() {
     assert(A[3] == 1);
 
     vt::ndview<const int, 2> B = A.reshape({ 2, 2 });
-    assert(B[0][0] == 3);
-    assert(B[0][1] == 1);
-    assert(B[1][0] == 4);
-    assert(B[1][1] == 1);
+    assert(B[0, 0] == 3);
+    assert(B[0, 1] == 1);
+    assert(B[1, 0] == 4);
+    assert(B[1, 1] == 1);
 }
 ```

@@ -40,9 +40,9 @@ static void mul(
 
     for (size_t i = 0; i < n; ++i) {
         for (size_t j = 0; j < p; ++j) {
-            C[i][j] = 0.0f;
+            C[i, j] = 0.0f;
             for (size_t k = 0; k < m; ++k) {
-                C[i][j] += A[i][k] * B[k][j];
+                C[i, j] += A[i, k] * B[k, j];
             }
         }
     }
@@ -64,9 +64,9 @@ static void mul(
 
     for (size_t i = 0; i < n; ++i) {
         for (size_t j = 0; j < p; ++j) {
-            C[i][j] = 0.0f;
+            C[i, j] = 0.0f;
             for (size_t k = 0; k < m; ++k) {
-                C[i][j] += A[i][k] * B[k][j];
+                C[i, j] += A[i, k] * B[k, j];
             }
         }
     }

@@ -5,6 +5,9 @@ This reference documents the API of the vt-ndarray library. Follow the links bel
 
 - [ndarray](container/readme.md#top)
 - [ndview](view/readme.md#top)
+- [ndslice](slice/readme.md#top)
+- [index_range](index-range/readme.md#top)
+- [indexer](indexer/readme.md#top)
 - [ndarray_allocator](allocator/readme.md#top)
 
 Notes

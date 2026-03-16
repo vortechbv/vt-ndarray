@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 VORtech b.v.
+// Copyright (c) 2026 VORtech b.v.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,12 +18,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef VT_NDARRAY_HPP_
-#define VT_NDARRAY_HPP_
+#ifndef VT_NDARRAY_IMPL_INDEX_IPP_
+#define VT_NDARRAY_IMPL_INDEX_IPP_
 
-#include <vt/ndarray/allocator.hpp>
-#include <vt/ndarray/container.hpp>
-#include <vt/ndarray/index.hpp>
-#include <vt/ndarray/view.hpp>
+namespace vt {
 
-#endif // VT_NDARRAY_HPP_
+inline constexpr index_range<0> r() noexcept {
+    return {};
+}
+
+
+inline constexpr index_range<1> r(std::size_t start) noexcept {
+    return { start };
+}
+
+
+inline constexpr index_range<2> r(std::size_t start, std::size_t end) noexcept {
+    return { start, end };
+}
+
+} // namespace vt
+
+#endif // VT_NDARRAY_IMPL_INDEX_IPP_

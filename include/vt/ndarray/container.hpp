@@ -22,6 +22,7 @@
 #define VT_NDARRAY_CONTAINER_HPP_
 
 #include <vt/ndarray/allocator.hpp>
+#include <vt/ndarray/index.hpp>
 #include <vt/ndarray/view.hpp>
 
 #include <array>
@@ -90,8 +91,14 @@ public:
     ndarray& operator=(const ndarray& other);
     ndarray& operator=(ndarray&& other);
 
-    decltype(auto) operator[](std::size_t idx) noexcept;
-    decltype(auto) operator[](std::size_t idx) const noexcept;
+    template<indexer... Index>
+    decltype(auto) operator[](
+        Index... idx
+    ) noexcept requires((sizeof...(Index) <= N));
+    template<indexer... Index>
+    decltype(auto) operator[](
+        Index... idx
+    ) const noexcept requires((sizeof...(Index) <= N));
 
     operator ndview<T, N>() noexcept;
     operator ndview<const T, N>() const noexcept;

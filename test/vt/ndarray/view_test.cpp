@@ -69,12 +69,12 @@ TEST_CASE(
     REQUIRE(view.shape(0) == 2);
     REQUIRE(view.shape(1) == 3);
 
-    CHECK(view[0][0] == 3);
-    CHECK(view[0][1] == 1);
-    CHECK(view[0][2] == 4);
-    CHECK(view[1][0] == 1);
-    CHECK(view[1][1] == 5);
-    CHECK(view[1][2] == 9);
+    CHECK(view[0, 0] == 3);
+    CHECK(view[0, 1] == 1);
+    CHECK(view[0, 2] == 4);
+    CHECK(view[1, 0] == 1);
+    CHECK(view[1, 1] == 5);
+    CHECK(view[1, 2] == 9);
 }
 
 
@@ -96,6 +96,91 @@ TEST_CASE(
     REQUIRE(view.shape(0) == 2);
     REQUIRE(view.shape(1) == 3);
     REQUIRE(view.shape(2) == 4);
+
+    CHECK(view[0, 0, 0] == 3);
+    CHECK(view[0, 0, 1] == 1);
+    CHECK(view[0, 0, 2] == 4);
+    CHECK(view[0, 0, 3] == 1);
+    CHECK(view[0, 1, 0] == 5);
+    CHECK(view[0, 1, 1] == 9);
+    CHECK(view[0, 1, 2] == 2);
+    CHECK(view[0, 1, 3] == 6);
+    CHECK(view[0, 2, 0] == 5);
+    CHECK(view[0, 2, 1] == 3);
+    CHECK(view[0, 2, 2] == 5);
+    CHECK(view[0, 2, 3] == 8);
+    CHECK(view[1, 0, 0] == 9);
+    CHECK(view[1, 0, 1] == 7);
+    CHECK(view[1, 0, 2] == 9);
+    CHECK(view[1, 0, 3] == 3);
+    CHECK(view[1, 1, 0] == 2);
+    CHECK(view[1, 1, 1] == 3);
+    CHECK(view[1, 1, 2] == 8);
+    CHECK(view[1, 1, 3] == 4);
+    CHECK(view[1, 2, 0] == 6);
+    CHECK(view[1, 2, 1] == 2);
+    CHECK(view[1, 2, 2] == 6);
+    CHECK(view[1, 2, 3] == 4);
+}
+
+
+TEST_CASE(
+    "Non-const elements of a vt::ndview can be modified when indexed"
+    "[ndarray][view]"
+) {
+    int data[4] = { 0 };
+    const vt::ndview<int, 1> view{{ 4 }, data};
+
+    REQUIRE(view.shape(0) == 4);
+
+    view[0] = 1;
+    view[1] = 2;
+    view[2] = 3;
+    view[3] = 4;
+
+    CHECK(view[0] == 1);
+    CHECK(view[1] == 2);
+    CHECK(view[2] == 3);
+    CHECK(view[3] == 4);
+}
+
+
+TEST_CASE(
+    "Specifying less indices than dimensions will result in a sub-view at that "
+    "index"
+    "[ndarray][view]"
+) {
+    int data[24] = { 0 };
+    const vt::ndview<int, 3> view{{ 2, 3, 4 }, data};
+
+    REQUIRE(view.shape(0) == 2);
+    REQUIRE(view.shape(1) == 3);
+    REQUIRE(view.shape(2) == 4);
+
+    view[0, 0, 0] = 3;
+    view[0, 0, 1] = 1;
+    view[0, 0, 2] = 4;
+    view[0, 0, 3] = 1;
+    view[0, 1, 0] = 5;
+    view[0, 1, 1] = 9;
+    view[0, 1, 2] = 2;
+    view[0, 1, 3] = 6;
+    view[0, 2, 0] = 5;
+    view[0, 2, 1] = 3;
+    view[0, 2, 2] = 5;
+    view[0, 2, 3] = 8;
+    view[1, 0, 0] = 9;
+    view[1, 0, 1] = 7;
+    view[1, 0, 2] = 9;
+    view[1, 0, 3] = 3;
+    view[1, 1, 0] = 2;
+    view[1, 1, 1] = 3;
+    view[1, 1, 2] = 8;
+    view[1, 1, 3] = 4;
+    view[1, 2, 0] = 6;
+    view[1, 2, 1] = 2;
+    view[1, 2, 2] = 6;
+    view[1, 2, 3] = 4;
 
     CHECK(view[0][0][0] == 3);
     CHECK(view[0][0][1] == 1);
@@ -121,27 +206,170 @@ TEST_CASE(
     CHECK(view[1][2][1] == 2);
     CHECK(view[1][2][2] == 6);
     CHECK(view[1][2][3] == 4);
+
+    view[0, 0][0] = 3;
+    view[0, 0][1] = 3;
+    view[0, 0][2] = 8;
+    view[0, 0][3] = 3;
+    view[0, 1][0] = 2;
+    view[0, 1][1] = 7;
+    view[0, 1][2] = 9;
+    view[0, 1][3] = 5;
+    view[0, 2][0] = 0;
+    view[0, 2][1] = 2;
+    view[0, 2][2] = 8;
+    view[0, 2][3] = 8;
+    view[1, 0][0] = 4;
+    view[1, 0][1] = 1;
+    view[1, 0][2] = 9;
+    view[1, 0][3] = 7;
+    view[1, 1][0] = 1;
+    view[1, 1][1] = 6;
+    view[1, 1][2] = 9;
+    view[1, 1][3] = 3;
+    view[1, 2][0] = 9;
+    view[1, 2][1] = 9;
+    view[1, 2][2] = 3;
+    view[1, 2][3] = 7;
+
+    CHECK(view[0][0, 0] == 3);
+    CHECK(view[0][0, 1] == 3);
+    CHECK(view[0][0, 2] == 8);
+    CHECK(view[0][0, 3] == 3);
+    CHECK(view[0][1, 0] == 2);
+    CHECK(view[0][1, 1] == 7);
+    CHECK(view[0][1, 2] == 9);
+    CHECK(view[0][1, 3] == 5);
+    CHECK(view[0][2, 0] == 0);
+    CHECK(view[0][2, 1] == 2);
+    CHECK(view[0][2, 2] == 8);
+    CHECK(view[0][2, 3] == 8);
+    CHECK(view[1][0, 0] == 4);
+    CHECK(view[1][0, 1] == 1);
+    CHECK(view[1][0, 2] == 9);
+    CHECK(view[1][0, 3] == 7);
+    CHECK(view[1][1, 0] == 1);
+    CHECK(view[1][1, 1] == 6);
+    CHECK(view[1][1, 2] == 9);
+    CHECK(view[1][1, 3] == 3);
+    CHECK(view[1][2, 0] == 9);
+    CHECK(view[1][2, 1] == 9);
+    CHECK(view[1][2, 2] == 3);
+    CHECK(view[1][2, 3] == 7);
+
+    view[0][0][0] = 5;
+    view[0][0][1] = 1;
+    view[0][0][2] = 0;
+    view[0][0][3] = 5;
+    view[0][1][0] = 8;
+    view[0][1][1] = 2;
+    view[0][1][2] = 0;
+    view[0][1][3] = 9;
+    view[0][2][0] = 7;
+    view[0][2][1] = 4;
+    view[0][2][2] = 9;
+    view[0][2][3] = 4;
+    view[1][0][0] = 4;
+    view[1][0][1] = 5;
+    view[1][0][2] = 9;
+    view[1][0][3] = 2;
+    view[1][1][0] = 3;
+    view[1][1][1] = 0;
+    view[1][1][2] = 7;
+    view[1][1][3] = 8;
+    view[1][2][0] = 1;
+    view[1][2][1] = 6;
+    view[1][2][2] = 4;
+    view[1][2][3] = 0;
+
+    CHECK(view[0, 0, 0] == 5);
+    CHECK(view[0, 0, 1] == 1);
+    CHECK(view[0, 0, 2] == 0);
+    CHECK(view[0, 0, 3] == 5);
+    CHECK(view[0, 1, 0] == 8);
+    CHECK(view[0, 1, 1] == 2);
+    CHECK(view[0, 1, 2] == 0);
+    CHECK(view[0, 1, 3] == 9);
+    CHECK(view[0, 2, 0] == 7);
+    CHECK(view[0, 2, 1] == 4);
+    CHECK(view[0, 2, 2] == 9);
+    CHECK(view[0, 2, 3] == 4);
+    CHECK(view[1, 0, 0] == 4);
+    CHECK(view[1, 0, 1] == 5);
+    CHECK(view[1, 0, 2] == 9);
+    CHECK(view[1, 0, 3] == 2);
+    CHECK(view[1, 1, 0] == 3);
+    CHECK(view[1, 1, 1] == 0);
+    CHECK(view[1, 1, 2] == 7);
+    CHECK(view[1, 1, 3] == 8);
+    CHECK(view[1, 2, 0] == 1);
+    CHECK(view[1, 2, 1] == 6);
+    CHECK(view[1, 2, 2] == 4);
+    CHECK(view[1, 2, 3] == 0);
 }
 
 
 TEST_CASE(
-    "Non-const elements of a vt::ndview can be modified when indexed"
+    "When slicing a vt::ndview with contiguous index ranges, the result is a "
+    "contiguous vt::ndview",
     "[ndarray][view]"
 ) {
-    int data[4] = { 0 };
-    const vt::ndview<int, 1> view{{ 4 }, data};
+    using vt::r;
 
-    REQUIRE(view.shape(0) == 4);
+    const int data[24] = {
+        3, 1, 4, 1,
+        5, 9, 2, 6,
+        5, 3, 5, 8,
 
-    view[0] = 1;
-    view[1] = 2;
-    view[2] = 3;
-    view[3] = 4;
+        9, 7, 9, 3,
+        2, 3, 8, 4,
+        6, 2, 6, 4
+    };
+    const vt::ndview<const int, 3> view{{ 2, 3, 4 }, data};
 
-    CHECK(view[0] == 1);
-    CHECK(view[1] == 2);
-    CHECK(view[2] == 3);
-    CHECK(view[3] == 4);
+    const vt::ndview<const int, 2> slice = view[1, r(1), r()];
+
+    REQUIRE(slice.shape(0) == 2);
+    REQUIRE(slice.shape(1) == 4);
+
+    CHECK(slice[0, 0] == 2);
+    CHECK(slice[0, 1] == 3);
+    CHECK(slice[0, 2] == 8);
+    CHECK(slice[0, 3] == 4);
+    CHECK(slice[1, 0] == 6);
+    CHECK(slice[1, 1] == 2);
+    CHECK(slice[1, 2] == 6);
+    CHECK(slice[1, 3] == 4);
+}
+
+
+TEST_CASE(
+    "When slicing a vt::ndview with non-contiguous index ranges, the result is "
+    "a non-contiguous vt::ndslice",
+    "[ndarray][view]"
+) {
+    using vt::r;
+
+    const int data[24] = {
+        3, 1, 4, 1,
+        5, 9, 2, 6,
+        5, 3, 5, 8,
+
+        9, 7, 9, 3,
+        2, 3, 8, 4,
+        6, 2, 6, 4
+    };
+    const vt::ndview<const int, 3> view{{ 2, 3, 4 }, data};
+
+    const vt::ndslice<const int, 2> slice = view[1, r(1), r(1, 3)];
+
+    REQUIRE(slice.shape(0) == 2);
+    REQUIRE(slice.shape(1) == 2);
+
+    CHECK(slice[0, 0] == 3);
+    CHECK(slice[0, 1] == 8);
+    CHECK(slice[1, 0] == 2);
+    CHECK(slice[1, 1] == 6);
 }
 
 
@@ -201,12 +429,12 @@ TEST_CASE(
     REQUIRE(review.shape(0) == m);
     REQUIRE(review.shape(1) == n);
 
-    CHECK(review[0][0] == 3);
-    CHECK(review[0][1] == 1);
-    CHECK(review[0][2] == 4);
-    CHECK(review[1][0] == 1);
-    CHECK(review[1][1] == 5);
-    CHECK(review[1][2] == 9);
+    CHECK(review[0, 0] == 3);
+    CHECK(review[0, 1] == 1);
+    CHECK(review[0, 2] == 4);
+    CHECK(review[1, 0] == 1);
+    CHECK(review[1, 1] == 5);
+    CHECK(review[1, 2] == 9);
 }
 
 
@@ -224,10 +452,10 @@ TEST_CASE(
     REQUIRE(review.shape(0) == n);
     REQUIRE(review.shape(1) == n);
 
-    CHECK(review[0][0] == 3);
-    CHECK(review[0][1] == 1);
-    CHECK(review[1][0] == 4);
-    CHECK(review[1][1] == 1);
+    CHECK(review[0, 0] == 3);
+    CHECK(review[0, 1] == 1);
+    CHECK(review[1, 0] == 4);
+    CHECK(review[1, 1] == 1);
 }
 
 
@@ -293,10 +521,10 @@ TEST_CASE(
     REQUIRE(slice.shape(0) == 2);
     REQUIRE(slice.shape(1) == 2);
 
-    CHECK(slice[0][0] == 4);
-    CHECK(slice[0][1] == 1);
-    CHECK(slice[1][0] == 5);
-    CHECK(slice[1][1] == 9);
+    CHECK(slice[0, 0] == 4);
+    CHECK(slice[0, 1] == 1);
+    CHECK(slice[1, 0] == 5);
+    CHECK(slice[1, 1] == 9);
 }
 
 
@@ -420,4 +648,246 @@ TEST_CASE(
     ss << view;
 
     REQUIRE(ss.str() == "[]");
+}
+
+
+TEST_CASE(
+    "A vt::ndslice consists of a pointer, shape and strides",
+    "[ndarray][view][slice]"
+) {
+    const int data[4] = { 0 };
+    const vt::ndslice<const int, 2> slice{{ 2, 2 }, { 2, 1 }, data};
+
+    REQUIRE(slice.shape(0) == 2);
+    REQUIRE(slice.shape(1) == 2);
+    REQUIRE(slice.strides(0) == 2);
+    REQUIRE(slice.strides(1) == 1);
+    REQUIRE(slice.data() == data);
+}
+
+
+TEST_CASE(
+    "When constructing a vt::ndslice without specifying strides, default "
+    "strides are determined based on the shape, assuming contiguous data",
+    "[ndarray][view][slice]"
+) {
+    const int data[4] = { 0 };
+    const vt::ndslice<const int, 2> slice{{ 2, 2 }, data};
+
+    REQUIRE(slice.shape(0) == 2);
+    REQUIRE(slice.shape(1) == 2);
+    REQUIRE(slice.strides(0) == 2);
+    REQUIRE(slice.strides(1) == 1);
+    REQUIRE(slice.data() == data);
+}
+
+
+TEST_CASE(
+    "A vt::ndslice can be implicitly constructed from a vt::ndview",
+    "[ndarray][view][slice]"
+) {
+    int data[4] = { 0 };
+    const vt::ndview<int, 2> view{{ 2, 2 }, data};
+
+    const vt::ndslice<const int, 2> slice = view;
+
+    REQUIRE(slice.shape(0) == 2);
+    REQUIRE(slice.shape(1) == 2);
+    REQUIRE(slice.strides(0) == 2);
+    REQUIRE(slice.strides(1) == 1);
+    REQUIRE(slice.data() == data);
+}
+
+
+TEST_CASE(
+    "A vt::ndslice can index into 1-dimensional non-contiguous data",
+    "[ndarray][view][slice]"
+) {
+    const int data[4] = { 3, 1, 4, 1 };
+    const vt::ndslice<const int, 1> slice{{ 2 }, { 2 }, data};
+
+    REQUIRE(slice.shape(0) == 2);
+
+    CHECK(slice[0] == 3);
+    CHECK(slice[1] == 4);
+}
+
+
+TEST_CASE(
+    "A vt::ndslice can index into 2-dimensional non-contiguous data",
+    "[ndarray][view][slice]"
+) {
+    const int data[6] = {
+        3, 1, 4,
+        1, 5, 9
+    };
+    const vt::ndslice<const int, 2> slice{{ 2, 2 }, { 3, 1 }, data};
+
+    REQUIRE(slice.shape(0) == 2);
+    REQUIRE(slice.shape(1) == 2);
+
+    CHECK(slice[0, 0] == 3);
+    CHECK(slice[0, 1] == 1);
+    CHECK(slice[1, 0] == 1);
+    CHECK(slice[1, 1] == 5);
+}
+
+
+TEST_CASE(
+    "A vt::ndslice can index into 3-dimensional non-contiguous data",
+    "[ndarray][view][slice]"
+) {
+    const int data[24] = {
+        3, 1, 4, 1,
+        5, 9, 2, 6,
+        5, 3, 5, 8,
+
+        9, 7, 9, 3,
+        2, 3, 8, 4,
+        6, 2, 6, 4
+    };
+    const vt::ndslice<const int, 3> slice{{ 2, 2, 4 }, { 12, 4, 1 }, data};
+
+    REQUIRE(slice.shape(0) == 2);
+    REQUIRE(slice.shape(1) == 2);
+    REQUIRE(slice.shape(2) == 4);
+
+    CHECK(slice[0, 0, 0] == 3);
+    CHECK(slice[0, 0, 1] == 1);
+    CHECK(slice[0, 0, 2] == 4);
+    CHECK(slice[0, 0, 3] == 1);
+    CHECK(slice[0, 1, 0] == 5);
+    CHECK(slice[0, 1, 1] == 9);
+    CHECK(slice[0, 1, 2] == 2);
+    CHECK(slice[0, 1, 3] == 6);
+    CHECK(slice[1, 0, 0] == 9);
+    CHECK(slice[1, 0, 1] == 7);
+    CHECK(slice[1, 0, 2] == 9);
+    CHECK(slice[1, 0, 3] == 3);
+    CHECK(slice[1, 1, 0] == 2);
+    CHECK(slice[1, 1, 1] == 3);
+    CHECK(slice[1, 1, 2] == 8);
+    CHECK(slice[1, 1, 3] == 4);
+}
+
+
+TEST_CASE(
+    "Non-const elements of a vt::ndslice can be modified when indexed"
+    "[ndarray][view][slice]"
+) {
+    int data[4] = { 0 };
+    const vt::ndslice<int, 1> slice{{ 2 }, { 2 }, data};
+
+    REQUIRE(slice.shape(0) == 2);
+
+    slice[0] = 1;
+    slice[1] = 2;
+
+    CHECK(data[0] == 1);
+    CHECK(data[1] == 0);
+    CHECK(data[2] == 2);
+    CHECK(data[3] == 0);
+}
+
+
+TEST_CASE(
+    "When slicing a vt::ndslice, the result is another vt::ndslice",
+    "[ndarray][view][slice]"
+) {
+    using vt::r;
+
+    const int data[24] = {
+        3, 1, 4, 1,
+        5, 9, 2, 6,
+        5, 3, 5, 8,
+
+        9, 7, 9, 3,
+        2, 3, 8, 4,
+        6, 2, 6, 4
+    };
+    const vt::ndview<const int, 3> view{{ 2, 3, 4 }, data};
+
+    const vt::ndslice<const int, 2> slice = view[1, r(1), r(1, 3)];
+
+    REQUIRE(slice.shape(0) == 2);
+    REQUIRE(slice.shape(1) == 2);
+
+    CHECK(slice[0, 0] == 3);
+    CHECK(slice[0, 1] == 8);
+    CHECK(slice[1, 0] == 2);
+    CHECK(slice[1, 1] == 6);
+
+    const vt::ndslice<const int, 1> slice2 = slice[r(), 1];
+
+    REQUIRE(slice2.shape(0) == 2);
+
+    CHECK(slice2[0] == 8);
+    CHECK(slice2[1] == 6);
+}
+
+
+TEST_CASE(
+    "A vt::ndslice<T, N> can convert to a vt::ndslice<const T, N>",
+    "[ndarray][view][slice]"
+) {
+    int data[4];
+    const vt::ndslice<int, 1> slice{{ 4 }, data};
+
+    const vt::ndslice<const int, 1> cslice = slice;
+
+    REQUIRE(slice.shape() == cslice.shape());
+    REQUIRE(slice.strides() == cslice.strides());
+    REQUIRE(slice.data() == cslice.data());
+}
+
+
+TEST_CASE(
+    "You can query a vt::ndslice's total element count, regardless of "
+    "dimensionality",
+    "[ndarray][view][slice]"
+) {
+    const int data[24] = { 0 };
+    const vt::ndslice<const int, 3> slice{{ 4, 3, 2 }, data};
+
+    REQUIRE(slice.element_count() == 24);
+}
+
+
+TEST_CASE(
+    "You can query a vt::ndslice's dimension count",
+    "[ndarray][view][slice]"
+) {
+    const vt::ndslice<const int, 12> slice{{ 0 }, nullptr};
+
+    REQUIRE(slice.dim_count == 12);
+}
+
+
+TEST_CASE(
+    "A vt::ndslice's template arguments can be deduced from its constructor "
+    "arguments",
+    "[ndarray][view][slice]"
+) {
+    const int data[4] = { 0 };
+
+    vt::ndslice slice{{ 2, 2 }, { 2, 1 }, data};
+
+    STATIC_REQUIRE(std::is_same_v<decltype(slice), vt::ndslice<const int, 2>>);
+}
+
+
+TEST_CASE(
+    "A vt::ndslice can be streamed to a std::ostream",
+    "[ndarray][view][slice]"
+) {
+    const int data[6] = {
+        3, 1, 4,
+        1, 5, 9
+    };
+    const vt::ndslice<const int, 2> slice{{ 2, 2 }, { 3, 1 }, data};
+
+    std::ostringstream ss;
+    ss << slice;
+
+    REQUIRE(ss.str() == "[[3,1],[1,5]]");
 }

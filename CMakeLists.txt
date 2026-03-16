@@ -104,6 +104,7 @@ set(
     -Wno-c++98-compat-pedantic
     -Wno-missing-braces
     -Wno-padded
+    -Wno-unsafe-buffer-usage
 )
 
 set(
@@ -123,7 +124,7 @@ target_include_directories(
     vt-ndarray
     INTERFACE ${CMAKE_CURRENT_LIST_DIR}/include
 )
-target_compile_features(vt-ndarray INTERFACE cxx_std_17)
+target_compile_features(vt-ndarray INTERFACE cxx_std_23)
 
 add_library(vt::ndarray ALIAS vt-ndarray)
 
@@ -137,6 +138,7 @@ if(VT_ENABLE_TESTING)
         "${CMAKE_CURRENT_LIST_DIR}/test/vt/ndarray/allocator_test.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/test/vt/ndarray/container_test.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/test/vt/ndarray/foreach_benchmark.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/test/vt/ndarray/index_test.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/test/vt/ndarray/matrix_mul_benchmark.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/test/vt/ndarray/test_main.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/test/vt/ndarray/view_test.cpp"

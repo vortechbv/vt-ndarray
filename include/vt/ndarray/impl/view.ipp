@@ -21,46 +21,15 @@
 #ifndef VT_NDARRAY_IMPL_VIEW_IPP_
 #define VT_NDARRAY_IMPL_VIEW_IPP_
 
+#include <vt/ndarray/detail/bounds.hpp>
+#include <vt/ndarray/detail/indexing.hpp>
+#include <vt/ndarray/detail/slicing.hpp>
+
 #include <cassert>
 #include <utility>
 
 
 namespace vt {
-
-namespace detail {
-
-template<std::size_t N>
-constexpr std::size_t count_elements(
-    const std::array<std::size_t, N>& shape
-) noexcept {
-    // Using a traditional for-loop, since a range-based for-loop or
-    // std::accumulate will not get optimized away by all compilers.
-    std::size_t count = 1;
-    for (std::size_t i = 0; i < N; ++i) {
-        count *= shape[i];
-    }
-
-    return count;
-}
-
-
-template<std::size_t N, std::size_t... I>
-constexpr std::array<std::size_t, N> to_array_impl(
-    const std::size_t (&shape)[N], std::index_sequence<I...>
-) noexcept {
-    return { {shape[I]...} };
-}
-
-
-template<std::size_t N>
-constexpr std::array<std::size_t, N> to_array(
-    const std::size_t (&shape)[N]
-) noexcept {
-    return to_array_impl(shape, std::make_index_sequence<N>{});
-}
-
-} // namespace detail
-
 
 template<typename T, std::size_t N>
 constexpr ndview<T, N>::ndview(
@@ -74,18 +43,22 @@ constexpr ndview<T, N>::ndview(
 
 
 template<typename T, std::size_t N>
-decltype(auto) ndview<T, N>::operator[](std::size_t idx) const noexcept {
-    assert(idx < _shape[0]);
-
-    if constexpr (N > 1) {
-        const std::array<std::size_t, N - 1> subshape_ = this->subshape();
-
-        return ndview<T, N - 1>{
-            subshape_,
-            _data + idx * detail::count_elements(subshape_)
-        };
+template<indexer... Index>
+constexpr decltype(auto) ndview<T, N>::operator[](
+    Index... idx
+) const noexcept requires((sizeof...(Index) <= N)) {
+    if constexpr (sizeof...(Index) == N) {
+        assert(detail::is_in_bounds(_shape.data(), idx...));
+        if constexpr ((std::convertible_to<Index, std::size_t> && ...)) {
+            return _data[detail::index_contiguous(_shape.data(), idx...)];
+        } else if constexpr (is_slice_contiguous_v<Index...>) {
+            return detail::slice_contiguous(_shape, _data, idx...);
+        } else {
+            const auto strides = detail::default_strides(_shape);
+            return detail::slice_strided(_shape, strides, _data, idx...);
+        }
     } else {
-        return _data[idx];
+        return detail::pad_index_call(*this, idx...);
     }
 }
 
@@ -98,7 +71,7 @@ constexpr ndview<T, N>::operator ndview<const T, N>() const noexcept {
 
 template<typename T, std::size_t N>
 constexpr std::size_t ndview<T, N>::element_count() const noexcept {
-    return detail::count_elements(_shape);
+    return detail::product(_shape);
 }
 
 
@@ -122,7 +95,7 @@ template<std::size_t M>
 constexpr ndview<T, M> ndview<T, N>::reshape(
     const std::array<std::size_t, M>& new_shape
 ) const noexcept {
-    assert(detail::count_elements(new_shape) == this->element_count());
+    assert(detail::product(new_shape) == this->element_count());
 
     return { new_shape, this->data() };
 }
@@ -133,7 +106,7 @@ template<std::size_t M>
 constexpr ndview<T, M> ndview<T, N>::reshape(
     const std::size_t (&new_shape)[M]
 ) const noexcept {
-    return this->reshape(detail::to_array(new_shape));
+    return this->reshape(std::to_array(new_shape));
 }
 
 
@@ -158,19 +131,7 @@ constexpr ndview<T, N> ndview<T, N>::slice(std::size_t offset) const noexcept {
 template<typename T, std::size_t N>
 constexpr ndview<T, N>
 ndview<T, N>::slice(std::size_t offset, std::size_t count) const noexcept {
-    assert(offset <= _shape[0]);
-    assert(offset + count <= _shape[0]);
-
-    if constexpr (N > 1) {
-        auto slice_shape = _shape;
-        slice_shape[0] = count;
-        return ndview<T, N>{
-            slice_shape,
-            _data + offset * detail::count_elements(this->subshape())
-        };
-    } else {
-        return ndview<T, 1>{{ count }, _data + offset};
-    }
+    return this->operator[](r(offset, offset + count));
 }
 
 
@@ -229,18 +190,126 @@ constexpr typename ndview<T, N>::const_reverse_iterator ndview<T, N>::crend(
 
 
 template<typename T, std::size_t N>
-std::array<std::size_t, N - 1> ndview<T, N>::subshape() const noexcept {
-    std::array<std::size_t, N - 1> subshape_;
-    for (std::size_t i = 0; i < N - 1; ++i) {
-        subshape_[i] = _shape[i + 1];
-    }
+std::ostream& operator<<(std::ostream& os, ndview<const T, N> a) {
+    const std::size_t n = a.shape(0);
 
-    return subshape_;
+    os << '[';
+    if (n > 0) os << a[0];
+    for (std::size_t i = 1; i < n; ++i) {
+        os << ',' << a[i];
+    }
+    os << ']';
+
+    return os;
 }
 
 
 template<typename T, std::size_t N>
-std::ostream& operator<<(std::ostream& os, ndview<const T, N> a) {
+constexpr ndslice<T, N>::ndslice(
+    const std::array<std::size_t, N>& shape_,
+    T* data_
+) noexcept :
+    ndslice{shape_, detail::default_strides(shape_), data_}
+{
+}
+
+template<typename T, std::size_t N>
+constexpr ndslice<T, N>::ndslice(
+    const std::array<std::size_t, N>& shape_,
+    const std::array<std::size_t, N>& strides_,
+    T* data_
+) noexcept :
+    _strides{strides_},
+    _data{data_},
+    _shape{shape_}
+{
+}
+
+
+template<typename T, std::size_t N>
+constexpr ndslice<T, N>::ndslice(const ndview<T, N>& view) noexcept :
+    ndslice{view.shape(), view.data()}
+{
+}
+
+
+template<typename T, std::size_t N>
+constexpr ndslice<T, N>::ndslice(
+    const ndview<std::remove_const_t<T>, N>& view
+) noexcept requires(std::is_const_v<T>) :
+    ndslice{view.shape(), view.data()}
+{
+}
+
+
+template<typename T, std::size_t N>
+template<indexer... Index>
+constexpr decltype(auto) ndslice<T, N>::operator[](
+    Index... idx
+) const noexcept requires((sizeof...(Index) <= N)) {
+    if constexpr (sizeof...(Index) == N) {
+        assert(detail::is_in_bounds(_shape.data(), idx...));
+        if constexpr ((std::convertible_to<Index, std::size_t> && ...)) {
+            return _data[detail::index_strided(_strides.data(), idx...)];
+        } else {
+            return detail::slice_strided(_shape, _strides, _data, idx...);
+        }
+    } else {
+        return detail::pad_index_call(*this, idx...);
+    }
+}
+
+
+template<typename T, std::size_t N>
+constexpr ndslice<T, N>::operator ndslice<const T, N>() const noexcept {
+    return { _shape, _strides, _data };
+}
+
+
+template<typename T, std::size_t N>
+constexpr std::size_t ndslice<T, N>::element_count() const noexcept {
+    return detail::product(_shape);
+}
+
+
+template<typename T, std::size_t N>
+constexpr const std::array<std::size_t, N>& ndslice<T, N>::shape(
+) const noexcept {
+    return _shape;
+}
+
+
+template<typename T, std::size_t N>
+constexpr std::size_t ndslice<T, N>::shape(std::size_t dim) const noexcept {
+    assert(dim < N);
+
+    return _shape[dim];
+}
+
+
+template<typename T, std::size_t N>
+constexpr const std::array<std::size_t, N>& ndslice<T, N>::strides(
+) const noexcept {
+    return _strides;
+}
+
+
+template<typename T, std::size_t N>
+constexpr std::size_t ndslice<T, N>::strides(std::size_t dim) const noexcept {
+    assert(dim < N);
+
+    return _strides[dim];
+}
+
+
+template<typename T, std::size_t N>
+constexpr T* ndslice<T, N>::data() const noexcept {
+    return _data;
+}
+
+
+template<typename T, std::size_t N>
+std::ostream& operator<<(std::ostream& os, ndslice<const T, N> a) {
     const std::size_t n = a.shape(0);
 
     os << '[';

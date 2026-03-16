@@ -44,7 +44,7 @@ static float sum(vt::ndview<const float, 2> x) {
     float sum_x = 0.0f;
     for (size_t i = 0; i < n; ++i) {
         for (size_t j = 0; j < m; ++j) {
-            sum_x += x[i][j];
+            sum_x += x[i, j];
         }
     }
 
@@ -61,7 +61,7 @@ static float sum(vt::ndview<const float, 3> x) {
     for (size_t i = 0; i < n; ++i) {
         for (size_t j = 0; j < m; ++j) {
             for (size_t k = 0; k < p; ++k) {
-                sum_x += x[i][j][k];
+                sum_x += x[i, j, k];
             }
         }
     }
@@ -89,7 +89,7 @@ static float sum(const vt::ndarray<float, 2>& x) {
     float sum_x = 0.0f;
     for (size_t i = 0; i < n; ++i) {
         for (size_t j = 0; j < m; ++j) {
-            sum_x += x[i][j];
+            sum_x += x[i, j];
         }
     }
 
@@ -106,7 +106,7 @@ static float sum(const vt::ndarray<float, 3>& x) {
     for (size_t i = 0; i < n; ++i) {
         for (size_t j = 0; j < m; ++j) {
             for (size_t k = 0; k < p; ++k) {
-                sum_x += x[i][j][k];
+                sum_x += x[i, j, k];
             }
         }
     }

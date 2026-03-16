@@ -8,7 +8,7 @@ N-dimensional array library for C++, developed and maintained by [VORtech](https
 Getting started
 ---------------
 
-This is a header-only library. To use it, simply add all files under `include` to your include directories. The library uses C++17 features and assumes a C++17 compliant compiler. Compatibility with the following compilers is tested:
+This is a header-only library. To use it, simply add all files under `include` to your include directories. The library uses C++23 features and assumes a C++23 compliant compiler. Compatibility with the following compilers is tested:
 
 - GCC 14.2
 - Clang 18.1
@@ -27,8 +27,8 @@ int main() {
         1, 5, 9
     }};
 
-    assert(A[0][0] == 3); assert(A[0][1] == 1); assert(A[0][2] == 4);
-    assert(A[1][0] == 1); assert(A[1][1] == 5); assert(A[1][2] == 9);
+    assert(A[0, 0] == 3); assert(A[0, 1] == 1); assert(A[0, 2] == 4);
+    assert(A[1, 0] == 1); assert(A[1, 1] == 5); assert(A[1, 2] == 9);
 }
 ```
 
@@ -42,9 +42,9 @@ static void diag(vt::ndview<int, 2> A, vt::ndview<const int, 1> d) {
     const size_t n = d.shape(0);
     for (size_t i = 0; i < n; ++i) {
         for (size_t j = 0; j < n; ++j) {
-            A[i][j] = 0;
+            A[i, j] = 0;
         }
-        A[i][i] = d[i];
+        A[i, i] = d[i];
     }
 }
 

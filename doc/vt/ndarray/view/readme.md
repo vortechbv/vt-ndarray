@@ -14,7 +14,7 @@ using ndarray_view = ndview<T, N>;
 
 View into N-dimensional array data. It's essentially a pointer-shape pair for externally managed data, providing an N-dimensional `operator[]` interface. The data is assumed to be in row-major order and the view does not take ownership of the data.
 
-For an owning N-dimensional array container, use [ndarray](../container/readme.md#top) instead.
+For non-contiguous data, use [ndslice](../slice/readme.md#top) instead. For an owning N-dimensional array container, use [ndarray](../container/readme.md#top) instead.
 
 This is a reference type and therefore cheap to copy, i.e. copy-constructing or assigning a view will be a shallow copy. As a reference type, note that `ndview<const T, N>` is similar to `const T*`, while `const ndview<T, N>` is similar to `T* const`.
 
@@ -90,12 +90,12 @@ int main() {
     // columns:
     vt::ndview<int, 2> view{{ 2, 3 }, data};
 
-    view[0][0] = 3;
-    view[0][1] = 1;
-    view[0][2] = 4;
-    view[1][0] = 1;
-    view[1][1] = 5;
-    view[1][2] = 9;
+    view[0, 0] = 3;
+    view[0, 1] = 1;
+    view[0, 2] = 4;
+    view[1, 0] = 1;
+    view[1, 1] = 5;
+    view[1, 2] = 9;
 
     std::cout << view << '\n';
 

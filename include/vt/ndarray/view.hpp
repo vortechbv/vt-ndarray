@@ -21,6 +21,8 @@
 #ifndef VT_NDARRAY_VIEW_HPP_
 #define VT_NDARRAY_VIEW_HPP_
 
+#include <vt/ndarray/index.hpp>
+
 #include <array>
 #include <cstddef>
 #include <iterator>
@@ -52,7 +54,10 @@ public:
         T* data_
     ) noexcept;
 
-    decltype(auto) operator[](std::size_t idx) const noexcept;
+    template<indexer... Index>
+    constexpr decltype(auto) operator[](
+        Index... idx
+    ) const noexcept requires((sizeof...(Index) <= N));
 
     constexpr operator ndview<const T, N>() const noexcept;
 
@@ -95,8 +100,6 @@ public:
 private:
     std::array<std::size_t, N> _shape;
     T* _data;
-
-    std::array<std::size_t, N - 1> subshape() const noexcept;
 };
 
 
@@ -108,6 +111,73 @@ ndview(const std::size_t (&)[N], T*) -> ndview<T, N>;
 
 template<typename T, std::size_t N>
 std::ostream& operator<<(std::ostream& os, ndview<const T, N> a);
+
+
+template<typename T, std::size_t N>
+class ndslice {
+    static_assert(N > 0);
+
+public:
+    using element_type = T;
+    using value_type = std::remove_cv_t<T>;
+    using index_type = std::size_t;
+    using pointer = T*;
+    using reference = T&;
+
+    static constexpr std::size_t dim_count = N;
+
+    constexpr ndslice(
+        const std::array<std::size_t, N>& shape_,
+        T* data_
+    ) noexcept;
+
+    constexpr ndslice(
+        const std::array<std::size_t, N>& shape_,
+        const std::array<std::size_t, N>& strides_,
+        T* data_
+    ) noexcept;
+
+    constexpr ndslice(const ndview<T, N>& view) noexcept;
+    constexpr ndslice(
+        const ndview<std::remove_const_t<T>, N>& view
+    ) noexcept requires(std::is_const_v<T>);
+
+    template<indexer... Index>
+    constexpr decltype(auto) operator[](
+        Index... idx
+    ) const noexcept requires((sizeof...(Index) <= N));
+
+    constexpr operator ndslice<const T, N>() const noexcept;
+
+    constexpr std::size_t element_count() const noexcept;
+
+    constexpr const std::array<std::size_t, N>& shape() const noexcept;
+    constexpr std::size_t shape(std::size_t dim) const noexcept;
+
+    constexpr const std::array<std::size_t, N>& strides() const noexcept;
+    constexpr std::size_t strides(std::size_t dim) const noexcept;
+
+    constexpr T* data() const noexcept;
+
+private:
+    std::array<std::size_t, N> _strides;
+    T* _data;
+    std::array<std::size_t, N> _shape;
+};
+
+
+template<typename T, std::size_t N>
+ndslice(const std::size_t (&)[N], T*) -> ndslice<T, N>;
+
+template<typename T, std::size_t N>
+ndslice(
+    const std::size_t (&)[N],
+    const std::size_t (&)[N],
+    T*
+) -> ndslice<T, N>;
+
+template<typename T, std::size_t N>
+std::ostream& operator<<(std::ostream& os, ndslice<const T, N> a);
 
 } // namespace vt
 

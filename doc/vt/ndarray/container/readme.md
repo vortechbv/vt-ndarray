@@ -113,7 +113,7 @@ int main() {
     std::cout << a << '\n';
 
     // The index-operator can be used to access elements:
-    std::cout << a[0][2][3] << '\n';
+    std::cout << a[0, 2, 3] << '\n';
 
     // The shape can be queried:
     std::cout << a.shape(0) << ',' << a.shape(1) << ',' a.shape(2) << '\n';

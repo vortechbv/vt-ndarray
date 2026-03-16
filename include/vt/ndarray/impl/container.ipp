@@ -241,16 +241,20 @@ ndarray<T, N, Allocator>& ndarray<T, N, Allocator>::operator=(ndarray&& other) {
 
 
 template<typename T, std::size_t N, typename Allocator>
+template<indexer... Index>
 decltype(auto) ndarray<T, N, Allocator>::operator[](
-    std::size_t idx
-) const noexcept {
-    return this->cview()[idx];
+    Index... idx
+) const noexcept requires((sizeof...(Index) <= N)) {
+    return this->cview()[std::forward<Index>(idx)...];
 }
 
 
 template<typename T, std::size_t N, typename Allocator>
-decltype(auto) ndarray<T, N, Allocator>::operator[](std::size_t idx) noexcept {
-    return this->view()[idx];
+template<indexer... Index>
+decltype(auto) ndarray<T, N, Allocator>::operator[](
+    Index... idx
+) noexcept requires((sizeof...(Index) <= N)) {
+    return this->view()[std::forward<Index>(idx)...];
 }
 
 
@@ -508,7 +512,7 @@ ndview<T, N> ndarray<T, N, Allocator>::make_allocated_view(
 ) {
     T* data_ = std::allocator_traits<Allocator>::allocate(
         _alloc,
-        detail::count_elements(shape_)
+        detail::product(shape_)
     );
     return { shape_, data_ };
 }

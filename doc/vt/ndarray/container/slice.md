@@ -52,9 +52,9 @@ int main() {
     // When slicing a 2D-array, rows outside of the slice will not be in the
     // obtained view
     vt::ndview<const int, 2> B = A.slice(1, 2);
-    assert(B[0][0] == 4);
-    assert(B[0][1] == 1);
-    assert(B[1][0] == 5);
-    assert(B[1][1] == 9);
+    assert(B[0, 0] == 4);
+    assert(B[0, 1] == 1);
+    assert(B[1, 0] == 5);
+    assert(B[1, 1] == 9);
 }
 ```
