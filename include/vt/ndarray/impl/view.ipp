@@ -43,6 +43,23 @@ constexpr ndview<T, N>::ndview(
 
 
 template<typename T, std::size_t N>
+template<ndview_compatible_range<T> R>
+constexpr ndview<T, N>::ndview(R&& r) noexcept requires(N == 1) :
+    ndview{{ std::ranges::size(r) }, std::ranges::data(r)}
+{
+}
+
+
+template<typename T, std::size_t N>
+constexpr ndview<T, N>::ndview(
+    std::initializer_list<std::remove_cv_t<T>> il
+) noexcept requires(std::is_const_v<T> && N == 1) :
+    ndview{{ il.size() }, il.begin()}
+{
+}
+
+
+template<typename T, std::size_t N>
 template<indexer... Index>
 constexpr decltype(auto) ndview<T, N>::operator[](
     Index... idx

@@ -41,6 +41,41 @@ TEST_CASE(
 
 
 TEST_CASE(
+    "A 1D vt::ndview can be implicitly constructed from a contiguous range",
+    "[ndarray][view]"
+) {
+    const std::array<int, 4> data = { 3, 1, 4, 1 };
+    const vt::ndview<const int, 1> view = data;
+
+    REQUIRE(view.shape(0) == 4);
+    CHECK(std::equal(data.begin(), data.end(), view.data()));
+}
+
+
+TEST_CASE(
+    "A 1D vt::ndview can be implicitly constructed from an initializer list",
+    "[ndarray][view]"
+) {
+    auto check = [](vt::ndview<const int, 1> view) {
+        REQUIRE(view.shape(0) == 4);
+
+        const std::array<int, 4> expected = { 3, 1, 4, 1 };
+        CHECK(std::equal(expected.begin(), expected.end(), view.data()));
+    };
+
+    check({ 3, 1, 4, 1 });
+}
+
+
+TEST_CASE(
+    "A vt::ndview is a contiguous range",
+    "[ndarray][view]"
+) {
+    STATIC_REQUIRE(std::ranges::contiguous_range<vt::ndview<int, 3>>);
+}
+
+
+TEST_CASE(
     "A vt::ndview can index into 1-dimensional data",
     "[ndarray][view]"
 ) {

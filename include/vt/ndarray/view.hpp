@@ -27,10 +27,34 @@
 #include <cstddef>
 #include <iterator>
 #include <ostream>
+#include <ranges>
 #include <type_traits>
 
 
 namespace vt {
+
+template<typename T, std::size_t N>
+class ndview;
+
+template<typename>
+struct is_ndview : std::false_type {};
+
+template<typename T, std::size_t N>
+struct is_ndview<ndview<T, N>> : std::true_type {};
+
+template<typename T>
+inline constexpr bool is_ndview_v = is_ndview<T>::value;
+
+template<typename R, typename T>
+concept ndview_compatible_range =
+    std::is_convertible_v<
+        std::remove_reference_t<std::ranges::range_reference_t<R>>(*)[],
+        T(*)[]
+    >
+    && std::ranges::contiguous_range<R>
+    && std::ranges::sized_range<R>
+    && (std::ranges::borrowed_range<R> || std::is_const_v<T>)
+    && !is_ndview_v<R>;
 
 template<typename T, std::size_t N>
 class ndview {
@@ -53,6 +77,13 @@ public:
         const std::array<std::size_t, N>& shape_,
         T* data_
     ) noexcept;
+
+    template<ndview_compatible_range<T> R>
+    constexpr ndview(R&& r) noexcept requires(N == 1);
+
+    constexpr ndview(
+        std::initializer_list<std::remove_cv_t<T>> il
+    ) noexcept requires(std::is_const_v<T> && N == 1);
 
     template<indexer... Index>
     constexpr decltype(auto) operator[](
