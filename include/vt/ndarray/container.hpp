@@ -133,9 +133,13 @@ public:
 
     Allocator get_allocator() const noexcept;
 
+    [[deprecated("Use operator[] instead")]]
     ndview<T, N> slice(std::size_t offset) noexcept;
+    [[deprecated("Use operator[] instead")]]
     ndview<const T, N> slice(std::size_t offset) const noexcept;
+    [[deprecated("Use operator[] instead")]]
     ndview<T, N> slice(std::size_t offset, std::size_t count) noexcept;
+    [[deprecated("Use operator[] instead")]]
     ndview<const T, N> slice(
         std::size_t offset,
         std::size_t count

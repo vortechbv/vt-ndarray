@@ -11,6 +11,8 @@ constexpr ndview<T, N> slice(
 ) const noexcept;
 ```
 
+**This function has been deprecated: Use operator[] instead.**
+
 Creates a slice in the first dimension of the view. The shape of the remaining dimensions will remain the same.
 
 1. Obtains a view of the slice `[offset, shape[0])`.

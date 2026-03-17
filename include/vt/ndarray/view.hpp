@@ -110,7 +110,9 @@ public:
 
     constexpr T* data() const noexcept;
 
+    [[deprecated("Use operator[] instead")]]
     constexpr ndview<T, N> slice(std::size_t offset) const noexcept;
+    [[deprecated("Use operator[] instead")]]
     constexpr ndview<T, N> slice(
         std::size_t offset,
         std::size_t count
