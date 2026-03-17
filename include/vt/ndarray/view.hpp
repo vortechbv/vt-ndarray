@@ -114,6 +114,75 @@ std::ostream& operator<<(std::ostream& os, ndview<const T, N> a);
 
 
 template<typename T, std::size_t N>
+class ndslice_iterator {
+    static_assert(N > 0);
+
+public:
+    using difference_type = std::ptrdiff_t;
+    using value_type = T;
+
+    constexpr ndslice_iterator() noexcept;
+
+    constexpr ndslice_iterator(
+        std::size_t start,
+        const std::array<std::size_t, N>& shape_,
+        const std::array<std::size_t, N>& strides_,
+        T* data_
+    ) noexcept;
+
+    constexpr T& operator[](std::size_t idx) const noexcept;
+
+    constexpr T& operator*() const noexcept;
+
+    constexpr ndslice_iterator<T, N>& operator++() noexcept;
+    constexpr ndslice_iterator<T, N> operator++(int) noexcept;
+
+    constexpr ndslice_iterator<T, N>& operator--() noexcept;
+    constexpr ndslice_iterator<T, N> operator--(int) noexcept;
+
+    constexpr ndslice_iterator<T, N>& operator+=(difference_type diff) noexcept;
+    constexpr ndslice_iterator<T, N> operator+(
+        difference_type diff
+    ) const noexcept;
+
+    constexpr ndslice_iterator<T, N>& operator-=(difference_type diff) noexcept;
+    constexpr ndslice_iterator<T, N> operator-(
+        difference_type diff
+    ) const noexcept;
+
+    constexpr difference_type operator-(
+        const ndslice_iterator<T, N>& other
+    ) const noexcept;
+
+    constexpr auto operator<=>(
+        const ndslice_iterator<T, N>& other
+    ) const noexcept;
+
+    constexpr bool operator==(
+        const ndslice_iterator<T, N>& other
+    ) const noexcept;
+
+private:
+    template<std::size_t... I>
+    constexpr T& index(
+        std::size_t idx,
+        std::index_sequence<I...>
+    ) const noexcept;
+
+    std::size_t _iter;
+    std::array<std::size_t, N> _shape;
+    std::array<std::size_t, N> _strides;
+    T* _data;
+};
+
+template<typename T, std::size_t N>
+constexpr ndslice_iterator<T, N> operator+(
+    typename ndslice_iterator<T, N>::difference_type a,
+    const ndslice_iterator<T, N>& b
+) noexcept;
+
+
+template<typename T, std::size_t N>
 class ndslice {
     static_assert(N > 0);
 
@@ -123,6 +192,10 @@ public:
     using index_type = std::size_t;
     using pointer = T*;
     using reference = T&;
+    using iterator = ndslice_iterator<T, N>;
+    using const_iterator = ndslice_iterator<const T, N>;
+    using reverse_iterator = std::reverse_iterator<iterator>;
+    using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
     static constexpr std::size_t dim_count = N;
 
@@ -158,6 +231,18 @@ public:
     constexpr std::size_t strides(std::size_t dim) const noexcept;
 
     constexpr T* data() const noexcept;
+
+    constexpr iterator begin() const noexcept;
+    constexpr const_iterator cbegin() const noexcept;
+
+    constexpr iterator end() const noexcept;
+    constexpr const_iterator cend() const noexcept;
+
+    constexpr reverse_iterator rbegin() const noexcept;
+    constexpr const_reverse_iterator crbegin() const noexcept;
+
+    constexpr reverse_iterator rend() const noexcept;
+    constexpr const_reverse_iterator crend() const noexcept;
 
 private:
     std::array<std::size_t, N> _strides;

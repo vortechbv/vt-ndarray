@@ -95,6 +95,17 @@ constexpr std::size_t index_strided(
 }
 
 
+template<std::size_t N, std::size_t I>
+constexpr std::size_t iter2indices(
+    std::size_t i,
+    const std::size_t* shape
+) noexcept {
+    if constexpr (I != N - 1) i /= product<N - 1 - I>(shape + 1 + I);
+    if constexpr (I != 0) i %= shape[I];
+    return i;
+}
+
+
 template<typename T, std::size_t... I, indexer... Index>
 constexpr decltype(auto) pad_index_call_impl(
     const T& indexee,

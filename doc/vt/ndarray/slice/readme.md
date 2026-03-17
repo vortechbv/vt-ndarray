@@ -33,6 +33,10 @@ value_type             | `std::remove_cv_t<T>`
 index_type             | `std::size_t`
 pointer                | `T*`
 reference              | `T&`
+iterator               | `std::random_access_iterator` to `value_type`
+const_iterator         | `std::random_access_iterator` to `const value_type`
+reverse_iterator       | `std::reverse_iterator<iterator>`
+const_reverse_iterator | `std::reverse_iterator<const_iterator>`
 
 Member constant
 ---------------
@@ -52,6 +56,10 @@ Member functions
 [element_count](element-count.md#top)     | returns the total number of elements
 [shape](shape.md#top)                     | returns the N-dimensional shape
 [data](data.md#top)                       | returns a pointer to the first element
+[begin<br>cbegin](begin.md#top)           | returns an iterator to the beginning
+[end<br>cend](end.md#top)                 | returns an iterator to the end
+[rbegin<br>crbegin](rbegin.md#top)        | returns a reverse iterator to the beginning
+[rend<br>crend](rend.md#top)              | returns a reverse iterator to the end
 
 Non-member functions
 --------------------
@@ -83,6 +91,13 @@ int main() {
 
     std::cout << slice << '\n';
 
+    // Iterators iterate over the entire range of elements, regardless of
+    // dimensionality:
+    for (int i : slice) {
+        std::cout << i;
+    }
+    std::cout << '\n';
+
     // The ndslice is only a view into the original array, so changing elements
     // in the slice will also change the corresponding elements in the original
     // array:
@@ -97,5 +112,6 @@ Output:
 
 ```
 [[3,1],[4,1]]
+3141
 310410
 ```

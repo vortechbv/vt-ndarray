@@ -205,6 +205,164 @@ std::ostream& operator<<(std::ostream& os, ndview<const T, N> a) {
 
 
 template<typename T, std::size_t N>
+constexpr ndslice_iterator<T, N>::ndslice_iterator() noexcept :
+    ndslice_iterator{std::size_t(-1), {}, {}, nullptr}
+{
+}
+
+
+template<typename T, std::size_t N>
+constexpr ndslice_iterator<T, N>::ndslice_iterator(
+    std::size_t start,
+    const std::array<std::size_t, N>& shape_,
+    const std::array<std::size_t, N>& strides_,
+    T* data_
+) noexcept :
+    _iter{start},
+    _shape{shape_},
+    _strides{strides_},
+    _data{data_}
+{
+}
+
+
+template<typename T, std::size_t N>
+constexpr T& ndslice_iterator<T, N>::operator[](
+    std::size_t idx
+) const noexcept {
+    return this->index(idx, std::make_index_sequence<N>{});
+}
+
+
+template<typename T, std::size_t N>
+constexpr T& ndslice_iterator<T, N>::operator*() const noexcept {
+    return this->operator[](_iter);
+}
+
+
+template<typename T, std::size_t N>
+constexpr ndslice_iterator<T, N>& ndslice_iterator<T, N>::operator++(
+) noexcept {
+    ++_iter;
+    return *this;
+}
+
+
+template<typename T, std::size_t N>
+constexpr ndslice_iterator<T, N> ndslice_iterator<T, N>::operator++(
+    int
+) noexcept {
+    const auto copy = *this;
+    ++_iter;
+    return copy;
+}
+
+
+template<typename T, std::size_t N>
+constexpr ndslice_iterator<T, N>& ndslice_iterator<T, N>::operator--(
+) noexcept {
+    --_iter;
+    return *this;
+}
+
+
+template<typename T, std::size_t N>
+constexpr ndslice_iterator<T, N> ndslice_iterator<T, N>::operator--(
+    int
+) noexcept {
+    const auto copy = *this;
+    --_iter;
+    return copy;
+}
+
+
+template<typename T, std::size_t N>
+constexpr ndslice_iterator<T, N>& ndslice_iterator<T, N>::operator+=(
+    difference_type diff
+) noexcept {
+    _iter += diff;
+    return *this;
+}
+
+
+template<typename T, std::size_t N>
+constexpr ndslice_iterator<T, N> ndslice_iterator<T, N>::operator+(
+    difference_type diff
+) const noexcept {
+    const auto copy = *this;
+    copy += diff;
+    return copy;
+}
+
+
+template<typename T, std::size_t N>
+constexpr ndslice_iterator<T, N>& ndslice_iterator<T, N>::operator-=(
+    difference_type diff
+) noexcept {
+    _iter -= diff;
+    return *this;
+}
+
+
+template<typename T, std::size_t N>
+constexpr ndslice_iterator<T, N> ndslice_iterator<T, N>::operator-(
+    difference_type diff
+) const noexcept {
+    const auto copy = *this;
+    copy -= diff;
+    return copy;
+}
+
+
+template<typename T, std::size_t N>
+constexpr typename ndslice_iterator<T, N>::difference_type
+ndslice_iterator<T, N>::operator-(
+    const ndslice_iterator<T, N>& other
+) const noexcept {
+    return _iter - other._iter;
+}
+
+
+template<typename T, std::size_t N>
+constexpr auto ndslice_iterator<T, N>::operator<=>(
+    const ndslice_iterator<T, N>& other
+) const noexcept {
+    return _iter <=> other._iter;
+}
+
+
+template<typename T, std::size_t N>
+constexpr bool ndslice_iterator<T, N>::operator==(
+    const ndslice_iterator<T, N>& other
+) const noexcept {
+    return _iter == other._iter;
+}
+
+
+template<typename T, std::size_t N>
+template<std::size_t... I>
+constexpr T& ndslice_iterator<T, N>::index(
+    std::size_t idx,
+    std::index_sequence<I...>
+) const noexcept {
+    const std::size_t offset = detail::index_strided(
+        _strides.data(),
+        detail::iter2indices<N, I>(idx, _shape.data())...
+    );
+    return _data[offset];
+}
+
+
+template<typename T, std::size_t N>
+constexpr ndslice_iterator<T, N> operator+(
+    typename ndslice_iterator<T, N>::difference_type a,
+    const ndslice_iterator<T, N>& b
+) noexcept {
+    return b + a;
+}
+
+
+template<typename T, std::size_t N>
 constexpr ndslice<T, N>::ndslice(
     const std::array<std::size_t, N>& shape_,
     T* data_
@@ -305,6 +463,60 @@ constexpr std::size_t ndslice<T, N>::strides(std::size_t dim) const noexcept {
 template<typename T, std::size_t N>
 constexpr T* ndslice<T, N>::data() const noexcept {
     return _data;
+}
+
+
+template<typename T, std::size_t N>
+constexpr typename ndslice<T, N>::iterator ndslice<T, N>::begin() const noexcept {
+    return iterator{0, _shape, _strides, _data};
+}
+
+
+template<typename T, std::size_t N>
+constexpr typename ndslice<T, N>::const_iterator ndslice<T, N>::cbegin(
+) const noexcept {
+    return const_iterator{0, _shape, _strides, _data};
+}
+
+
+template<typename T, std::size_t N>
+constexpr typename ndslice<T, N>::iterator ndslice<T, N>::end() const noexcept {
+    return iterator{this->element_count(), _shape, _strides, _data};
+}
+
+
+template<typename T, std::size_t N>
+constexpr typename ndslice<T, N>::const_iterator ndslice<T, N>::cend(
+) const noexcept {
+    return const_iterator{this->element_count(), _shape, _strides, _data};
+}
+
+
+template<typename T, std::size_t N>
+constexpr typename ndslice<T, N>::reverse_iterator ndslice<T, N>::rbegin(
+) const noexcept {
+    return reverse_iterator{this->end()};
+}
+
+
+template<typename T, std::size_t N>
+constexpr typename ndslice<T, N>::const_reverse_iterator ndslice<T, N>::crbegin(
+) const noexcept {
+    return const_reverse_iterator{this->cend()};
+}
+
+
+template<typename T, std::size_t N>
+constexpr typename ndslice<T, N>::reverse_iterator ndslice<T, N>::rend(
+) const noexcept {
+    return reverse_iterator{this->begin()};
+}
+
+
+template<typename T, std::size_t N>
+constexpr typename ndslice<T, N>::const_reverse_iterator ndslice<T, N>::crend(
+) const noexcept {
+    return const_reverse_iterator{this->cbegin()};
 }
 
 

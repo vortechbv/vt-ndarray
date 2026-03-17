@@ -652,6 +652,16 @@ TEST_CASE(
 
 
 TEST_CASE(
+    "A vt::ndslice_iterator is a random access iterator",
+    "[ndarray][view][slice]"
+) {
+    STATIC_REQUIRE(
+        std::random_access_iterator<vt::ndslice_iterator<const int, 3>>
+    );
+}
+
+
+TEST_CASE(
     "A vt::ndslice consists of a pointer, shape and strides",
     "[ndarray][view][slice]"
 ) {
@@ -860,6 +870,72 @@ TEST_CASE(
     const vt::ndslice<const int, 12> slice{{ 0 }, nullptr};
 
     REQUIRE(slice.dim_count == 12);
+}
+
+
+TEST_CASE(
+    "A vt::ndslice supports iterating over all elements, regardless of "
+    "dimensionality",
+    "[ndarray][view][slice]"
+) {
+    const int data[6] = {
+        3, 1, 4,
+        1, 5, 9
+    };
+    const vt::ndslice<const int, 2> slice{{ 2, 2 }, { 3, 1 }, data};
+
+    const std::array<int, 4> expected = { 3, 1, 1, 5 };
+
+    REQUIRE(std::equal(slice.cbegin(), slice.cend(), expected.begin()));
+}
+
+
+TEST_CASE(
+    "Values can also be modified through a vt::ndslice's iterators",
+    "[ndarray][view][slice]"
+) {
+    int data[8] = { 0 };
+    const vt::ndslice<int, 1> slice{{ 4 }, { 2 }, data};
+
+    std::iota(slice.begin(), slice.end(), 0);
+
+    CHECK(data[0] == 0);
+    CHECK(data[1] == 0);
+    CHECK(data[2] == 1);
+    CHECK(data[3] == 0);
+    CHECK(data[4] == 2);
+    CHECK(data[5] == 0);
+    CHECK(data[6] == 3);
+    CHECK(data[7] == 0);
+}
+
+
+TEST_CASE(
+    "A vt::ndslice also supports reverse iterators",
+    "[ndarray][view][slice]"
+) {
+    const int data[12] = { 0, 3, 1, 4, 2, 5, 2, 6, 1, 7, 0, 8 };
+    const vt::ndslice<const int, 1> slice{{ 6 }, { 2 }, data};
+
+    REQUIRE(std::equal(slice.crbegin(), slice.crend(), slice.cbegin()));
+}
+
+
+TEST_CASE(
+    "Values can also be modified through a vt::ndslice's reverse iterators",
+    "[ndarray][view][slice]"
+) {
+    int data[4] = { 0 };
+    const vt::ndslice<int, 1> slice{{ 4 }, data};
+
+    std::iota(slice.rbegin(), slice.rend(), 0);
+
+    REQUIRE(slice.shape(0) == 4);
+
+    CHECK(slice[0] == 3);
+    CHECK(slice[1] == 2);
+    CHECK(slice[2] == 1);
+    CHECK(slice[3] == 0);
 }
 
 

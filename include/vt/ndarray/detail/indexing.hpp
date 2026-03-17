@@ -82,6 +82,13 @@ constexpr std::size_t index_strided(
 ) noexcept;
 
 
+template<std::size_t N, std::size_t I>
+constexpr std::size_t iter2indices(
+    std::size_t i,
+    const std::size_t* shape
+) noexcept;
+
+
 // Utility for padding instances of index_range<0> when the caller specifies
 // less indices than the number of dimensions.
 
