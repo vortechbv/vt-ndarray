@@ -12,7 +12,7 @@ This is a header-only library. To use it, simply add all files under `include` t
 
 - GCC 14.2
 - Clang 18.1
-- MSVC vs2022
+- MSVC vs2026
 
 The library provides an array container that allows for N-dimensional indexing:
 

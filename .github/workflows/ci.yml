@@ -23,27 +23,27 @@ jobs:
             build_type: Release
             compiler: clang++-18
 
-          - os: windows-2022
+          - os: windows-2025-vs2026
             build_type: Debug
-            generator: Visual Studio 17 2022
+            generator: Visual Studio 18 2026
             arch: Win32
-          - os: windows-2022
+          - os: windows-2025-vs2026
             build_type: Release
-            generator: Visual Studio 17 2022
+            generator: Visual Studio 18 2026
             arch: Win32
-          - os: windows-2022
+          - os: windows-2025-vs2026
             build_type: Debug
-            generator: Visual Studio 17 2022
+            generator: Visual Studio 18 2026
             arch: x64
-          - os: windows-2022
+          - os: windows-2025-vs2026
             build_type: Release
-            generator: Visual Studio 17 2022
+            generator: Visual Studio 18 2026
             arch: x64
 
-          - os: windows-2022
+          - os: windows-2025-vs2026
             build_type: Debug
             generator: MinGW Makefiles
-          - os: windows-2022
+          - os: windows-2025-vs2026
             build_type: Release
             generator: MinGW Makefiles
 
