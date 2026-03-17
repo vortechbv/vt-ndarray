@@ -745,6 +745,42 @@ TEST_CASE(
 
 
 TEST_CASE(
+    "A 1D vt::ndslice can be implicitly constructed from a contiguous range",
+    "[ndarray][view][slice]"
+) {
+    const std::array<int, 4> data = { 3, 1, 4, 1 };
+    const vt::ndslice<const int, 1> slice = data;
+
+    REQUIRE(slice.shape(0) == 4);
+    CHECK(std::equal(data.begin(), data.end(), slice.data()));
+}
+
+
+TEST_CASE(
+    "A 1D vt::ndslice can be implicitly constructed from an initializer list",
+    "[ndarray][view][slice]"
+) {
+    auto check = [](vt::ndslice<const int, 1> slice) {
+        REQUIRE(slice.shape(0) == 4);
+
+        const std::array<int, 4> expected = { 3, 1, 4, 1 };
+        CHECK(std::equal(expected.begin(), expected.end(), slice.data()));
+    };
+
+    check({ 3, 1, 4, 1 });
+}
+
+
+TEST_CASE(
+    "A vt::ndslice is a random access range, but not a contiguous range",
+    "[ndarray][view][slice]"
+) {
+    STATIC_REQUIRE(std::ranges::random_access_range<vt::ndslice<int, 3>>);
+    STATIC_REQUIRE(!std::ranges::contiguous_range<vt::ndslice<int, 3>>);
+}
+
+
+TEST_CASE(
     "A vt::ndslice can index into 1-dimensional non-contiguous data",
     "[ndarray][view][slice]"
 ) {

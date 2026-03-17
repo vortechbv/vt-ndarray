@@ -418,6 +418,23 @@ constexpr ndslice<T, N>::ndslice(
 
 
 template<typename T, std::size_t N>
+template<ndview_compatible_range<T> R>
+constexpr ndslice<T, N>::ndslice(R&& r) noexcept requires(N == 1) :
+    ndslice{{ std::ranges::size(r) }, std::ranges::data(r)}
+{
+}
+
+
+template<typename T, std::size_t N>
+constexpr ndslice<T, N>::ndslice(
+    std::initializer_list<std::remove_cv_t<T>> il
+) noexcept requires(std::is_const_v<T> && N == 1) :
+    ndslice{{ il.size() }, il.begin()}
+{
+}
+
+
+template<typename T, std::size_t N>
 template<indexer... Index>
 constexpr decltype(auto) ndslice<T, N>::operator[](
     Index... idx

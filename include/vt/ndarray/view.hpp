@@ -246,6 +246,13 @@ public:
         const ndview<std::remove_const_t<T>, N>& view
     ) noexcept requires(std::is_const_v<T>);
 
+    template<ndview_compatible_range<T> R>
+    constexpr ndslice(R&& r) noexcept requires(N == 1);
+
+    constexpr ndslice(
+        std::initializer_list<std::remove_cv_t<T>> il
+    ) noexcept requires(std::is_const_v<T> && N == 1);
+
     template<indexer... Index>
     constexpr decltype(auto) operator[](
         Index... idx
