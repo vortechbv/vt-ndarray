@@ -93,7 +93,7 @@ static void mul(
 
 
 TEST_CASE("Benchmark naive matrix multiplication", "[ndarray][!benchmark]") {
-    const size_t n = GENERATE(8, 64, 512, 1024);
+    const size_t n = GENERATE(8uz, 64uz, 512uz, 1024uz);
 
     const vt::ndarray<float, 2> A{{ n, n }};
     const vt::ndarray<float, 2> B{{ n, n }};

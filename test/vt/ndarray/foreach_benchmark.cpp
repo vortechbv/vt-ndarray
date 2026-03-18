@@ -127,7 +127,7 @@ static float iter_sum(vt::ndview<const float, N> x) {
 
 
 TEST_CASE("Benchmark sum", "[ndarray][!benchmark]") {
-    const size_t n = GENERATE(8, 64, 512, 1024);
+    const size_t n = GENERATE(8uz, 64uz, 512uz, 1024uz);
 
     SECTION("1D") {
         const vt::ndarray<float, 1> x{{ n }};
