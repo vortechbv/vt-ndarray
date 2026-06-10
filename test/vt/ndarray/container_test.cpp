@@ -134,12 +134,12 @@ TEST_CASE(
     REQUIRE(b.shape(0) == 2);
     REQUIRE(b.shape(1) == 3);
 
-    CHECK(b[0][0] == 3);
-    CHECK(b[0][1] == 1);
-    CHECK(b[0][2] == 4);
-    CHECK(b[1][0] == 1);
-    CHECK(b[1][1] == 5);
-    CHECK(b[1][2] == 9);
+    CHECK(b[0, 0] == 3);
+    CHECK(b[0, 1] == 1);
+    CHECK(b[0, 2] == 4);
+    CHECK(b[1, 0] == 1);
+    CHECK(b[1, 1] == 5);
+    CHECK(b[1, 2] == 9);
 }
 
 
@@ -209,12 +209,12 @@ TEST_CASE(
     REQUIRE(a.shape(0) == 2);
     REQUIRE(a.shape(1) == 3);
 
-    CHECK(a[0][0] == 3);
-    CHECK(a[0][1] == 1);
-    CHECK(a[0][2] == 4);
-    CHECK(a[1][0] == 1);
-    CHECK(a[1][1] == 5);
-    CHECK(a[1][2] == 9);
+    CHECK(a[0, 0] == 3);
+    CHECK(a[0, 1] == 1);
+    CHECK(a[0, 2] == 4);
+    CHECK(a[1, 0] == 1);
+    CHECK(a[1, 1] == 5);
+    CHECK(a[1, 2] == 9);
 }
 
 
@@ -347,19 +347,19 @@ TEST_CASE(
     REQUIRE(a.shape(0) == 2);
     REQUIRE(a.shape(1) == 3);
 
-    a[0][0] = 0;
-    a[0][1] = 1;
-    a[0][2] = 2;
-    a[1][0] = 3;
-    a[1][1] = 4;
-    a[1][2] = 5;
+    a[0, 0] = 0;
+    a[0, 1] = 1;
+    a[0, 2] = 2;
+    a[1, 0] = 3;
+    a[1, 1] = 4;
+    a[1, 2] = 5;
 
-    CHECK(a[0][0] == 0);
-    CHECK(a[0][1] == 1);
-    CHECK(a[0][2] == 2);
-    CHECK(a[1][0] == 3);
-    CHECK(a[1][1] == 4);
-    CHECK(a[1][2] == 5);
+    CHECK(a[0, 0] == 0);
+    CHECK(a[0, 1] == 1);
+    CHECK(a[0, 2] == 2);
+    CHECK(a[1, 0] == 3);
+    CHECK(a[1, 1] == 4);
+    CHECK(a[1, 2] == 5);
 }
 
 
@@ -376,10 +376,10 @@ TEST_CASE(
     REQUIRE(reshaped.shape(0) == n);
     REQUIRE(reshaped.shape(1) == n);
 
-    CHECK(reshaped[0][0] == 3);
-    CHECK(reshaped[0][1] == 1);
-    CHECK(reshaped[1][0] == 4);
-    CHECK(reshaped[1][1] == 1);
+    CHECK(reshaped[0, 0] == 3);
+    CHECK(reshaped[0, 1] == 1);
+    CHECK(reshaped[1, 0] == 4);
+    CHECK(reshaped[1, 1] == 1);
 }
 
 
@@ -426,10 +426,10 @@ TEST_CASE(
     REQUIRE(slice.shape(0) == 2);
     REQUIRE(slice.shape(1) == 2);
 
-    CHECK(slice[0][0] == 4);
-    CHECK(slice[0][1] == 1);
-    CHECK(slice[1][0] == 5);
-    CHECK(slice[1][1] == 9);
+    CHECK(slice[0, 0] == 4);
+    CHECK(slice[0, 1] == 1);
+    CHECK(slice[1, 0] == 5);
+    CHECK(slice[1, 1] == 9);
 }
 
 

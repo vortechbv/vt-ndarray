@@ -1,5 +1,5 @@
-vt::ndarray::data
-=================
+vt::ndview::data
+================
 
 ```c++
 constexpr T* data() const noexcept;

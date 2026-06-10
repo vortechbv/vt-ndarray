@@ -12,6 +12,8 @@ ndview<T, N> slice(std::size_t offset, std::size_t count) noexcept;
 ndview<const T, N> slice(std::size_t offset, std::size_t count) const noexcept;
 ```
 
+**This function has been deprecated: Use operator[] instead.**
+
 Creates a slice in the first dimension of the array. The shape of the remaining dimensions will remain the same.
 
 1. Obtains a mutable view of the slice `[offset, shape[0])`.
@@ -52,9 +54,9 @@ int main() {
     // When slicing a 2D-array, rows outside of the slice will not be in the
     // obtained view
     vt::ndview<const int, 2> B = A.slice(1, 2);
-    assert(B[0][0] == 4);
-    assert(B[0][1] == 1);
-    assert(B[1][0] == 5);
-    assert(B[1][1] == 9);
+    assert(B[0, 0] == 4);
+    assert(B[0, 1] == 1);
+    assert(B[1, 0] == 5);
+    assert(B[1, 1] == 9);
 }
 ```

@@ -21,14 +21,40 @@
 #ifndef VT_NDARRAY_VIEW_HPP_
 #define VT_NDARRAY_VIEW_HPP_
 
+#include <vt/ndarray/index.hpp>
+
 #include <array>
 #include <cstddef>
 #include <iterator>
 #include <ostream>
+#include <ranges>
 #include <type_traits>
 
 
 namespace vt {
+
+template<typename T, std::size_t N>
+class ndview;
+
+template<typename>
+struct is_ndview : std::false_type {};
+
+template<typename T, std::size_t N>
+struct is_ndview<ndview<T, N>> : std::true_type {};
+
+template<typename T>
+inline constexpr bool is_ndview_v = is_ndview<T>::value;
+
+template<typename R, typename T>
+concept ndview_compatible_range =
+    std::is_convertible_v<
+        std::remove_reference_t<std::ranges::range_reference_t<R>>(*)[],
+        T(*)[]
+    >
+    && std::ranges::contiguous_range<R>
+    && std::ranges::sized_range<R>
+    && (std::ranges::borrowed_range<R> || std::is_const_v<T>)
+    && !is_ndview_v<R>;
 
 template<typename T, std::size_t N>
 class ndview {
@@ -52,7 +78,17 @@ public:
         T* data_
     ) noexcept;
 
-    decltype(auto) operator[](std::size_t idx) const noexcept;
+    template<ndview_compatible_range<T> R>
+    constexpr ndview(R&& r) noexcept requires(N == 1);
+
+    constexpr ndview(
+        std::initializer_list<std::remove_cv_t<T>> il
+    ) noexcept requires(std::is_const_v<T> && N == 1);
+
+    template<indexer... Index>
+    constexpr decltype(auto) operator[](
+        Index... idx
+    ) const noexcept requires((sizeof...(Index) <= N));
 
     constexpr operator ndview<const T, N>() const noexcept;
 
@@ -74,7 +110,9 @@ public:
 
     constexpr T* data() const noexcept;
 
+    [[deprecated("Use operator[] instead")]]
     constexpr ndview<T, N> slice(std::size_t offset) const noexcept;
+    [[deprecated("Use operator[] instead")]]
     constexpr ndview<T, N> slice(
         std::size_t offset,
         std::size_t count
@@ -95,8 +133,6 @@ public:
 private:
     std::array<std::size_t, N> _shape;
     T* _data;
-
-    std::array<std::size_t, N - 1> subshape() const noexcept;
 };
 
 
@@ -108,6 +144,165 @@ ndview(const std::size_t (&)[N], T*) -> ndview<T, N>;
 
 template<typename T, std::size_t N>
 std::ostream& operator<<(std::ostream& os, ndview<const T, N> a);
+
+
+template<typename T, std::size_t N>
+class ndslice_iterator {
+    static_assert(N > 0);
+
+public:
+    using difference_type = std::ptrdiff_t;
+    using value_type = T;
+
+    constexpr ndslice_iterator() noexcept;
+
+    constexpr ndslice_iterator(
+        std::size_t start,
+        const std::array<std::size_t, N>& shape_,
+        const std::array<std::size_t, N>& strides_,
+        T* data_
+    ) noexcept;
+
+    constexpr T& operator[](std::size_t idx) const noexcept;
+
+    constexpr T& operator*() const noexcept;
+
+    constexpr ndslice_iterator<T, N>& operator++() noexcept;
+    constexpr ndslice_iterator<T, N> operator++(int) noexcept;
+
+    constexpr ndslice_iterator<T, N>& operator--() noexcept;
+    constexpr ndslice_iterator<T, N> operator--(int) noexcept;
+
+    constexpr ndslice_iterator<T, N>& operator+=(difference_type diff) noexcept;
+    constexpr ndslice_iterator<T, N> operator+(
+        difference_type diff
+    ) const noexcept;
+
+    constexpr ndslice_iterator<T, N>& operator-=(difference_type diff) noexcept;
+    constexpr ndslice_iterator<T, N> operator-(
+        difference_type diff
+    ) const noexcept;
+
+    constexpr difference_type operator-(
+        const ndslice_iterator<T, N>& other
+    ) const noexcept;
+
+    constexpr auto operator<=>(
+        const ndslice_iterator<T, N>& other
+    ) const noexcept;
+
+    constexpr bool operator==(
+        const ndslice_iterator<T, N>& other
+    ) const noexcept;
+
+private:
+    template<std::size_t... I>
+    constexpr T& index(
+        std::size_t idx,
+        std::index_sequence<I...>
+    ) const noexcept;
+
+    std::size_t _iter;
+    std::array<std::size_t, N> _shape;
+    std::array<std::size_t, N> _strides;
+    T* _data;
+};
+
+template<typename T, std::size_t N>
+constexpr ndslice_iterator<T, N> operator+(
+    typename ndslice_iterator<T, N>::difference_type a,
+    const ndslice_iterator<T, N>& b
+) noexcept;
+
+
+template<typename T, std::size_t N>
+class ndslice {
+    static_assert(N > 0);
+
+public:
+    using element_type = T;
+    using value_type = std::remove_cv_t<T>;
+    using index_type = std::size_t;
+    using pointer = T*;
+    using reference = T&;
+    using iterator = ndslice_iterator<T, N>;
+    using const_iterator = ndslice_iterator<const T, N>;
+    using reverse_iterator = std::reverse_iterator<iterator>;
+    using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+
+    static constexpr std::size_t dim_count = N;
+
+    constexpr ndslice(
+        const std::array<std::size_t, N>& shape_,
+        T* data_
+    ) noexcept;
+
+    constexpr ndslice(
+        const std::array<std::size_t, N>& shape_,
+        const std::array<std::size_t, N>& strides_,
+        T* data_
+    ) noexcept;
+
+    constexpr ndslice(const ndview<T, N>& view) noexcept;
+    constexpr ndslice(
+        const ndview<std::remove_const_t<T>, N>& view
+    ) noexcept requires(std::is_const_v<T>);
+
+    template<ndview_compatible_range<T> R>
+    constexpr ndslice(R&& r) noexcept requires(N == 1);
+
+    constexpr ndslice(
+        std::initializer_list<std::remove_cv_t<T>> il
+    ) noexcept requires(std::is_const_v<T> && N == 1);
+
+    template<indexer... Index>
+    constexpr decltype(auto) operator[](
+        Index... idx
+    ) const noexcept requires((sizeof...(Index) <= N));
+
+    constexpr operator ndslice<const T, N>() const noexcept;
+
+    constexpr std::size_t element_count() const noexcept;
+
+    constexpr const std::array<std::size_t, N>& shape() const noexcept;
+    constexpr std::size_t shape(std::size_t dim) const noexcept;
+
+    constexpr const std::array<std::size_t, N>& strides() const noexcept;
+    constexpr std::size_t strides(std::size_t dim) const noexcept;
+
+    constexpr T* data() const noexcept;
+
+    constexpr iterator begin() const noexcept;
+    constexpr const_iterator cbegin() const noexcept;
+
+    constexpr iterator end() const noexcept;
+    constexpr const_iterator cend() const noexcept;
+
+    constexpr reverse_iterator rbegin() const noexcept;
+    constexpr const_reverse_iterator crbegin() const noexcept;
+
+    constexpr reverse_iterator rend() const noexcept;
+    constexpr const_reverse_iterator crend() const noexcept;
+
+private:
+    std::array<std::size_t, N> _strides;
+    T* _data;
+    std::array<std::size_t, N> _shape;
+};
+
+
+template<typename T, std::size_t N>
+ndslice(const std::size_t (&)[N], T*) -> ndslice<T, N>;
+
+template<typename T, std::size_t N>
+ndslice(
+    const std::size_t (&)[N],
+    const std::size_t (&)[N],
+    T*
+) -> ndslice<T, N>;
+
+template<typename T, std::size_t N>
+std::ostream& operator<<(std::ostream& os, ndslice<const T, N> a);
 
 } // namespace vt
 
